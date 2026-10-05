@@ -5,6 +5,8 @@ package battleship;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The type Fleet.
@@ -218,19 +220,17 @@ public class Fleet implements IFleet
 	}
 
 	/**
-	 * This operation shows the state of a fleet
+	 * This operation shows the state of a fleet.
+	 * The message is localised via {@link Messages}, with ICU plural rules
+	 * for the sunk-ships count (e.g. "1 afundado" vs "3 afundados").
 	 */
 	public void printStatus()
-    {
-		System.out.println("Estado da Frota: " + this.getFloatingShips().size() + " a flutuar, " + this.getSunkShips().size() + " afundados!");
-//		printAllShips();
-//		printFloatingShips();
-//		printShipsByCategory("Galeao");
-//		printShipsByCategory("Fragata");
-//		printShipsByCategory("Nau");
-//		printShipsByCategory("Caravela");
-//		printShipsByCategory("Barca");
-    }
+	{
+		Map<String, Object> args = new HashMap<>();
+		args.put("floating", this.getFloatingShips().size());
+		args.put("sunk", this.getSunkShips().size());
+		System.out.println(Messages.format("fleet.status", args));
+	}
 
 	/**
 	 * This operation prints all the ships of a fleet belonging to a particular

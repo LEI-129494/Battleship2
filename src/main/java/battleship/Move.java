@@ -56,6 +56,10 @@ public class Move implements IMove {
 	 * such as valid shots, repeated shots, missed shots, hits on ships, and sunk ships. It can
 	 * also display a detailed summary of the shot results if verbose mode is activated.
 	 *
+	 * <p>The human-readable summary is built with the ICU4J {@code MessageFormat}, using
+	 * {@code plural} rules to correctly handle singular/plural agreement in any language.
+	 * The active language is determined by {@link Messages#getCurrentLocale()}.</p>
+	 *
 	 * @param verbose a boolean indicating whether a detailed summary should be printed to the console
 	 *                for the processed enemy fire data.
 	 * @return a JSON-formatted string that encapsulates the results, including counts of valid shots,
@@ -69,99 +73,50 @@ public class Move implements IMove {
 		int repeatedShots = 0;
 		int missedShots = 0;
 
-		Map<String, Integer> sunkBoatsCount = new HashMap<>(); // Rastrear quantos navios de cada tipo afundaram
+		Map<String, Integer> sunkBoatsCount = new HashMap<>(); // Quantos navios de cada tipo afundaram
 		Map<String, Integer> hitsPerBoat = new HashMap<>();
 
 		// Processar cada resultado de tiro
 		for (IGame.ShotResult result : this.shotResults) {
 			if (!result.valid()) {
-				// Tiro inválido - apenas ignorar
+				// Tiro invalido - apenas ignorar
 				continue;
 			}
 
 			if (result.repeated())
 				repeatedShots++; // tiro repetido
 			else {
-				// Tiro válido
+				// Tiro valido
 				validShots++;
 				if (result.ship() == null)
-					missedShots++; // Tiro na água
-				else{
+					missedShots++; // Tiro na agua
+				else {
 					String boatName = result.ship().getCategory();
 					hitsPerBoat.put(boatName, hitsPerBoat.getOrDefault(boatName, 0) + 1);
 					if (result.sunk())
-						sunkBoatsCount.put(boatName, sunkBoatsCount.getOrDefault(boatName, 0) + 1); // Contar barcos do mesmo tipo afundados
+						sunkBoatsCount.put(boatName, sunkBoatsCount.getOrDefault(boatName, 0) + 1);
 				}
 			}
 		}
 
-		// Determinar número de tiros fora do tabuleiro
+		// Determinar numero de tiros fora do tabuleiro
 		int outsideShots = Game.NUMBER_SHOTS - validShots - repeatedShots;
 
 		if (verbose) {
-			// Construção da mensagem de saída
-			StringBuilder output = new StringBuilder();
-
-			if (validShots == 0 && repeatedShots > 0) {
-				output.append(repeatedShots).append(" tiro").append(repeatedShots > 1 ? "s" : "").append(" repetido").append(repeatedShots > 1 ? "s" : "");
-			} else {
-				if (validShots > 0) {
-					output.append(validShots).append(" tiro").append(validShots > 1 ? "s" : "").append(" válido").append(validShots > 1 ? "s" : "").append(": ");
-				}
-
-				// Atualizar lógica para contar múltiplos barcos afundados do mesmo tipo
-				if (!sunkBoatsCount.isEmpty()) {
-					for (Map.Entry<String, Integer> entry : sunkBoatsCount.entrySet()) {
-						String boatName = entry.getKey();
-						int count = entry.getValue();
-						output.append(count).append(" ").append(boatName).append(count > 1 ? "s" : "").append(" ao fundo").append(" + ");
-					}
-				}
-
-				if (!hitsPerBoat.isEmpty()) {
-					for (Map.Entry<String, Integer> entry : hitsPerBoat.entrySet()) {
-						String boatName = entry.getKey();
-						int hits = entry.getValue();
-						if (!sunkBoatsCount.containsKey(boatName)) {
-							output.append(hits).append(" tiro").append(hits > 1 ? "s" : "").append(" num(a) ").append(boatName).append(" + ");
-						}
-					}
-				}
-
-				if (missedShots > 0) {
-					output.append(missedShots).append(" tiro").append(missedShots > 1 ? "s" : "").append(" na água");
-				} else if (!sunkBoatsCount.isEmpty() || !hitsPerBoat.isEmpty()) {
-					output.setLength(output.length() - 2); // Remover o "+" final
-				}
-
-				if (repeatedShots > 0) {
-					if (validShots > 0) {
-						output.append(", ");
-					}
-					output.append(repeatedShots).append(" tiro").append(repeatedShots > 1 ? "s" : "").append(" repetido").append(repeatedShots > 1 ? "s" : "");
-				}
-			}
-
-			// Adicionar contagem de tiros fora do tabuleiro
-			if (outsideShots > 0) {
-				if (!output.isEmpty()) {
-					output.append(", ");
-				}
-				output.append(outsideShots).append(" tiro").append(outsideShots > 1 ? "s" : "").append(" exterior").append(outsideShots > 1 ? "es" : "");
-			}
-
-			// Imprimir na consola se verbose for true
-			System.out.println("Jogada nº" + this.number + " -> " + output);
+			String summary = buildSummary(validShots, repeatedShots, missedShots,
+					outsideShots, sunkBoatsCount, hitsPerBoat);
+			System.out.println(Messages.format("move.line", this.number, summary));
 		}
 
-		// Criar o mapa para o JSON
+		// ----------------------------------------------------------------
+		// Construcao do JSON de resposta (inalterado)
+		// ----------------------------------------------------------------
 		Map<String, Object> response = new HashMap<>();
 		response.put("validShots", validShots);
 		response.put("outsideShots", outsideShots);
 		response.put("repeatedShots", repeatedShots);
 		response.put("missedShots", missedShots);
 
-		// Criar a lista de barcos afundados
 		List<Map<String, Object>> sunkBoats = new ArrayList<>();
 		for (Map.Entry<String, Integer> entry : sunkBoatsCount.entrySet()) {
 			Map<String, Object> boat = new HashMap<>();
@@ -171,7 +126,6 @@ public class Move implements IMove {
 		}
 		response.put("sunkBoats", sunkBoats);
 
-		// Criar a lista de acertos em barcos que não foram afundados
 		List<Map<String, Object>> boatHits = new ArrayList<>();
 		for (Map.Entry<String, Integer> entry : hitsPerBoat.entrySet()) {
 			if (!sunkBoatsCount.containsKey(entry.getKey())) {
@@ -183,23 +137,115 @@ public class Move implements IMove {
 		}
 		response.put("hitsOnBoats", boatHits);
 
-		// Serializar o JSON utilizando Jackson
-		String jsonString;
-
-		// Serializar os tiros gerados em JSON usando a biblioteca Jackson
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
+		String jsonString;
 		try {
 			jsonString = objectMapper.writeValueAsString(response);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException("Erro ao serializar o JSON dos resultados da jogada", e);
+			throw new RuntimeException(Messages.get("error.jsonMoveSerialization"), e);
 		}
 
 		System.out.println(jsonString);
 		System.out.println();
 
-		// Retornar o JSON
 		return jsonString;
+	}
+
+	/**
+	 * Constroi a mensagem legivel para o jogador, usando ICU4J {@code MessageFormat}
+	 * para as regras de plural. As pecas sao montadas numa lista e juntas com
+	 * {@code " + "}, tal como no formato original.
+	 *
+	 * <p>Exemplos de saida (em Portugues):</p>
+	 * <ul>
+	 *   <li>{@code 3 tiros validos: 1 Nau ao fundo + 2 tiros num(a) Caravela + 1 tiro na agua}</li>
+	 *   <li>{@code 1 tiro repetido}</li>
+	 *   <li>{@code 3 tiros exteriores}</li>
+	 * </ul>
+	 */
+	private String buildSummary(int validShots, int repeatedShots, int missedShots, int outsideShots,
+								Map<String, Integer> sunkBoatsCount, Map<String, Integer> hitsPerBoat) {
+
+		StringBuilder sb = new StringBuilder();
+
+		// Caso especial: so ha tiros repetidos (nenhum tiro valido)
+		if (validShots == 0 && repeatedShots > 0) {
+			sb.append(Messages.format("move.repeated", countArgs(repeatedShots)));
+		} else {
+			List<String> parts = new ArrayList<>();
+
+			// Navios afundados: "N {type} ao fundo" / "N {typePlural} ao fundo"
+			for (Map.Entry<String, Integer> e : sunkBoatsCount.entrySet()) {
+				Map<String, Object> args = new HashMap<>();
+				args.put("count", e.getValue());
+				args.put("type", shipName(e.getKey(), false));
+				args.put("typePlural", shipName(e.getKey(), true));
+				parts.add(Messages.format("move.sunk", args));
+			}
+
+			// Navios atingidos mas ainda a flutuar (nao contam tambem como afundados)
+			for (Map.Entry<String, Integer> e : hitsPerBoat.entrySet()) {
+				if (sunkBoatsCount.containsKey(e.getKey())) continue;
+				Map<String, Object> args = new HashMap<>();
+				args.put("count", e.getValue());
+				args.put("type", shipName(e.getKey(), false));
+				parts.add(Messages.format("move.hits", args));
+			}
+
+			// Tiros na agua
+			if (missedShots > 0) {
+				parts.add(Messages.format("move.missed", countArgs(missedShots)));
+			}
+
+			// Prefixo "N tiros validos: " (so quando ha tiros validos)
+			if (validShots > 0) {
+				sb.append(Messages.format("move.valid", countArgs(validShots)));
+				sb.append(": ");
+			}
+
+			sb.append(String.join(" " + Messages.get("move.joiner") + " ", parts));
+
+			// Tiros repetidos a seguir, com virgula
+			if (repeatedShots > 0) {
+				if (sb.length() > 0) sb.append(", ");
+				sb.append(Messages.format("move.repeated", countArgs(repeatedShots)));
+			}
+		}
+
+		// Tiros exteriores sempre no fim
+		if (outsideShots > 0) {
+			if (sb.length() > 0) sb.append(", ");
+			sb.append(Messages.format("move.outside", countArgs(outsideShots)));
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * Devolve o nome traduzido de um tipo de navio, dado o seu identificador interno
+	 * (o valor retornado por {@code IShip.getCategory()}, e.g. {@code "Nau"}).
+	 * Faz fallback para o proprio identificador se a chave nao existir no bundle.
+	 *
+	 * @param category identificador interno do tipo de navio
+	 * @param plural   {@code true} para devolver a forma plural
+	 */
+	private String shipName(String category, boolean plural) {
+		String key = "ship." + category + (plural ? ".plural" : "");
+		try {
+			return Messages.get(key);
+		} catch (MissingResourceException e) {
+			return category;
+		}
+	}
+
+	/**
+	 * Atalho para criar um mapa de argumentos ICU com a chave {@code count}.
+	 */
+	private static Map<String, Object> countArgs(int count) {
+		Map<String, Object> args = new HashMap<>();
+		args.put("count", count);
+		return args;
 	}
 }
