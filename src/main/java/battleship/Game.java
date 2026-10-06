@@ -13,6 +13,9 @@ public class Game implements IGame
 	 * shots, and other game elements onto the console. The method also optionally
 	 * displays shot positions and a legend explaining the symbols used on the board.
 	 *
+	 * <p>The legend is localised via {@link Messages}. The board itself uses only
+	 * language-neutral symbols ({@code #}, {@code -}, {@code .}, {@code *}, {@code o}).</p>
+	 *
 	 * @param fleet       the fleet of ships to be displayed on the board. Ships are marked
 	 *                    and their positions are shown according to their placement.
 	 * @param moves       the list of moves containing shots. If shot positions are shown,
@@ -41,9 +44,11 @@ public class Game implements IGame
 		printBoardFrame(map);
 
 		if (showLegend) {
-			System.out.println("          LEGENDA");
-			System.out.println("'" + SHIP_MARKER + "'->navio, '" + SHIP_ADJACENT_MARKER + "'->adjacente a navio, '" + EMPTY_MARKER + "'->água");
-			System.out.println("'" + SHOT_SHIP_MARKER + "'->Tiro certeiro, '" + SHOT_WATER_MARKER + "'->Tiro na água");
+			System.out.println(Messages.get("board.legend.title"));
+			System.out.println(Messages.format("board.legend.symbols",
+					SHIP_MARKER, SHIP_ADJACENT_MARKER, EMPTY_MARKER));
+			System.out.println(Messages.format("board.legend.shots",
+					SHOT_SHIP_MARKER, SHOT_WATER_MARKER));
 		}
 		System.out.println();
 	}
@@ -117,15 +122,12 @@ public class Game implements IGame
 
 		assert shots != null;
 
-		// Serializar os tiros gerados em JSON usando a biblioteca Jackson
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-		// 1. Create a simplified list containing only the desired data
 		List<Map<String, Object>> simplifiedShots = new ArrayList<>();
 		for (IPosition shot : shots) {
 			Map<String, Object> simplePos = new LinkedHashMap<>();
-			// We use getClassicRow() and getClassicColumn() based on your current JSON output
 			simplePos.put("row", String.valueOf(shot.getClassicRow()));
 			simplePos.put("column", shot.getClassicColumn());
 			simplifiedShots.add(simplePos);
@@ -133,16 +135,14 @@ public class Game implements IGame
 
 		String jsonString = null;
 		try {
-			// 2. Serialize the simplified list instead of the raw 'shots' list
 			jsonString = objectMapper.writeValueAsString(simplifiedShots);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException("Erro ao serializar o JSON", e);
+			throw new RuntimeException(Messages.get("error.jsonSerialization"), e);
 		}
 
 		System.out.println(jsonString);
 		System.out.println();
 
-		// Retornar o JSON
 		return jsonString;
 	}
 
@@ -221,7 +221,6 @@ public class Game implements IGame
 	 */
 	public String randomEnemyFire() {
 
-		// Criar uma instância de Random com uma seed baseada no timestamp atual
 		Random random = new Random(System.currentTimeMillis());
 
 		Set<IPosition> usablePositions = new HashSet<IPosition>();
@@ -234,11 +233,9 @@ public class Game implements IGame
 
 		List<IPosition> candidateShots = new ArrayList<>(usablePositions);
 
-		// Criar lista para armazenar os tiros
 		List<IPosition> shots = new ArrayList<IPosition>();
 
 		System.out.println();
-		// Gerar coordenadas únicas até atingir o número definido por NUMBER_SHOTS
 
 		IPosition newShot = null;
 		if (candidateShots.size() >= Game.NUMBER_SHOTS)
@@ -257,7 +254,7 @@ public class Game implements IGame
 				shots.add(newShot);
 		}
 
-		System.out.print("rajada ");
+		System.out.print(Messages.get("move.burst.label") + " ");
 		for (IPosition shot : shots)
 			System.out.print(shot + " ");
 		System.out.println();
@@ -287,31 +284,29 @@ public class Game implements IGame
 
 		String input = in.nextLine().trim();
 
-		// Criar lista para armazenar os tiros
 		List<IPosition> shots = new ArrayList<>();
 
 		Scanner inputScanner = new Scanner(input);
 		while (shots.size() < NUMBER_SHOTS && inputScanner.hasNext()) {
-			// Lê a próxima parte e constrói uma posição
 			String token = inputScanner.next();
 
 			if (token.matches("[A-Za-z]")) {
-				// Caso seja somente uma coluna ("A", "B", etc.), esperar o próximo número
 				if (inputScanner.hasNextInt()) {
 					int row = inputScanner.nextInt();
 					shots.add(new Position(token.toUpperCase().charAt(0), row));
 				} else {
-					throw new IllegalArgumentException("Posição incompleta! A coluna '" + token + "' não é seguida por uma linha.");
+					throw new IllegalArgumentException(
+							Messages.format("error.incompletePosition", token));
 				}
 			} else {
-				// Caso o token já contenha a coluna e a linha juntas (ex.: "A3")
 				Scanner singleScanner = new Scanner(token);
 				shots.add(Tasks.readClassicPosition(singleScanner));
 			}
 		}
 
 		if (shots.size() != NUMBER_SHOTS) {
-			throw new IllegalArgumentException("Você deve inserir exatamente " + NUMBER_SHOTS + " posições!");
+			throw new IllegalArgumentException(
+					Messages.format("error.invalidPositionCount", NUMBER_SHOTS));
 		}
 
 		this.fireShots(shots);
@@ -337,7 +332,8 @@ public class Game implements IGame
 
 		List<ShotResult> shotResults = new ArrayList<ShotResult>();
 		if (shots.size() != NUMBER_SHOTS) {
-			throw new IllegalArgumentException("Must fire exactly " + NUMBER_SHOTS + " shots per move.");
+			throw new IllegalArgumentException(
+					Messages.format("error.mustFireExactly", NUMBER_SHOTS));
 		}
 
 		List<IPosition> alreadyShot = new ArrayList<IPosition>();
@@ -347,8 +343,6 @@ public class Game implements IGame
 		}
 
 		Move move = new Move(moveNumber, shots, shotResults);
-
-//		System.out.println(move);
 
 		move.processEnemyFire(true);
 
@@ -447,9 +441,9 @@ public class Game implements IGame
 	}
 
 	public void over() {
-			System.out.println();
-			System.out.println("+--------------------------------------------------------------+");
-			System.out.println("| Maldito sejas, Java Sparrow, eu voltarei, glub glub glub ... |");
-			System.out.println("+--------------------------------------------------------------+");
+		System.out.println();
+		System.out.println(Messages.get("game.over.line1"));
+		System.out.println(Messages.get("game.over.message"));
+		System.out.println(Messages.get("game.over.line2"));
 	}
 }
