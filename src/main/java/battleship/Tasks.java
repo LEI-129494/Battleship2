@@ -31,6 +31,7 @@ public class Tasks {
 	private static final String CMD_SHOT      = "SHOT";
 	private static final String CMD_SHOTS     = "SHOTS";
 	private static final String CMD_SIMULATE  = "SIMULATE";
+	private static final String CMD_EXPORTPDF = "EXPORTPDF";
 	private static final String CMD_QUIT      = "QUIT";
 	private static final String CMD_UNKNOWN   = "";
 
