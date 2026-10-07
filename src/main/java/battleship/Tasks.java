@@ -80,7 +80,7 @@ public class Tasks {
 		String command = in.next();
 		while (!CMD_QUIT.equals(canonical(command))) {
 
-			switch (canonical(command)) {
+						switch (canonical(command)) {
 				case CMD_NEWFLEET:
 					myFleet = Fleet.createRandom();
 					game = new Game(myFleet);
@@ -134,6 +134,19 @@ public class Tasks {
 					if (game != null)
 						game.printMyBoard(true, true);
 					break;
+				case CMD_EXPORTPDF:
+					if (game != null) {
+						try {
+							java.nio.file.Path pdf = PdfExporter.export(game);
+							System.out.println(Messages.format("msg.pdfExported", pdf.toAbsolutePath()));
+						} catch (java.io.IOException e) {
+							LOGGER.error(Messages.get("error.pdfExport"), e);
+							System.out.println(Messages.get("error.pdfExport"));
+						}
+					} else {
+						System.out.println(Messages.get("msg.noActiveGame"));
+					}
+					break;
 				case CMD_HELP:
 					menuHelp();
 					break;
@@ -166,6 +179,7 @@ public class Tasks {
 		if (t.equals(Messages.get("cmd.shot").toLowerCase()))      return CMD_SHOT;
 		if (t.equals(Messages.get("cmd.shots").toLowerCase()))     return CMD_SHOTS;
 		if (t.equals(Messages.get("cmd.simulate").toLowerCase()))  return CMD_SIMULATE;
+		if (t.equals(Messages.get("cmd.exportpdf").toLowerCase())) return CMD_EXPORTPDF;
 		if (t.equals(Messages.get("cmd.quit").toLowerCase()))      return CMD_QUIT;
 		return CMD_UNKNOWN;
 	}
@@ -185,6 +199,7 @@ public class Tasks {
 		System.out.println(Messages.format("menu.help.shot",      Messages.get("cmd.shot")));
 		System.out.println(Messages.format("menu.help.simulate",  Messages.get("cmd.simulate")));
 		System.out.println(Messages.format("menu.help.shots",     Messages.get("cmd.shots")));
+		System.out.println(Messages.format("menu.help.exportpdf", Messages.get("cmd.exportpdf")));
 		System.out.println(Messages.format("menu.help.quit",      Messages.get("cmd.quit")));
 		System.out.println(Messages.get("menu.help.footer"));
 	}
