@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.ResultSet;
 
 public class DatabaseManager {
     private static final String DATABASE_URL =
@@ -66,6 +67,55 @@ public class DatabaseManager {
         } catch (SQLException e) {
             System.err.println(
                     "Erro ao guardar jogada: " + e.getMessage()
+            );
+        }
+    }
+    public static void printHistory() {
+
+        String sql = """
+            SELECT turn_number, row_position, column_position, result
+            FROM shots
+            ORDER BY turn_number, id
+            """;
+
+        try (Connection connection =
+                     DriverManager.getConnection(DATABASE_URL);
+             Statement statement =
+                     connection.createStatement();
+             ResultSet resultSet =
+                     statement.executeQuery(sql)) {
+
+            boolean hasHistory = false;
+
+            System.out.println();
+            System.out.println("===== HISTÓRICO DE JOGADAS =====");
+
+            while (resultSet.next()) {
+
+                hasHistory = true;
+
+                int turnNumber = resultSet.getInt("turn_number");
+                String row = resultSet.getString("row_position");
+                int column = resultSet.getInt("column_position");
+                String result = resultSet.getString("result");
+
+                System.out.println(
+                        "Jogada " + turnNumber +
+                                " | " + row + column +
+                                " | " + result
+                );
+            }
+
+            if (!hasHistory) {
+                System.out.println("Ainda não existem jogadas guardadas.");
+            }
+
+            System.out.println("===============================");
+            System.out.println();
+
+        } catch (SQLException e) {
+            System.err.println(
+                    "Erro ao consultar histórico: " + e.getMessage()
             );
         }
     }
