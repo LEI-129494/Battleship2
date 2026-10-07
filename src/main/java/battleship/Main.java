@@ -9,6 +9,7 @@ public class Main
 	 */
 	public static void main(String[] args)
 	{
+		DatabaseManager.initializeDatabase();
 		Tasks.chooseLanguage();
 		System.out.println(Messages.get("app.title"));
 		Tasks.menu();
