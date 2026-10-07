@@ -94,6 +94,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>javazoom</groupId>
+			<artifactId>jlayer</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+
 		<!-- JUnit Jupiter Engine -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
