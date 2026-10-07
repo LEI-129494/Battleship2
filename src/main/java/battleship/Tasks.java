@@ -33,6 +33,7 @@ public class Tasks {
 	private static final String CMD_SIMULATE  = "SIMULATE";
 	private static final String CMD_QUIT      = "QUIT";
 	private static final String CMD_UNKNOWN   = "";
+	private static final String CMD_HISTORY = "HISTORY";
 
 
 	/**
@@ -80,6 +81,9 @@ public class Tasks {
 		while (!CMD_QUIT.equals(canonical(command))) {
 
 			switch (canonical(command)) {
+				case CMD_HISTORY:
+					DatabaseManager.printHistory();
+					break;
 				case CMD_NEWFLEET:
 					myFleet = Fleet.createRandom();
 					game = new Game(myFleet);
@@ -166,6 +170,7 @@ public class Tasks {
 		if (t.equals(Messages.get("cmd.shots").toLowerCase()))     return CMD_SHOTS;
 		if (t.equals(Messages.get("cmd.simulate").toLowerCase()))  return CMD_SIMULATE;
 		if (t.equals(Messages.get("cmd.quit").toLowerCase()))      return CMD_QUIT;
+		if (t.equals(Messages.get("cmd.history").toLowerCase())) return CMD_HISTORY;
 		return CMD_UNKNOWN;
 	}
 
@@ -185,6 +190,7 @@ public class Tasks {
 		System.out.println(Messages.format("menu.help.simulate",  Messages.get("cmd.simulate")));
 		System.out.println(Messages.format("menu.help.shots",     Messages.get("cmd.shots")));
 		System.out.println(Messages.format("menu.help.quit",      Messages.get("cmd.quit")));
+		System.out.println(Messages.format("menu.help.history", Messages.get("cmd.history")));
 		System.out.println(Messages.get("menu.help.footer"));
 	}
 
