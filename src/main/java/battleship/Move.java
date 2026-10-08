@@ -77,26 +77,43 @@ public class Move implements IMove {
 		Map<String, Integer> hitsPerBoat = new HashMap<>();
 
 		// Processar cada resultado de tiro
-		for (IGame.ShotResult result : this.shotResults) {
+		for (int i = 0; i < this.shotResults.size(); i++) {
+			IGame.ShotResult result = this.shotResults.get(i);
+			IPosition position = this.shots.get(i);
+			String databaseResult;
 			if (!result.valid()) {
 				// Tiro invalido - apenas ignorar
-				continue;
+				databaseResult = "OUTSIDE";
 			}
 
-			if (result.repeated())
+			else if (result.repeated()) {
 				repeatedShots++; // tiro repetido
+				databaseResult = "REPEATED";
+			}
 			else {
 				// Tiro valido
 				validShots++;
-				if (result.ship() == null)
+				if (result.ship() == null) {
 					missedShots++; // Tiro na agua
+					databaseResult = "MISS";
+				}
 				else {
 					String boatName = result.ship().getCategory();
 					hitsPerBoat.put(boatName, hitsPerBoat.getOrDefault(boatName, 0) + 1);
-					if (result.sunk())
+					if (result.sunk()) {
 						sunkBoatsCount.put(boatName, sunkBoatsCount.getOrDefault(boatName, 0) + 1);
+						databaseResult = "SUNK";
+					}else {
+						databaseResult = "HIT";
+					}
 				}
 			}
+			DatabaseManager.saveShot(
+					this.number,
+					String.valueOf(position.getClassicRow()),
+					position.getClassicColumn(),
+					databaseResult
+			);
 		}
 
 		// Determinar numero de tiros fora do tabuleiro
