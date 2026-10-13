@@ -302,3 +302,5 @@ O LLM (Gemini) demonstrou desde o início um comportamento estratégico sólido,
 - ✅ Manteve um Diário de Bordo coerente
 
 Não foram necessárias correções ao comportamento do LLM durante as partidas. A técnica de few-shot prompting foi aplicada **proativamente**, com exemplos embutidos no prompt inicial.
+
+🎬 **Vídeo de demonstração:** [https://youtu.be/NqXW33kzdMo](https://youtu.be/NqXW33kzdMo)
