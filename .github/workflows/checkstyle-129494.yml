@@ -1,0 +1,19 @@
+# 129494 - Guilherme Cabo
+name: Checkstyle Naming Gate 129494
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  checkstyle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Checkstyle
+        uses: dbelyaev/action-checkstyle@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          checkstyle_config: 'Checkstyle/checkstyle-129494.xml'
+          reporter: 'github-pr-review'
+          level: 'warning'
