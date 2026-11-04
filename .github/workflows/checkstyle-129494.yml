@@ -1,4 +1,4 @@
-# 129494 - Guilherme Cabo
+# 129494 - O Teu Nome
 name: Checkstyle Naming Gate 129494
 on:
   pull_request:
@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run Checkstyle
-        uses: dbelyaev/action-checkstyle@master
+        uses: dbelyaev/action-checkstyle@v1.6.0 # Versão mais estável
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           checkstyle_config: 'Checkstyle/checkstyle-129494.xml'
