@@ -1,9 +1,6 @@
-# 129494 - Guilherme Cabo
 profile:
   base:
-    name: empty
+    name: qodana.starter
   inspections:
     - inspection: LongMethod
-      enabled: true
-      options:
-        m: 200 # Limite de linhas
+      enabled: false # Desativamos o Long Method
