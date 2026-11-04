@@ -1,0 +1,24 @@
+# 129494 - Guilherme Cabo
+name: Qodana Long Method Gate 129494
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  qodana:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: 'Qodana Scan'
+        uses: JetBrains/qodana-action@v2025.1
+        with:
+          args: --config qodana-129494.yaml
+          use-annotations: true
+          post-pr-comment: true
