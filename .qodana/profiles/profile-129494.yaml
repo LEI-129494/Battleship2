@@ -1,0 +1,9 @@
+# 129494 - Guilherme Cabo
+profile:
+  base:
+    name: empty
+  inspections:
+    - inspection: LongMethod
+      enabled: true
+      options:
+        m: 40 # Limite de linhas
