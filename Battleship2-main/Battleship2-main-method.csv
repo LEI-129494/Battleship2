@@ -1,0 +1,214 @@
+Method Name;CC;CCM;CDISP;CINT;CND;FDP;HD;HEF;HER;HL;HVC;HVL;LAA;LND;LOC;MMI;MND;NOAV;NOL;NOPM
+battleship.Barge.Barge(Compass, IPosition);1;0;0.6;5;0;0;6.0;301.1369;0.015;14;12;50.1895;0.0;0;11;65.3869;0;2;0;2
+battleship.Caravel.Caravel(Compass, IPosition);9;5;0.5;6;0;1;27.0;12198.3903;0.1766;93;29;451.7922;0.0;1;27;49.8962;1;10;4;2
+battleship.Carrack.Carrack(Compass, IPosition);9;5;0.5;6;0;1;27.0;12198.3903;0.1766;93;29;451.7922;0.0;1;27;49.8962;1;10;4;2
+battleship.Compass.Compass(char);1;0;0.0;0;0;0;1.0;8.0;0.0013;4;4;8.0;1.0;0;9;72.8607;0;2;0;1
+battleship.Compass.charToCompass(char);6;1;0.0;0;0;0;5.0909;615.6326;0.0241;29;18;120.9278;1.0;0;28;53.6323;1;6;0;1
+battleship.Compass.getDirection();1;0;0.0;0;0;0;1.5;12.0;0.0017;4;4;8.0;1.0;0;9;72.8607;0;1;0;0
+battleship.Compass.randomBearing();1;0;0.5;1;0;1;4.6667;186.028;0.0109;12;10;39.8631;0.0;0;10;67.0454;0;3;0;0
+battleship.Compass.toString();1;0;0.0;0;0;0;1.5;17.4145;0.0022;5;5;11.6096;1.0;0;10;70.8942;0;1;0;0
+battleship.Compass.valueOf(String);1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;0;0.0;-1;0;0;1
+battleship.Compass.values();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;0;0.0;-1;0;0;0
+battleship.DatabaseManager.initializeDatabase();2;1;1.0;5;0;2;5.5;531.4704;0.0219;22;21;96.631;0.25;0;23;56.3222;1;7;0;0
+battleship.DatabaseManager.printHistory();4;3;0.6667;9;1;2;14.2308;5109.2948;0.0989;65;46;359.0315;0.25;1;38;47.4614;2;13;1;0
+battleship.DatabaseManager.saveShot(int, String, int, String);2;1;0.7143;7;0;2;8.75;1588.6058;0.0454;37;30;181.555;0.3333;0;25;53.6039;1;10;0;4
+battleship.Fleet.Fleet();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;7;77.3494;0;1;0;0
+battleship.Fleet.addShip(IShip);4;3;0.5;3;1;0;10.2857;1092.3242;0.0354;25;19;106.1982;0.5;0;23;55.9276;1;4;0;1
+battleship.Fleet.colisionRisk(IShip);3;2;0.6667;3;1;0;10.2143;1103.6352;0.0356;25;20;108.0482;1.0;1;16;59.3475;1;3;1;1
+battleship.Fleet.createRandom();4;3;1.0;4;1;1;14.375;2597.3573;0.063;38;27;180.6857;0.0;1;27;52.7984;2;5;1;0
+battleship.Fleet.getFloatingShips();3;2;1.0;2;1;0;5.8333;232.535;0.0126;12;10;39.8631;1.0;1;19;60.8169;0;3;1;0
+battleship.Fleet.getShips();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;10;73.9704;0;1;0;0
+battleship.Fleet.getShipsLike(String);3;2;1.0;3;1;0;8.0;562.5922;0.0227;18;15;70.324;1.0;1;21;58.09;0;4;1;1
+battleship.Fleet.getSunkShips();3;2;1.0;2;1;0;6.6667;299.8174;0.0149;13;11;44.9726;1.0;1;19;60.4501;0;3;1;0
+battleship.Fleet.printAllShips();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;7;77.3494;0;1;0;0
+battleship.Fleet.printFloatingShips();1;0;0.0;0;0;0;0.0;0.0;0.0;4;4;8.0;0.0;0;7;75.2416;0;0;0;0
+battleship.Fleet.printShips(List<IShip>);2;1;1.0;1;0;1;3.75;137.0295;0.0089;11;10;36.5412;0.0;1;11;66.2926;0;3;1;1
+battleship.Fleet.printShipsByCategory(String);1;0;0.0;0;0;0;4.5;121.5;0.0082;9;8;27.0;0.0;0;11;67.3754;0;1;0;1
+battleship.Fleet.printStatus();1;0;0.6667;4;0;1;7.0;546.9647;0.0223;20;15;78.1378;0.0;0;12;63.2103;0;2;0;0
+battleship.Fleet.shipAt(IPosition);3;2;1.0;1;1;0;6.125;317.8353;0.0155;15;11;51.8915;1.0;1;20;59.5152;0;3;1;1
+battleship.Frigate.Frigate(Compass, IPosition);9;5;0.5;6;0;1;27.0;12198.3903;0.1766;93;29;451.7922;0.0;1;27;49.8962;1;10;4;2
+battleship.Galleon.Galleon(Compass, IPosition);5;1;0.2;1;0;1;8.125;982.5386;0.0329;29;18;120.9278;0.0;0;23;55.5204;1;6;0;2
+battleship.Galleon.fillEast(IPosition);2;1;0.75;4;0;0;15.1667;2512.6491;0.0616;39;19;165.6692;0.0;1;12;60.8387;1;2;1;1
+battleship.Galleon.fillNorth(IPosition);2;1;0.75;4;0;0;15.0;2564.5039;0.0625;41;18;170.9669;0.0;1;12;60.7479;1;2;1;1
+battleship.Galleon.fillSouth(IPosition);3;2;0.75;4;0;0;14.8571;2568.4601;0.0625;40;20;172.8771;0.0;1;13;59.8995;1;3;2;1
+battleship.Galleon.fillWest(IPosition);2;1;0.75;4;0;0;18.2;2959.8128;0.0687;39;18;162.6271;0.0;1;12;60.8945;1;2;1;1
+battleship.Game.Game(IFleet);1;0;0.0;0;0;0;1.875;205.1118;0.0116;28;15;109.3929;1.0;0;13;61.4344;0;10;0;1
+battleship.Game.fireShots(List<IPosition>);3;2;0.5;5;1;0;14.3182;2826.6735;0.0666;42;26;197.4185;1.0;1;30;51.5645;1;8;1;1
+battleship.Game.fireSingleShot(IPosition, boolean);6;5;0.6667;5;1;0;27.8182;9093.7674;0.1452;68;28;326.9001;1.0;0;33;49.0366;1;8;0;2
+battleship.Game.getAlienFleet();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;5;80.5371;0;1;0;0
+battleship.Game.getAlienMoves();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;5;80.5371;0;1;0;0
+battleship.Game.getHits();1;0;0.0;0;0;0;2.0;23.2193;0.0027;5;5;11.6096;1.0;0;5;77.4608;0;1;0;0
+battleship.Game.getInvalidShots();1;0;0.0;0;0;0;2.0;23.2193;0.0027;5;5;11.6096;1.0;0;5;77.4608;0;1;0;0
+battleship.Game.getMyFleet();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;5;80.5371;0;1;0;0
+battleship.Game.getMyMoves();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;5;80.5371;0;1;0;0
+battleship.Game.getRemainingShips();1;0;1.0;2;0;0;2.5;49.1287;0.0045;7;7;19.6515;1.0;0;6;74.0716;0;2;0;0
+battleship.Game.getRepeatedShots();1;0;0.0;0;0;0;2.0;23.2193;0.0027;5;5;11.6096;1.0;0;5;77.4608;0;1;0;0
+battleship.Game.getSunkShips();1;0;0.0;0;0;0;2.0;23.2193;0.0027;5;5;11.6096;1.0;0;5;77.4608;0;1;0;0
+battleship.Game.jsonShots(List<IPosition>);3;2;0.7;10;0;2;17.6923;4194.6077;0.0867;47;33;237.0865;0.0;1;33;50.0994;1;9;1;1
+battleship.Game.over();1;0;0.6667;3;0;1;4.375;221.8948;0.0122;16;9;50.7188;0.0;0;6;71.1292;0;1;0;0
+battleship.Game.printAlienBoard(boolean, boolean);1;0;0.0;0;0;0;2.5;87.1729;0.0066;11;9;34.8692;1.0;0;4;76.1432;0;4;0;2
+battleship.Game.printBoard(IFleet, List<IMove>, boolean, boolean);5;4;0.2857;4;1;1;19.4737;7101.9115;0.1232;69;39;364.6928;0.8571;2;37;47.642;1;14;2;4
+battleship.Game.printBoardFrame(char[][]);6;5;0.5;4;0;1;22.2353;10685.3272;0.1617;97;31;480.557;0.5;2;25;50.4903;1;10;5;1
+battleship.Game.printBoardShots(List<IMove>, char[][]);7;6;0.5;4;2;0;14.7727;2980.2256;0.069;44;24;201.7384;1.0;2;13;59.3117;2;11;2;2
+battleship.Game.printMyBoard(boolean, boolean);1;0;0.0;0;0;0;2.5;87.1729;0.0066;11;9;34.8692;1.0;0;4;76.1432;0;4;0;2
+battleship.Game.printShips(IFleet, char[][]);5;4;0.5;6;1;0;11.1429;1396.6002;0.0416;29;20;125.3359;1.0;2;9;64.2851;1;7;3;2
+battleship.Game.randomEnemyFire();10;10;0.5882;15;2;1;45.6842;31455.884;0.3322;122;50;688.5505;0.8;2;43;44.189;2;15;6;0
+battleship.Game.readEnemyFire(Scanner);6;7;0.3333;13;2;0;29.0769;10593.1167;0.1608;68;41;364.3135;1.0;1;40;46.8789;3;8;1;1
+battleship.Game.repeatedShot(IPosition);3;2;1.0;2;1;0;5.25;348.69;0.0165;17;15;66.4171;1.0;1;8;67.4118;0;3;1;1
+battleship.IFleet.addShip(IShip);1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;1
+battleship.IFleet.getFloatingShips();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IFleet.getShips();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IFleet.getShipsLike(String);1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;0;0.0;N/A;N/A;0;1
+battleship.IFleet.getSunkShips();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IFleet.printStatus();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IFleet.shipAt(IPosition);1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;0;0.0;N/A;N/A;0;1
+battleship.IGame.fireShots(List<IPosition>);1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;1;0;0.0;N/A;N/A;4;1
+battleship.IGame.fireSingleShot(IPosition, boolean);1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;1;0;0.0;N/A;N/A;4;2
+battleship.IGame.getAlienFleet();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;1;0;0.0;N/A;N/A;4;0
+battleship.IGame.getAlienMoves();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;1;0;0.0;N/A;N/A;4;0
+battleship.IGame.getHits();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;1;0;0.0;N/A;N/A;4;0
+battleship.IGame.getInvalidShots();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;1;0;0.0;N/A;N/A;4;0
+battleship.IGame.getMyFleet();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;1;0;0.0;N/A;N/A;4;0
+battleship.IGame.getMyMoves();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;1;0;0.0;N/A;N/A;4;0
+battleship.IGame.getRemainingShips();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;1;0;0.0;N/A;N/A;4;0
+battleship.IGame.getRepeatedShots();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;1;0;0.0;N/A;N/A;4;0
+battleship.IGame.getSunkShips();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;1;0;0.0;N/A;N/A;4;0
+battleship.IGame.over();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;1;0;0.0;N/A;N/A;4;0
+battleship.IGame.printAlienBoard(boolean, boolean);1;0;0.0;0;0;0;0.0;0.0;0.0;3;2;3.0;0.0;1;0;0.0;N/A;N/A;4;2
+battleship.IGame.printMyBoard(boolean, boolean);1;0;0.0;0;0;0;0.0;0.0;0.0;3;2;3.0;0.0;1;0;0.0;N/A;N/A;4;2
+battleship.IGame.randomEnemyFire();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;1;0;0.0;N/A;N/A;4;0
+battleship.IGame.readEnemyFire(Scanner);1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;1;0;0.0;N/A;N/A;4;1
+battleship.IGame.ShotResult.ShotResult(boolean, boolean, IShip, boolean);1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;4;∞;-1;0;0;4
+battleship.IGame.ShotResult.repeated();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;1;∞;-1;0;0;0
+battleship.IGame.ShotResult.ship();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;1;∞;-1;0;0;0
+battleship.IGame.ShotResult.sunk();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;1;∞;-1;0;0;0
+battleship.IGame.ShotResult.valid();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;1;∞;-1;0;0;0
+battleship.IMove.getNumber();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;1;0;0.0;N/A;N/A;1;0
+battleship.IMove.getShotResults();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;1;0;0.0;N/A;N/A;1;0
+battleship.IMove.getShots();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;1;0;0.0;N/A;N/A;1;0
+battleship.IMove.processEnemyFire(boolean);1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;1;0;0.0;N/A;N/A;1;1
+battleship.IMove.readMove(int, Scanner);2;1;1.0;2;0;0;6.75;827.7112;0.0294;30;17;122.6239;0.0;1;10;63.4841;1;7;1;2
+battleship.IMove.toString();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;1;0;0.0;N/A;N/A;1;0
+battleship.IPosition.adjacentPositions();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IPosition.equals(Object);1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;1
+battleship.IPosition.getClassicColumn();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IPosition.getClassicRow();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IPosition.getColumn();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IPosition.getRow();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IPosition.isAdjacentTo(IPosition);1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;1
+battleship.IPosition.isHit();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IPosition.isInside();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IPosition.isOccupied();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IPosition.occupy();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IPosition.shoot();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IShip.getAdjacentPositions();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IShip.getBearing();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IShip.getBottomMostPos();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IShip.getCategory();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IShip.getLeftMostPos();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IShip.getPosition();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IShip.getPositions();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IShip.getRightMostPos();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IShip.getSize();1;0;0.0;0;0;0;0.0;NaN;NaN;0;0;NaN;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IShip.getTopMostPos();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IShip.isInsideBoard();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IShip.occupies(IPosition);1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;1
+battleship.IShip.shoot(IPosition);1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;1
+battleship.IShip.sink();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IShip.stillFloating();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;0
+battleship.IShip.tooCloseTo(IPosition);1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;1
+battleship.IShip.tooCloseTo(IShip);1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;0;0.0;N/A;N/A;0;1
+battleship.Main.main(String[]);1;0;0.8;5;0;1;4.0;132.8771;0.0087;10;10;33.2193;0.0;0;12;65.8261;0;1;0;1
+battleship.Messages.Messages();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;3;∞;0;0;0;0
+battleship.Messages.format(String, Map<String, ?>);1;0;1.0;2;0;0;3.375;205.5972;0.0116;16;14;60.9177;1.0;0;18;60.1669;0;7;0;2
+battleship.Messages.format(String, Object[]);1;0;1.0;1;0;0;2.5;95.1344;0.0069;11;11;38.0537;1.0;0;17;62.0974;0;6;0;2
+battleship.Messages.get(String);1;0;1.0;1;0;0;2.0;31.0196;0.0033;6;6;15.5098;1.0;0;10;69.951;0;2;0;1
+battleship.Messages.getCurrentLocale();1;0;0.0;0;0;0;1.5;12.0;0.0017;4;4;8.0;1.0;0;9;72.8607;0;1;0;0
+battleship.Messages.init(Locale);3;2;1.0;2;1;1;9.75;876.1202;0.0305;23;15;89.8585;0.8;0;23;56.4979;1;5;0;1
+battleship.Move.Move(int, List<IPosition>, List<ShotResult>);1;0;0.0;0;0;0;1.5;52.3038;0.0047;11;9;34.8692;1.0;0;6;72.302;0;6;0;3
+battleship.Move.buildSummary(int, int, int, int, Map<String, Integer>, Map<String, Integer>);12;12;0.5;12;3;1;34.1346;28463.0304;0.3107;147;51;833.8465;0.0;1;59;40.5861;2;12;2;6
+battleship.Move.countArgs(int);1;0;1.0;1;0;0;4.0;126.797;0.0084;10;9;31.6993;0.0;0;8;69.8575;0;2;0;1
+battleship.Move.getNumber();1;0;0.0;0;0;0;2.0;23.2193;0.0027;5;5;11.6096;1.0;0;4;79.5748;0;1;0;0
+battleship.Move.getShotResults();1;0;0.0;0;0;0;1.5;12.0;0.0017;4;4;8.0;1.0;0;4;80.5432;0;1;0;0
+battleship.Move.getShots();1;0;0.0;0;0;0;1.5;12.0;0.0017;4;4;8.0;1.0;0;4;80.5432;0;1;0;0
+battleship.Move.processEnemyFire(boolean);11;13;0.44;24;3;4;49.7609;64928.2407;0.5385;202;88;1304.8052;0.3;1;105;33.7741;4;29;3;1
+battleship.Move.shipName(String, boolean);3;2;1.0;1;0;0;3.5;175.6632;0.0105;14;12;50.1895;0.0;0;16;61.6894;1;3;0;2
+battleship.Move.toString();1;0;1.0;1;0;0;1.5;62.2698;0.0052;12;11;41.5132;1.0;0;8;69.0073;0;3;0;0
+battleship.PdfExporter.describeMove(IMove);7;7;0.4167;12;1;1;28.4375;12114.1781;0.1758;79;42;425.9931;0.0;1;23;51.6296;1;8;2;1
+battleship.PdfExporter.export(IGame);7;6;0.375;14;1;0;69.6774;83712.7694;0.6379;201;63;1201.4333;1.0;1;76;37.1473;3;21;2;1
+battleship.PdfExporter.sanitize(String);5;5;0.6667;3;1;0;11.375;1673.9591;0.047;33;22;147.1612;0.0;1;14;59.6063;1;3;1;1
+battleship.PdfExporter.writeLine(PDPageContentStream, PDType1Font, float, float, float, String);1;0;0.0;0;0;0;6.0;502.5708;0.0211;22;14;83.7618;1.0;0;13;62.2631;0;7;0;6
+battleship.Position.Position(char, int);1;0;1.0;1;0;0;3.3333;260.4594;0.0136;20;15;78.1378;1.0;0;13;62.452;0;6;0;2
+battleship.Position.Position(int, int);1;0;0.0;0;0;0;1.7143;85.421;0.0065;15;10;49.8289;1.0;0;13;63.8657;0;6;0;2
+battleship.Position.adjacentPositions();3;2;0.5;1;1;0;15.0;2867.3511;0.0673;45;19;191.1567;1.0;1;29;51.9797;2;6;1;0
+battleship.Position.equals(Object);4;3;0.5;2;1;0;7.5;780.0;0.0282;26;16;104.0;1.0;0;18;58.3078;1;4;0;1
+battleship.Position.getClassicColumn();1;0;0.0;0;0;0;2.0;31.0196;0.0033;6;6;15.5098;1.0;0;8;72.065;0;1;0;0
+battleship.Position.getClassicRow();1;0;0.0;0;0;0;2.0;36.1895;0.0036;7;6;18.0947;1.0;0;8;71.5106;0;1;0;0
+battleship.Position.getColumn();1;0;0.0;0;0;0;1.5;12.0;0.0017;4;4;8.0;1.0;0;9;72.8607;0;1;0;0
+battleship.Position.getRow();1;0;0.0;0;0;0;1.5;12.0;0.0017;4;4;8.0;1.0;0;9;72.8607;0;1;0;0
+battleship.Position.hashCode();1;0;1.0;1;0;0;2.0;48.0;0.0044;8;8;24.0;1.0;0;9;69.5199;0;4;0;0
+battleship.Position.isAdjacentTo(IPosition);2;1;0.6667;3;0;0;7.5;571.1032;0.0229;20;14;76.1471;1.0;0;11;64.0204;0;3;0;1
+battleship.Position.isHit();1;0;0.0;0;0;0;1.5;12.0;0.0017;4;4;8.0;1.0;0;9;72.8607;0;1;0;0
+battleship.Position.isInside();4;1;0.0;0;0;1;5.0;237.7444;0.0128;15;9;47.5489;0.6667;0;10;66.2915;0;3;0;0
+battleship.Position.isOccupied();1;0;0.0;0;0;0;1.5;12.0;0.0017;4;4;8.0;1.0;0;9;72.8607;0;1;0;0
+battleship.Position.occupy();1;0;0.0;0;0;0;1.0;8.0;0.0013;4;4;8.0;1.0;0;7;75.2416;0;1;0;0
+battleship.Position.randomPosition();1;0;1.0;1;0;1;4.6667;248.0373;0.0132;16;10;53.1508;0.0;0;7;69.4917;0;3;0;0
+battleship.Position.shoot();1;0;0.0;0;0;0;1.0;8.0;0.0013;4;4;8.0;1.0;0;7;75.2416;0;1;0;0
+battleship.Position.toString();1;0;0.0;0;0;0;2.0;63.3985;0.0053;10;9;31.6993;1.0;0;11;66.8406;0;2;0;0
+battleship.Ship.Ship(String, Compass, IPosition, int);1;0;1.0;1;0;0;3.75;475.1676;0.0203;31;17;126.7113;1.0;0;19;57.3985;0;9;0;4
+battleship.Ship.buildShip(String, Compass, Position);7;1;0.0;0;0;0;13.5;3154.0862;0.0717;55;19;233.636;1.0;0;36;49.2129;1;9;0;3
+battleship.Ship.getAdjacentPositions();5;4;0.5;3;1;0;11.0;988.4433;0.0331;23;15;89.8585;1.0;2;19;58.2392;1;4;2;0
+battleship.Ship.getBearing();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;15;70.1292;0;1;0;0
+battleship.Ship.getBottomMostPos();3;2;0.5;2;1;0;13.5;1566.0;0.045;29;16;116.0;1.0;1;19;57.5022;0;2;1;0
+battleship.Ship.getCategory();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;15;70.1292;0;1;0;0
+battleship.Ship.getLeftMostPos();3;2;0.5;2;1;0;12.375;1402.0854;0.0418;29;15;113.2998;1.0;1;19;57.5819;0;2;1;0
+battleship.Ship.getPosition();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;15;70.1292;0;1;0;0
+battleship.Ship.getPositions();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;9;74.9686;0;1;0;0
+battleship.Ship.getRightMostPos();3;2;0.5;2;1;0;13.5;1566.0;0.045;29;16;116.0;1.0;1;19;57.5022;0;2;1;0
+battleship.Ship.getSize();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;9;74.9686;0;1;0;0
+battleship.Ship.getTopMostPos();3;2;0.5;2;1;0;12.375;1402.0854;0.0418;29;15;113.2998;1.0;1;19;57.5819;0;2;1;0
+battleship.Ship.isInsideBoard();4;0;0.0;0;0;1;11.375;1069.3825;0.0349;23;17;94.0116;0.0;0;6;69.0231;0;1;0;0
+battleship.Ship.occupies(IPosition);3;2;0.5;2;1;0;10.5;1089.1259;0.0353;24;20;103.7263;1.0;1;20;57.3777;0;2;1;1
+battleship.Ship.shoot(IPosition);3;2;0.25;3;1;0;10.0;629.0748;0.0245;17;13;62.9075;1.0;1;21;58.459;1;2;1;1
+battleship.Ship.sink();2;1;0.5;1;0;0;2.5;38.7744;0.0038;6;6;15.5098;1.0;1;13;67.3722;0;1;1;0
+battleship.Ship.stillFloating();3;2;0.5;2;1;0;9.75;797.0553;0.0287;20;17;81.7493;1.0;1;18;59.1065;0;1;1;0
+battleship.Ship.toString();1;0;0.0;0;0;0;1.1667;31.5;0.0033;9;8;27.0;1.0;0;10;68.2784;0;3;0;0
+battleship.Ship.tooCloseTo(IPosition);3;2;0.5;2;1;0;11.25;1235.3393;0.0384;25;21;109.8079;1.0;1;20;57.2055;0;2;1;1
+battleship.Ship.tooCloseTo(IShip);3;3;0.6;4;1;0;8.4;686.6938;0.0259;20;17;81.7493;0.0;1;21;57.6462;0;2;1;1
+battleship.SoundManager.SoundManager();1;0;0.0;0;0;0;0.0;0.0;0.0;1;1;0.0;0.0;0;3;∞;0;0;0;0
+battleship.SoundManager.play(String);3;2;1.0;3;1;1;10.1111;1417.8854;0.0421;31;23;140.2304;0.0;0;17;57.984;3;5;0;1
+battleship.SoundManager.playHit();1;0;0.0;0;0;0;2.0;23.2193;0.0027;5;5;11.6096;0.0;0;3;82.3002;0;0;0;0
+battleship.Tasks.buildFleet(Scanner);4;5;0.5;7;2;1;20.125;5075.9216;0.0985;50;33;252.2197;0.5;1;26;52.1327;2;7;1;1
+battleship.Tasks.canonical(String);13;12;0.6667;3;1;0;5.8462;2974.209;0.0689;100;34;508.7463;1.0;0;25;50.2139;0;14;0;1
+battleship.Tasks.chooseLanguage();3;3;0.5556;9;1;2;12.9231;2699.5427;0.0646;43;29;208.8932;0.0;0;27;52.3974;1;5;0;0
+battleship.Tasks.menu();24;14;0.5417;21;2;1;60.8387;72071.093;0.5773;192;72;1184.6256;0.8571;2;90;35.4231;5;20;2;0
+battleship.Tasks.menuHelp();1;0;0.6667;3;0;1;4.5;1822.5;0.0497;81;32;405.0;0.0;0;20;53.3619;0;1;0;0
+battleship.Tasks.readClassicPosition(Scanner);8;7;0.4444;9;1;0;25.5;9548.1603;0.15;73;35;374.4377;0.0;0;32;48.8717;1;8;0;1
+battleship.Tasks.readPosition(Scanner);1;0;1.0;1;0;0;6.0;344.1564;0.0164;16;12;57.3594;0.0;0;12;64.1641;0;3;0;1
+battleship.Tasks.readShip(Scanner);1;0;0.8;4;0;0;7.8571;720.8013;0.0268;22;18;91.7384;0.0;0;14;61.2812;0;5;0;1
+restserver.AiShotStrategy.buildHuntPool(Set<IPosition>, List<IPosition>);6;5;0.6667;3;2;1;18.6667;3814.1539;0.0814;44;25;204.3297;0.0;2;19;55.6923;4;7;2;2
+restserver.AiShotStrategy.computeShots(IGame);19;18;0.5625;14;2;2;49.4706;35796.2555;0.3621;131;46;723.5866;0.0;2;55;41.62;4;16;6;1
+restserver.AiShotStrategy.getHitButNotSunkPositions(IGame, Set<IPosition>);10;7;0.3636;11;1;1;34.5;8790.2485;0.142;53;28;254.7898;0.0;2;24;52.7437;3;5;2;2
+restserver.BattleshipServer.main(String[]);1;0;1.0;1;0;0;2.5;38.7744;0.0038;6;6;15.5098;0.0;0;3;81.3571;0;1;0;1
+restserver.CallbackClient.CallbackClient();1;0;0.75;4;0;0;3.5;127.8942;0.0085;11;10;36.5412;1.0;0;6;72.1282;0;2;0;0
+restserver.CallbackClient.recordAiMove(IGame, List<IPosition>, ShotResponse);4;3;0.6;5;1;2;17.4167;5716.0727;0.1066;63;37;328.1956;0.0;1;20;53.8167;1;12;1;3
+restserver.CallbackClient.sendShots(GameSession, List<IPosition>);9;8;0.5172;28;1;6;39.4167;32798.5712;0.3415;132;79;832.0991;0.1429;1;62;40.1586;1;22;1;2
+restserver.Dtos.ErrorResponse.ErrorResponse(String);1;0;0.0;0;0;0;1.0;8.0;0.0013;4;4;8.0;1.0;0;1;93.6766;0;2;0;1
+restserver.GameController.GameController(GameRegistry, CallbackClient, AiShotStrategy);1;0;0.0;0;0;0;1.0;30.0;0.0032;10;8;30.0;1.0;0;7;71.2222;0;6;0;3
+restserver.GameController.error(HttpStatus, String);1;0;1.0;2;0;0;2.5;49.1287;0.0045;7;7;19.6515;0.0;0;4;77.9128;0;2;0;2
+restserver.GameController.evaluateShots(List<IPosition>, IGame, GameSession);6;6;0.5;12;1;3;24.0625;11761.1466;0.1724;89;45;488.7749;0.0;1;38;46.4733;2;17;1;3
+restserver.GameController.receiveShots(String, ShotRequest);12;9;0.4737;17;1;7;32.4103;25910.9345;0.2919;130;71;799.4671;0.1579;1;60;40.5536;2;23;1;2
+restserver.GameController.register(RegistrationRequest);5;4;0.7143;6;1;5;13.975;4511.7061;0.091;64;33;322.8412;0.0909;0;29;50.3228;1;12;0;1
+restserver.GameRegistry.createSession(String, String);1;0;0.6667;3;0;0;4.2;188.885;0.011;13;11;44.9726;1.0;0;7;70.0576;0;5;0;2
+restserver.GameRegistry.getSession(String);1;0;1.0;1;0;0;1.5;17.4145;0.0022;5;5;11.6096;1.0;0;4;79.5748;0;2;0;1
+restserver.GameRegistry.removeSession(String);1;0;1.0;1;0;0;1.5;17.4145;0.0022;5;5;11.6096;1.0;0;4;79.5748;0;2;0;1
+restserver.GameSession.GameSession(String, String, String);1;0;1.0;1;0;1;2.0;188.0233;0.0109;23;17;94.0116;0.875;0;9;65.3683;0;11;0;3
+restserver.GameSession.getCallbackUrl();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;1;95.7844;0;1;0;0
+restserver.GameSession.getGame();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;1;95.7844;0;1;0;0
+restserver.GameSession.getGameId();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;1;95.7844;0;1;0;0
+restserver.GameSession.getPlayerName();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;1;95.7844;0;1;0;0
+restserver.GameSession.getShotsPerTurn();1;0;0.0;0;0;0;1.5;12.0;0.0017;4;4;8.0;1.0;0;1;93.6766;0;1;0;0
+restserver.GameSession.getWinner();1;0;0.0;0;0;0;1.0;4.7549;0.0009;3;3;4.7549;1.0;0;1;95.7844;0;1;0;0
+restserver.GameSession.isGameOver();1;0;0.0;0;0;0;1.5;12.0;0.0017;4;4;8.0;1.0;0;1;93.6766;0;1;0;0
+restserver.GameSession.markAiWins();1;0;0.0;0;0;0;1.5;33.6883;0.0035;8;7;22.4588;1.0;0;4;77.467;0;2;0;0
+restserver.GameSession.markStudentWins();1;0;0.0;0;0;0;1.5;33.6883;0.0035;8;7;22.4588;1.0;0;4;77.467;0;2;0;0
