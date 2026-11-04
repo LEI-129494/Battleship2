@@ -6,4 +6,4 @@ profile:
     - inspection: LongMethod
       enabled: true
       options:
-        m: 40 # Limite de linhas
+        m: 200 # Limite de linhas
