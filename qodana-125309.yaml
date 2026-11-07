@@ -1,9 +1,8 @@
 # 125309 - Diogo Miranda
 
 version: "1.0"
-
 linter: qodana-jvm-community
-
+withinDocker: false
 projectJDK: "21"
 
 profile:
