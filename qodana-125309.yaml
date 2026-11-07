@@ -6,7 +6,14 @@ withinDocker: false
 projectJDK: "21"
 
 profile:
-  path: .qodana/profiles/profile-125309.yaml
+  base:
+    name: empty
+
+  inspections:
+    - inspection: MethodWithTooManyParameters
+      enabled: true
+      options:
+        limit: 5
 
 failureConditions:
   severityThresholds:
