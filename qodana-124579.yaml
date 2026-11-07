@@ -15,6 +15,9 @@ profile:
         m_limit: 20
         ignoreGettersAndSetters: false
         ignoreOverridingMethods: false
+      ignore:
+        - "src/test/java/battleship/PositionTest.java"
+        - "src/test/java/battleship/ShipTest.java"
 
     - inspection: ClassComplexity
       enabled: true

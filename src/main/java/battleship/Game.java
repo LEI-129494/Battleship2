@@ -1,160 +1,13 @@
 package battleship;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
 import java.util.*;
 
 public class Game implements IGame
 {
-	/**
-	 * Prints the game board by representing the positions of ships, adjacent tiles,
-	 * shots, and other game elements onto the console. The method also optionally
-	 * displays shot positions and a legend explaining the symbols used on the board.
-	 *
-	 * <p>The legend is localised via {@link Messages}. The board itself uses only
-	 * language-neutral symbols ({@code #}, {@code -}, {@code .}, {@code *}, {@code o}).</p>
-	 *
-	 * @param fleet       the fleet of ships to be displayed on the board. Ships are marked
-	 *                    and their positions are shown according to their placement.
-	 * @param moves       the list of moves containing shots. If shot positions are shown,
-	 *                    they will be rendered based on their outcome (hit, miss, etc.).
-	 * @param show_shots  if true, displays the shots taken during the game and marks
-	 *                    their result (hit or miss) on the board.
-	 * @param showLegend  if true, displays an explanatory legend of the symbols used
-	 *                    to represent various elements such as ships, misses, hits, etc.
-	 */
-	public static void printBoard(IFleet fleet, List<IMove> moves, boolean show_shots, boolean showLegend) {
-
-		assert fleet != null;
-		assert moves != null;
-
-		char[][] map = new char[BOARD_SIZE][BOARD_SIZE];
-
-		for (int r = 0; r < BOARD_SIZE; r++)
-			for (int c = 0; c < BOARD_SIZE; c++)
-				map[r][c] = EMPTY_MARKER;
-
-		printShips(fleet, map);
-
-		if (show_shots)
-			printBoardShots(moves, map);
-
-		printBoardFrame(map);
-
-		if (showLegend) {
-			System.out.println(Messages.get("board.legend.title"));
-			System.out.println(Messages.format("board.legend.symbols",
-					SHIP_MARKER, SHIP_ADJACENT_MARKER, EMPTY_MARKER));
-			System.out.println(Messages.format("board.legend.shots",
-					SHOT_SHIP_MARKER, SHOT_WATER_MARKER));
-		}
-		System.out.println();
-	}
-
-	private static void printShips(IFleet fleet, char[][] map) {
-		for (IShip ship : fleet.getShips()) {
-			for (IPosition ship_pos : ship.getPositions())
-				map[ship_pos.getRow()][ship_pos.getColumn()] = SHIP_MARKER;
-			if (!ship.stillFloating())
-				for (IPosition adjacent_pos : ship.getAdjacentPositions())
-					map[adjacent_pos.getRow()][adjacent_pos.getColumn()] = SHIP_ADJACENT_MARKER;
-		}
-	}
-
-	private static void printBoardShots(List<IMove> moves, char[][] map) {
-		for (IMove move : moves)
-			for (IPosition shot : move.getShots()) {
-				if (shot.isInside()){
-					int row = shot.getRow();
-					int col = shot.getColumn();
-					if (map[row][col] == SHIP_MARKER)
-						map[row][col] = SHOT_SHIP_MARKER;
-					if (map[row][col] == EMPTY_MARKER || map[row][col] == SHIP_ADJACENT_MARKER)
-						map[row][col] = SHOT_WATER_MARKER;
-				}
-			}
-	}
-
-	private static void printBoardFrame(char[][] map) {
-		System.out.println();
-		System.out.print("    ");
-		for (int col = 0; col < BOARD_SIZE; col++) {
-			System.out.print(" " + (col + 1));
-		}
-		System.out.println();
-
-		System.out.print("   +-");
-		for (int col = 0; col < BOARD_SIZE; col++) {
-			System.out.print("--");
-		}
-		System.out.println("+");
-
-		for (int row = 0; row < BOARD_SIZE; row++) {
-			Position pos = new Position(row, 0);
-			char rowLabel = pos.getClassicRow();
-			System.out.print(" " + rowLabel + " |");
-			for (int col = 0; col < BOARD_SIZE; col++)
-				System.out.print(" " + map[row][col]);
-			System.out.println(" |");
-		}
-
-		System.out.print("   +");
-		for (int col = 0; col < BOARD_SIZE; col++)
-			System.out.print("--");
-		System.out.println("-+");
-	}
-
-	/**
-	 * Serializes a list of shot positions into a JSON string. Each shot is represented
-	 * with its classic row and column values. The method uses the Jackson library for
-	 * JSON serialization.
-	 *
-	 * @param shots a list of shot positions to be serialized. Each position is represented
-	 *              by an implementation of the {@code IPosition} interface. The list must
-	 *              not be null.
-	 * @return a formatted JSON string containing the shot positions. Each shot includes
-	 *         its classic row and column.
-	 * @throws RuntimeException if an error occurs during JSON serialization.
-	 */
-	public static String jsonShots(List<IPosition> shots) {
-
-		assert shots != null;
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-
-		List<Map<String, Object>> simplifiedShots = new ArrayList<>();
-		for (IPosition shot : shots) {
-			Map<String, Object> simplePos = new LinkedHashMap<>();
-			simplePos.put("row", String.valueOf(shot.getClassicRow()));
-			simplePos.put("column", shot.getClassicColumn());
-			simplifiedShots.add(simplePos);
-		}
-
-		String jsonString = null;
-		try {
-			jsonString = objectMapper.writeValueAsString(simplifiedShots);
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(Messages.get("error.jsonSerialization"), e);
-		}
-
-		System.out.println(jsonString);
-		System.out.println();
-
-		return jsonString;
-	}
 
 	//------------------------------------------------------------------
 	public static final int BOARD_SIZE = 10;
 	public static final int NUMBER_SHOTS = 3;
-
-	private static final char EMPTY_MARKER = '.';
-	private static final char SHIP_MARKER = '#';
-	private static final char SHOT_SHIP_MARKER = '*';
-	private static final char SHOT_WATER_MARKER = 'o';
-	private static final char SHIP_ADJACENT_MARKER = '-';
 
 	//------------------------------------------------------------------
 	private final IFleet myFleet;
@@ -261,7 +114,7 @@ public class Game implements IGame
 
 		this.fireShots(shots);
 
-		return Game.jsonShots(shots);
+		return ShotJsonSerializer.jsonShots(shots);
 	}
 
 
@@ -311,7 +164,7 @@ public class Game implements IGame
 
 		this.fireShots(shots);
 
-		return Game.jsonShots(shots);
+		return ShotJsonSerializer.jsonShots(shots);
 	}
 
 	/**
@@ -435,14 +288,14 @@ public class Game implements IGame
 		return false;
 	}
 
-	public void printMyBoard(boolean show_shots, boolean show_legend)
-	{
-		Game.printBoard(this.myFleet, this.alienMoves, show_shots, show_legend);
+	public void printMyBoard(boolean show_shots, boolean show_legend) {
+		BoardPrinter.printBoard(
+				this.myFleet, this.alienMoves, show_shots, show_legend);
 	}
 
-	public void printAlienBoard(boolean show_shots, boolean show_legend)
-	{
-		Game.printBoard(this.alienFleet, this.myMoves, show_shots, show_legend);
+	public void printAlienBoard(boolean show_shots, boolean show_legend) {
+		BoardPrinter.printBoard(
+				this.alienFleet, this.myMoves, show_shots, show_legend);
 	}
 
 	public void over() {
