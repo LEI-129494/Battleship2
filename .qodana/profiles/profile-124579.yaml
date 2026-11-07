@@ -1,0 +1,19 @@
+# 124579 - Jaime Ferreira
+version: "1.0"
+
+profile:
+  base:
+    name: empty
+
+  inspections:
+    - inspection: MethodCount
+      enabled: true
+      options:
+        m_limit: 20
+        ignoreGettersAndSetters: false
+        ignoreOverridingMethods: false
+
+    - inspection: ClassComplexity
+      enabled: true
+      options:
+        m_limit: 80

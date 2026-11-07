@@ -1,0 +1,33 @@
+# 124579 - Jaime Ferreira
+name: Qodana - Large Class
+
+on:
+  push:
+    branches:
+      - LEI-124579
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  qodana:
+    name: Qodana analysis
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Run Qodana
+        uses: JetBrains/qodana-action@v2026.2
+        with:
+          args: --config qodana-124579.yaml
