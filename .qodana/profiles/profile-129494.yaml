@@ -1,0 +1,6 @@
+profile:
+  base:
+    name: qodana.starter
+  inspections:
+    - inspection: LongMethod
+      enabled: false # Desativamos o Long Method
