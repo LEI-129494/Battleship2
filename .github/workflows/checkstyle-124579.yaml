@@ -1,0 +1,30 @@
+# 124579 - Jaime Ferreira
+name: Checkstyle - Constant Names
+
+on:
+  pull_request:
+
+permissions: {}
+
+jobs:
+  checkstyle:
+    name: Checkstyle quality gate
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      checks: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Run Checkstyle
+        uses: dbelyaev/action-checkstyle@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          checkstyle_config: CheckStyle/checkstyle-124579.xml
+          reporter: github-pr-check
+          filter_mode: nofilter
+          level: error
+          fail_level: error
