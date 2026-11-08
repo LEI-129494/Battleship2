@@ -5,7 +5,7 @@ name: "127523"
 baseProfile: empty
 
 inspections:
-  - inspection: CyclomaticComplexityInspection
+  - inspection: CyclomaticComplexity
     enabled: true
     options:
       m_limit: 10
