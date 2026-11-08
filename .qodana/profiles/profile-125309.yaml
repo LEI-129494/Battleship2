@@ -1,0 +1,11 @@
+# 125309 - Diogo Miranda
+
+profile:
+  base:
+    name: empty
+
+inspections:
+  - inspection: MethodWithTooManyParameters
+    enabled: true
+    options:
+      limit: 5

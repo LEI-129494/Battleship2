@@ -1,0 +1,20 @@
+# 125309 - Diogo Miranda
+
+version: "1.0"
+linter: qodana-jvm-community
+withinDocker: false
+projectJDK: "21"
+
+profile:
+  base:
+    name: empty
+
+  inspections:
+    - inspection: MethodWithTooManyParameters
+      enabled: true
+      options:
+        limit: 5
+
+failureConditions:
+  severityThresholds:
+    any: 0
