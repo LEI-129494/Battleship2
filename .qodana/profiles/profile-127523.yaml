@@ -4,7 +4,7 @@ profile:
   base:
     name: empty
   inspections:
-    - inspection: CyclomaticComplexity
+    - inspection: CyclomaticComplexityInspection
       enabled: true
       options:
         m_limit: 10
