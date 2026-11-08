@@ -33,7 +33,7 @@ jobs:
       - name: Qodana Code Analysis
         uses: JetBrains/qodana-action@v2026.2.2
         with:
-          args: --config qodana-127523.yaml
+          args: --config qodana-127523.yaml --profile-path .qodana/profiles/profile-127523.yaml
           pr-mode: false
           use-annotations: true
           post-pr-comment: true
