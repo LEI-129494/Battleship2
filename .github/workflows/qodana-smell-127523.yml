@@ -23,9 +23,18 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
+      - name: Verify Qodana configuration files
+        run: |
+          pwd
+          ls -la
+          test -f qodana-127523.yaml
+          test -f .qodana/profiles/profile-127523.yaml
+
       - name: Qodana Code Analysis
         uses: JetBrains/qodana-action@v2026.2.2
         with:
           args: --config qodana-127523.yaml
+          pr-mode: false
           use-annotations: true
           post-pr-comment: true
+          upload.results: true
