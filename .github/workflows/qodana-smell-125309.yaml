@@ -29,6 +29,4 @@ jobs:
       - name: Run Qodana
         uses: JetBrains/qodana-action@v2026.2
         with:
-          args: --config=./qodana-125309.yaml
-          use-annotations: true
-          post-pr-comment: true
+          args: --config qodana-125309.yaml
