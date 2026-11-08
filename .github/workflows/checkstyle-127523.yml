@@ -25,6 +25,6 @@ jobs:
       - name: Run Checkstyle ConstantName
         run: |
           mvn -B org.apache.maven.plugins:maven-checkstyle-plugin:3.6.0:check \
-            -Dcheckstyle.config.location=Checkstyle/checkstyle-127523.xml \
+            -Dcheckstyle.config.location=CheckStyle/checkstyle-127523.xml \
             -Dcheckstyle.consoleOutput=true \
             -Dcheckstyle.failOnViolation=true
