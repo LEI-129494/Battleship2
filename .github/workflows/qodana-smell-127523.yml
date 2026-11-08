@@ -1,0 +1,31 @@
+# 127523 - Diego Costa
+name: Qodana Complexity Gate 127523
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  qodana:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Qodana Code Analysis
+        uses: JJetBrains/qodana-action@v2026.2.2
+        with:
+          args: --config qodana-127523.yaml
+          use-annotations: true
+          post-pr-comment: true

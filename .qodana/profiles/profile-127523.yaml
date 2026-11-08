@@ -1,0 +1,10 @@
+# 127523 - Diego Costa
+profile:
+  base:
+    name: empty
+
+  inspections:
+    - inspection: OverlyComplexMethod
+      enabled: true
+      options:
+        m_limit: 10
