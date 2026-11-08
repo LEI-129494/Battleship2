@@ -10,4 +10,4 @@ profile:
 
 failureConditions:
   severityThresholds:
-    any: 5
+    any: 0
