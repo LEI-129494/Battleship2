@@ -1,0 +1,384 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Move</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">battleship</a>
+</div>
+
+<h1>Coverage Summary for Class: Move (battleship)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Move</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/42)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/102)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package battleship;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.core.JsonProcessingException;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;import com.fasterxml.jackson.databind.SerializationFeature;
+&nbsp;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;/**
+&nbsp; * Shot
+&nbsp; *
+&nbsp; * @author Your Name
+&nbsp; * Date: 20/02/2026
+&nbsp; * Time: 19:39
+&nbsp; */
+&nbsp;public class Move implements IMove {
+&nbsp;
+&nbsp;	//-------------------------------------------------------------------
+&nbsp;	private final int number;
+&nbsp;	private final List&lt;IPosition&gt; shots;
+&nbsp;	private final List&lt;IGame.ShotResult&gt; shotResults;
+&nbsp;
+&nbsp;	//-------------------------------------------------------------------
+<b class="nc">&nbsp;	public Move(int moveNumber, List&lt;IPosition&gt; moveShots, List&lt;IGame.ShotResult&gt; moveResults) {</b>
+<b class="nc">&nbsp;		this.number = moveNumber;</b>
+<b class="nc">&nbsp;		this.shots = moveShots;</b>
+<b class="nc">&nbsp;		this.shotResults = moveResults;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String toString() {
+<b class="nc">&nbsp;		return &quot;Move{&quot; +</b>
+&nbsp;				&quot;number=&quot; + number +
+<b class="nc">&nbsp;				&quot;, shots=&quot; + shots.size() +</b>
+<b class="nc">&nbsp;				&quot;, results=&quot; + shotResults.size() +</b>
+&nbsp;				&#39;}&#39;;
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public int getNumber() {
+<b class="nc">&nbsp;		return this.number;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public List&lt;IPosition&gt; getShots() {
+<b class="nc">&nbsp;		return this.shots;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public List&lt;IGame.ShotResult&gt; getShotResults() {
+<b class="nc">&nbsp;		return this.shotResults;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Processes the results of enemy fire on the game board, analyzing the outcomes of shots,
+&nbsp;	 * such as valid shots, repeated shots, missed shots, hits on ships, and sunk ships. It can
+&nbsp;	 * also display a detailed summary of the shot results if verbose mode is activated.
+&nbsp;	 *
+&nbsp;	 * &lt;p&gt;The human-readable summary is built with the ICU4J {@code MessageFormat}, using
+&nbsp;	 * {@code plural} rules to correctly handle singular/plural agreement in any language.
+&nbsp;	 * The active language is determined by {@link Messages#getCurrentLocale()}.&lt;/p&gt;
+&nbsp;	 *
+&nbsp;	 * @param verbose a boolean indicating whether a detailed summary should be printed to the console
+&nbsp;	 *                for the processed enemy fire data.
+&nbsp;	 * @return a JSON-formatted string that encapsulates the results, including counts of valid shots,
+&nbsp;	 *         repeated shots, missed shots, shots outside the game board, and details of hits and
+&nbsp;	 *         sunk ships.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public String processEnemyFire(boolean verbose) {
+&nbsp;
+<b class="nc">&nbsp;		int validShots = 0;</b>
+<b class="nc">&nbsp;		int repeatedShots = 0;</b>
+<b class="nc">&nbsp;		int missedShots = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;		Map&lt;String, Integer&gt; sunkBoatsCount = new HashMap&lt;&gt;(); // Quantos navios de cada tipo afundaram</b>
+<b class="nc">&nbsp;		Map&lt;String, Integer&gt; hitsPerBoat = new HashMap&lt;&gt;();</b>
+&nbsp;
+&nbsp;		// Processar cada resultado de tiro
+<b class="nc">&nbsp;		for (int i = 0; i &lt; this.shotResults.size(); i++) {</b>
+<b class="nc">&nbsp;			IGame.ShotResult result = this.shotResults.get(i);</b>
+<b class="nc">&nbsp;			IPosition position = this.shots.get(i);</b>
+&nbsp;			String databaseResult;
+<b class="nc">&nbsp;			if (!result.valid()) {</b>
+&nbsp;				// Tiro invalido - apenas ignorar
+<b class="nc">&nbsp;				databaseResult = &quot;OUTSIDE&quot;;</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			else if (result.repeated()) {</b>
+<b class="nc">&nbsp;				repeatedShots++; // tiro repetido</b>
+<b class="nc">&nbsp;				databaseResult = &quot;REPEATED&quot;;</b>
+&nbsp;			}
+&nbsp;			else {
+&nbsp;				// Tiro valido
+<b class="nc">&nbsp;				validShots++;</b>
+<b class="nc">&nbsp;				if (result.ship() == null) {</b>
+<b class="nc">&nbsp;					missedShots++; // Tiro na agua</b>
+<b class="nc">&nbsp;					databaseResult = &quot;MISS&quot;;</b>
+&nbsp;				}
+&nbsp;				else {
+<b class="nc">&nbsp;					String boatName = result.ship().getCategory();</b>
+<b class="nc">&nbsp;					hitsPerBoat.put(boatName, hitsPerBoat.getOrDefault(boatName, 0) + 1);</b>
+<b class="nc">&nbsp;					if (result.sunk()) {</b>
+<b class="nc">&nbsp;						sunkBoatsCount.put(boatName, sunkBoatsCount.getOrDefault(boatName, 0) + 1);</b>
+<b class="nc">&nbsp;						databaseResult = &quot;SUNK&quot;;</b>
+&nbsp;					}else {
+<b class="nc">&nbsp;						databaseResult = &quot;HIT&quot;;</b>
+&nbsp;					}
+&nbsp;				}
+&nbsp;			}
+<b class="nc">&nbsp;			DatabaseManager.saveShot(</b>
+&nbsp;					this.number,
+<b class="nc">&nbsp;					String.valueOf(position.getClassicRow()),</b>
+<b class="nc">&nbsp;					position.getClassicColumn(),</b>
+&nbsp;					databaseResult
+&nbsp;			);
+&nbsp;		}
+&nbsp;
+&nbsp;		// Determinar numero de tiros fora do tabuleiro
+<b class="nc">&nbsp;		int outsideShots = Game.NUMBER_SHOTS - validShots - repeatedShots;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (verbose) {</b>
+<b class="nc">&nbsp;			String summary = buildSummary(validShots, repeatedShots, missedShots,</b>
+&nbsp;					outsideShots, sunkBoatsCount, hitsPerBoat);
+<b class="nc">&nbsp;			System.out.println(Messages.format(&quot;move.line&quot;, this.number, summary));</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// ----------------------------------------------------------------
+&nbsp;		// Construcao do JSON de resposta (inalterado)
+&nbsp;		// ----------------------------------------------------------------
+<b class="nc">&nbsp;		Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;		response.put(&quot;validShots&quot;, validShots);</b>
+<b class="nc">&nbsp;		response.put(&quot;outsideShots&quot;, outsideShots);</b>
+<b class="nc">&nbsp;		response.put(&quot;repeatedShots&quot;, repeatedShots);</b>
+<b class="nc">&nbsp;		response.put(&quot;missedShots&quot;, missedShots);</b>
+&nbsp;
+<b class="nc">&nbsp;		List&lt;Map&lt;String, Object&gt;&gt; sunkBoats = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;		for (Map.Entry&lt;String, Integer&gt; entry : sunkBoatsCount.entrySet()) {</b>
+<b class="nc">&nbsp;			Map&lt;String, Object&gt; boat = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;			boat.put(&quot;type&quot;, entry.getKey());</b>
+<b class="nc">&nbsp;			boat.put(&quot;count&quot;, entry.getValue());</b>
+<b class="nc">&nbsp;			sunkBoats.add(boat);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		response.put(&quot;sunkBoats&quot;, sunkBoats);</b>
+&nbsp;
+<b class="nc">&nbsp;		List&lt;Map&lt;String, Object&gt;&gt; boatHits = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;		for (Map.Entry&lt;String, Integer&gt; entry : hitsPerBoat.entrySet()) {</b>
+<b class="nc">&nbsp;			if (!sunkBoatsCount.containsKey(entry.getKey())) {</b>
+<b class="nc">&nbsp;				Map&lt;String, Object&gt; boat = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;				boat.put(&quot;type&quot;, entry.getKey());</b>
+<b class="nc">&nbsp;				boat.put(&quot;hits&quot;, entry.getValue());</b>
+<b class="nc">&nbsp;				boatHits.add(boat);</b>
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		response.put(&quot;hitsOnBoats&quot;, boatHits);</b>
+&nbsp;
+<b class="nc">&nbsp;		ObjectMapper objectMapper = new ObjectMapper();</b>
+<b class="nc">&nbsp;		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);</b>
+&nbsp;
+&nbsp;		String jsonString;
+&nbsp;		try {
+<b class="nc">&nbsp;			jsonString = objectMapper.writeValueAsString(response);</b>
+&nbsp;		} catch (JsonProcessingException e) {
+<b class="nc">&nbsp;			throw new RuntimeException(Messages.get(&quot;error.jsonMoveSerialization&quot;), e);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		System.out.println(jsonString);</b>
+<b class="nc">&nbsp;		System.out.println();</b>
+&nbsp;
+<b class="nc">&nbsp;		return jsonString;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Constroi a mensagem legivel para o jogador, usando ICU4J {@code MessageFormat}
+&nbsp;	 * para as regras de plural. As pecas sao montadas numa lista e juntas com
+&nbsp;	 * {@code &quot; + &quot;}, tal como no formato original.
+&nbsp;	 *
+&nbsp;	 * &lt;p&gt;Exemplos de saida (em Portugues):&lt;/p&gt;
+&nbsp;	 * &lt;ul&gt;
+&nbsp;	 *   &lt;li&gt;{@code 3 tiros validos: 1 Nau ao fundo + 2 tiros num(a) Caravela + 1 tiro na agua}&lt;/li&gt;
+&nbsp;	 *   &lt;li&gt;{@code 1 tiro repetido}&lt;/li&gt;
+&nbsp;	 *   &lt;li&gt;{@code 3 tiros exteriores}&lt;/li&gt;
+&nbsp;	 * &lt;/ul&gt;
+&nbsp;	 */
+&nbsp;	private String buildSummary(int validShots, int repeatedShots, int missedShots, int outsideShots,
+&nbsp;								Map&lt;String, Integer&gt; sunkBoatsCount, Map&lt;String, Integer&gt; hitsPerBoat) {
+&nbsp;
+<b class="nc">&nbsp;		StringBuilder sb = new StringBuilder();</b>
+&nbsp;
+&nbsp;		// Caso especial: so ha tiros repetidos (nenhum tiro valido)
+<b class="nc">&nbsp;		if (validShots == 0 &amp;&amp; repeatedShots &gt; 0) {</b>
+<b class="nc">&nbsp;			sb.append(Messages.format(&quot;move.repeated&quot;, countArgs(repeatedShots)));</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			List&lt;String&gt; parts = new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;			// Navios afundados: &quot;N {type} ao fundo&quot; / &quot;N {typePlural} ao fundo&quot;
+<b class="nc">&nbsp;			for (Map.Entry&lt;String, Integer&gt; e : sunkBoatsCount.entrySet()) {</b>
+<b class="nc">&nbsp;				Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;				args.put(&quot;count&quot;, e.getValue());</b>
+<b class="nc">&nbsp;				args.put(&quot;type&quot;, shipName(e.getKey(), false));</b>
+<b class="nc">&nbsp;				args.put(&quot;typePlural&quot;, shipName(e.getKey(), true));</b>
+<b class="nc">&nbsp;				parts.add(Messages.format(&quot;move.sunk&quot;, args));</b>
+&nbsp;			}
+&nbsp;
+&nbsp;			// Navios atingidos mas ainda a flutuar (nao contam tambem como afundados)
+<b class="nc">&nbsp;			for (Map.Entry&lt;String, Integer&gt; e : hitsPerBoat.entrySet()) {</b>
+<b class="nc">&nbsp;				if (sunkBoatsCount.containsKey(e.getKey())) continue;</b>
+<b class="nc">&nbsp;				Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;				args.put(&quot;count&quot;, e.getValue());</b>
+<b class="nc">&nbsp;				args.put(&quot;type&quot;, shipName(e.getKey(), false));</b>
+<b class="nc">&nbsp;				parts.add(Messages.format(&quot;move.hits&quot;, args));</b>
+&nbsp;			}
+&nbsp;
+&nbsp;			// Tiros na agua
+<b class="nc">&nbsp;			if (missedShots &gt; 0) {</b>
+<b class="nc">&nbsp;				parts.add(Messages.format(&quot;move.missed&quot;, countArgs(missedShots)));</b>
+&nbsp;			}
+&nbsp;
+&nbsp;			// Prefixo &quot;N tiros validos: &quot; (so quando ha tiros validos)
+<b class="nc">&nbsp;			if (validShots &gt; 0) {</b>
+<b class="nc">&nbsp;				sb.append(Messages.format(&quot;move.valid&quot;, countArgs(validShots)));</b>
+<b class="nc">&nbsp;				sb.append(&quot;: &quot;);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			sb.append(String.join(&quot; &quot; + Messages.get(&quot;move.joiner&quot;) + &quot; &quot;, parts));</b>
+&nbsp;
+&nbsp;			// Tiros repetidos a seguir, com virgula
+<b class="nc">&nbsp;			if (repeatedShots &gt; 0) {</b>
+<b class="nc">&nbsp;				if (sb.length() &gt; 0) sb.append(&quot;, &quot;);</b>
+<b class="nc">&nbsp;				sb.append(Messages.format(&quot;move.repeated&quot;, countArgs(repeatedShots)));</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		// Tiros exteriores sempre no fim
+<b class="nc">&nbsp;		if (outsideShots &gt; 0) {</b>
+<b class="nc">&nbsp;			if (sb.length() &gt; 0) sb.append(&quot;, &quot;);</b>
+<b class="nc">&nbsp;			sb.append(Messages.format(&quot;move.outside&quot;, countArgs(outsideShots)));</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return sb.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Devolve o nome traduzido de um tipo de navio, dado o seu identificador interno
+&nbsp;	 * (o valor retornado por {@code IShip.getCategory()}, e.g. {@code &quot;Nau&quot;}).
+&nbsp;	 * Faz fallback para o proprio identificador se a chave nao existir no bundle.
+&nbsp;	 *
+&nbsp;	 * @param category identificador interno do tipo de navio
+&nbsp;	 * @param plural   {@code true} para devolver a forma plural
+&nbsp;	 */
+&nbsp;	private String shipName(String category, boolean plural) {
+<b class="nc">&nbsp;		String key = &quot;ship.&quot; + category + (plural ? &quot;.plural&quot; : &quot;&quot;);</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			return Messages.get(key);</b>
+&nbsp;		} catch (MissingResourceException e) {
+<b class="nc">&nbsp;			return category;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Atalho para criar um mapa de argumentos ICU com a chave {@code count}.
+&nbsp;	 */
+&nbsp;	private static Map&lt;String, Object&gt; countArgs(int count) {
+<b class="nc">&nbsp;		Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;		args.put(&quot;count&quot;, count);</b>
+<b class="nc">&nbsp;		return args;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-11-10 20:16</div>
+</div>
+</body>
+</html>
