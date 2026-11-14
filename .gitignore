@@ -1,2 +1,8 @@
 /target/
 .idea/codeStyles/codeStyleConfig.xml
+
+# Local IDE settings
+.idea/inspectionProfiles/
+
+# Local runtime data
+data/battleship.db
