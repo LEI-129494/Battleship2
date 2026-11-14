@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DtosTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">restserver in BattleshipGamePlayer Coverage Results</a> &gt; <a href="index.source.html" class="el_package">restserver</a> &gt; <span class="el_source">DtosTest.java</span></div><h1>DtosTest.java</h1><pre class="source lang-java linenums">package restserver;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import restserver.Dtos.*;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+<span class="fc" id="L11">class DtosTest {</span>
+
+    @Test
+    @DisplayName(&quot;Deve testar os DTOs de Registo&quot;)
+    void testRegistrationDtos() {
+<span class="fc" id="L16">        RegistrationRequest req = new RegistrationRequest();</span>
+<span class="fc" id="L17">        req.playerName = &quot;Alice&quot;;</span>
+<span class="fc" id="L18">        req.callbackUrl = &quot;http://host&quot;;</span>
+<span class="fc" id="L19">        assertEquals(&quot;Alice&quot;, req.playerName);</span>
+<span class="fc" id="L20">        assertEquals(&quot;http://host&quot;, req.callbackUrl);</span>
+
+<span class="fc" id="L22">        RegistrationResponse res = new RegistrationResponse();</span>
+<span class="fc" id="L23">        res.gameId = &quot;id&quot;;</span>
+<span class="fc" id="L24">        res.status = &quot;OK&quot;;</span>
+<span class="fc" id="L25">        res.shotsPerTurn = 3;</span>
+<span class="fc" id="L26">        res.message = &quot;Ready&quot;;</span>
+<span class="fc" id="L27">        assertEquals(&quot;id&quot;, res.gameId);</span>
+<span class="fc" id="L28">        assertEquals(&quot;OK&quot;, res.status);</span>
+<span class="fc" id="L29">        assertEquals(3, res.shotsPerTurn);</span>
+<span class="fc" id="L30">        assertEquals(&quot;Ready&quot;, res.message);</span>
+<span class="fc" id="L31">    }</span>
+
+    @Test
+    @DisplayName(&quot;Deve testar os DTOs de Tiro (Request e Response)&quot;)
+    void testShotDtos() {
+<span class="fc" id="L36">        ShotPosition pos = new ShotPosition();</span>
+<span class="fc" id="L37">        pos.row = &quot;A&quot;;</span>
+<span class="fc" id="L38">        pos.column = 1;</span>
+<span class="fc" id="L39">        assertEquals(&quot;A&quot;, pos.row);</span>
+<span class="fc" id="L40">        assertEquals(1, pos.column);</span>
+
+<span class="fc" id="L42">        ShotRequest req = new ShotRequest();</span>
+<span class="fc" id="L43">        req.shots = List.of(pos);</span>
+<span class="fc" id="L44">        assertNotNull(req.shots);</span>
+
+<span class="fc" id="L46">        ShotResult result = new ShotResult();</span>
+<span class="fc" id="L47">        result.row = &quot;B&quot;;</span>
+<span class="fc" id="L48">        result.column = 2;</span>
+<span class="fc" id="L49">        result.outcome = &quot;HIT&quot;;</span>
+<span class="fc" id="L50">        result.shipType = &quot;Fragata&quot;;</span>
+<span class="fc" id="L51">        assertEquals(&quot;B&quot;, result.row);</span>
+<span class="fc" id="L52">        assertEquals(2, result.column);</span>
+<span class="fc" id="L53">        assertEquals(&quot;HIT&quot;, result.outcome);</span>
+<span class="fc" id="L54">        assertEquals(&quot;Fragata&quot;, result.shipType);</span>
+
+<span class="fc" id="L56">        ShotResponse res = new ShotResponse();</span>
+<span class="fc" id="L57">        res.results = List.of(result);</span>
+<span class="fc" id="L58">        res.shipsRemaining = 5;</span>
+<span class="fc" id="L59">        res.gameStatus = &quot;ONGOING&quot;;</span>
+<span class="fc" id="L60">        res.winner = null;</span>
+<span class="fc" id="L61">        assertNotNull(res.results);</span>
+<span class="fc" id="L62">        assertEquals(5, res.shipsRemaining);</span>
+<span class="fc" id="L63">        assertEquals(&quot;ONGOING&quot;, res.gameStatus);</span>
+<span class="fc" id="L64">        assertNull(res.winner);</span>
+<span class="fc" id="L65">    }</span>
+
+    @Test
+    @DisplayName(&quot;Deve testar o DTO de Erro&quot;)
+    void testErrorResponse() {
+<span class="fc" id="L70">        ErrorResponse err = new ErrorResponse(&quot;Erro grave&quot;);</span>
+<span class="fc" id="L71">        assertEquals(&quot;Erro grave&quot;, err.error);</span>
+<span class="fc" id="L72">    }</span>
+
+    @Test
+    @DisplayName(&quot;Deve instanciar a classe externa Dtos&quot;)
+    void testDtosOuterClass() {
+<span class="fc" id="L77">        Dtos dtos = new Dtos();</span>
+<span class="fc" id="L78">        assertNotNull(dtos, &quot;A classe externa Dtos deve ser instanciada para cobertura&quot;);</span>
+<span class="fc" id="L79">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
