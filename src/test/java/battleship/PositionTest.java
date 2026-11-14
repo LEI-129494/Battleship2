@@ -1,33 +1,21 @@
+
 package battleship;
 
 import org.junit.jupiter.api.*;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for Position.
- * Author: britoeabreu
- * Date: 2024-03-19 15:30
- * Cyclomatic Complexity for each method:
- * - Constructor: 1
- * - getRow: 1
- * - getColumn: 1
- * - isValid: 4
- * - isAdjacentTo: 4
- * - isOccupied: 1
- * - isHit: 1
- * - occupy: 1
- * - shoot: 1
- * - equals: 3
- * - hashCode: 1
- * - toString: 1
  */
 public class PositionTest {
+
 	private Position position;
 
 	@BeforeEach
 	void setUp() {
 		position = new Position(2, 3);
-	//	position = new Position('C', 4);
 	}
 
 	@AfterEach
@@ -36,150 +24,285 @@ public class PositionTest {
 	}
 
 	@Test
+	@DisplayName("Should create a position with integer coordinates")
 	void constructor() {
 		Position pos = new Position(1, 1);
-		assertNotNull(pos, "Failed to create Position: object is null");
-		assertEquals(1, pos.getRow(), "Failed to set row: expected 1 but got " + pos.getRow());
-		assertEquals(1, pos.getColumn(), "Failed to set column: expected 1 but got " + pos.getColumn());
-		assertFalse(pos.isOccupied(), "New position should not be occupied");
-		assertFalse(pos.isHit(), "New position should not be hit");
+
+		assertNotNull(pos);
+		assertEquals(1, pos.getRow());
+		assertEquals(1, pos.getColumn());
+		assertFalse(pos.isOccupied());
+		assertFalse(pos.isHit());
 	}
 
 	@Test
+	@DisplayName("Should create a position using classic coordinates")
+	void constructorWithClassicCoordinates() {
+		Position pos = new Position('C', 4);
+
+		assertEquals(2, pos.getRow());
+		assertEquals(3, pos.getColumn());
+		assertEquals('C', pos.getClassicRow());
+		assertEquals(4, pos.getClassicColumn());
+		assertFalse(pos.isOccupied());
+		assertFalse(pos.isHit());
+	}
+
+	@Test
+	@DisplayName("Should return the row")
 	void getRow() {
-		assertEquals(2, position.getRow(), "Failed to get row: expected 2 but got " + position.getRow());
+		assertEquals(2, position.getRow());
 	}
 
 	@Test
+	@DisplayName("Should return the column")
 	void getColumn() {
-		assertEquals(3, position.getColumn(), "Failed to get column: expected 3 but got " + position.getColumn());
+		assertEquals(3, position.getColumn());
 	}
 
 	@Test
+	@DisplayName("Should return the classic row")
 	void getClassicRow() {
-		assertEquals('C', position.getClassicRow(), "Failed to get row: expected 2 but got " + position.getRow());
+		assertEquals('C', position.getClassicRow());
 	}
 
 	@Test
+	@DisplayName("Should return the classic column")
 	void getClassicColumn() {
-		assertEquals(3, position.getColumn(), "Failed to get column: expected 3 but got " + position.getColumn());
+		assertEquals(4, position.getClassicColumn());
 	}
 
 	@Test
-	void isValid1() {
+	@DisplayName("Should generate a random position inside the board")
+	void randomPosition() {
+		Position random = Position.randomPosition();
+
+		assertNotNull(random);
+		assertTrue(random.isInside());
+	}
+
+	@Test
+	@DisplayName("Should identify a valid position at the beginning of the board")
+	void isInsideAtBeginning() {
 		position = new Position(0, 0);
-		assertTrue(position.isInside(), "Position (0,0) should be valid");
+
+		assertTrue(position.isInside());
 	}
 
 	@Test
-	void isValid2() {
+	@DisplayName("Should identify a valid position at the end of the board")
+	void isInsideAtEnd() {
+		position = new Position(
+				Game.BOARD_SIZE - 1,
+				Game.BOARD_SIZE - 1
+		);
+
+		assertTrue(position.isInside());
+	}
+
+	@Test
+	@DisplayName("Should reject a position with negative row")
+	void isInsideWithNegativeRow() {
 		position = new Position(-1, 5);
-		assertFalse(position.isInside(), "Position with negative row should be invalid");
+
+		assertFalse(position.isInside());
 	}
 
 	@Test
-	void isValid3() {
+	@DisplayName("Should reject a position with negative column")
+	void isInsideWithNegativeColumn() {
 		position = new Position(5, -1);
-		assertFalse(position.isInside(), "Position with negative column should be invalid");
+
+		assertFalse(position.isInside());
 	}
 
 	@Test
-	void isValid4() {
+	@DisplayName("Should reject a position with row outside the board")
+	void isInsideWithRowOutsideBoard() {
 		position = new Position(Game.BOARD_SIZE, 5);
-		assertFalse(position.isInside(), "Position with row >= BOARD_SIZE should be invalid");
+
+		assertFalse(position.isInside());
 	}
 
 	@Test
-	void isValid5() {
+	@DisplayName("Should reject a position with column outside the board")
+	void isInsideWithColumnOutsideBoard() {
 		position = new Position(5, Game.BOARD_SIZE);
-		assertFalse(position.isInside(), "Position with column >= BOARD_SIZE should be invalid");
+
+		assertFalse(position.isInside());
 	}
 
 	@Test
-	void isAdjacentTo1() {
+	@DisplayName("Should detect horizontal adjacency")
+	void isAdjacentToHorizontal() {
 		Position other = new Position(2, 4);
-		assertTrue(position.isAdjacentTo(other), "Failed to detect horizontally adjacent position");
+
+		assertTrue(position.isAdjacentTo(other));
 	}
 
 	@Test
-	void isAdjacentTo2() {
+	@DisplayName("Should detect vertical adjacency")
+	void isAdjacentToVertical() {
 		Position other = new Position(3, 3);
-		assertTrue(position.isAdjacentTo(other), "Failed to detect vertically adjacent position");
+
+		assertTrue(position.isAdjacentTo(other));
 	}
 
 	@Test
-	void isAdjacentTo3() {
+	@DisplayName("Should detect diagonal adjacency")
+	void isAdjacentToDiagonal() {
 		Position other = new Position(3, 4);
-		assertTrue(position.isAdjacentTo(other), "Failed to detect diagonally adjacent position");
+
+		assertTrue(position.isAdjacentTo(other));
 	}
 
 	@Test
-	void isAdjacentTo4() {
+	@DisplayName("Should detect non-adjacent positions")
+	void isAdjacentToNonAdjacent() {
 		Position other = new Position(4, 5);
-		assertFalse(position.isAdjacentTo(other), "Non-adjacent position incorrectly identified as adjacent");
+
+		assertFalse(position.isAdjacentTo(other));
 	}
 
 	@Test
+	@DisplayName("Should consider a position adjacent to itself")
+	void isAdjacentToItself() {
+		assertTrue(position.isAdjacentTo(position));
+	}
+
+	@Test
+	@DisplayName("Should throw NullPointerException when checking adjacency with null")
 	void isAdjacentToWithNull() {
-		assertThrows(NullPointerException.class, () -> position.isAdjacentTo(null),
-				"isAdjacentTo should throw NullPointerException for null input");
+		assertThrows(
+				NullPointerException.class,
+				() -> position.isAdjacentTo(null)
+		);
 	}
 
 	@Test
+	@DisplayName("Should return eight adjacent positions from the center")
+	void adjacentPositionsFromCenter() {
+		Position pos = new Position(5, 5);
+
+		List<IPosition> adjacent = pos.adjacentPositions();
+
+		assertEquals(8, adjacent.size());
+	}
+
+	@Test
+	@DisplayName("Should return three adjacent positions from a corner")
+	void adjacentPositionsFromCorner() {
+		Position pos = new Position(0, 0);
+
+		List<IPosition> adjacent = pos.adjacentPositions();
+
+		assertEquals(3, adjacent.size());
+	}
+
+	@Test
+	@DisplayName("Should return five adjacent positions from an edge")
+	void adjacentPositionsFromEdge() {
+		Position pos = new Position(0, 5);
+
+		List<IPosition> adjacent = pos.adjacentPositions();
+
+		assertEquals(5, adjacent.size());
+	}
+
+	@Test
+	@DisplayName("Should return valid adjacent positions only")
+	void adjacentPositionsShouldAllBeInside() {
+		Position pos = new Position(0, 0);
+
+		List<IPosition> adjacent = pos.adjacentPositions();
+
+		for (IPosition adjacentPosition : adjacent) {
+			assertTrue(adjacentPosition.isInside());
+		}
+	}
+
+	@Test
+	@DisplayName("Should initially not be occupied and become occupied")
 	void isOccupied() {
-		assertFalse(position.isOccupied(), "New position should not be occupied");
+		assertFalse(position.isOccupied());
+
 		position.occupy();
-		assertTrue(position.isOccupied(), "Position should be occupied after occupy()");
+
+		assertTrue(position.isOccupied());
 	}
 
 	@Test
+	@DisplayName("Should initially not be hit and become hit")
 	void isHit() {
-		assertFalse(position.isHit(), "New position should not be hit");
+		assertFalse(position.isHit());
+
 		position.shoot();
-		assertTrue(position.isHit(), "Position should be hit after shoot()");
+
+		assertTrue(position.isHit());
 	}
 
 	@Test
-	void equals1() {
+	@DisplayName("Should consider positions with the same coordinates equal")
+	void equalsSameCoordinates() {
 		Position same = new Position(2, 3);
-		assertTrue(position.equals(same), "Equal positions not identified as equal");
+
+		assertTrue(position.equals(same));
 	}
 
 	@Test
-	void equals2() {
-		assertFalse(position.equals(null), "Position should not equal null");
+	@DisplayName("Should not consider null equal")
+	void equalsNull() {
+		assertFalse(position.equals(null));
 	}
 
 	@Test
-	void equals3() {
+	@DisplayName("Should not consider a different object equal")
+	void equalsDifferentObject() {
 		Object other = new Object();
-		assertFalse(position.equals(other), "Position should not equal non-Position object");
+
+		assertFalse(position.equals(other));
 	}
 
 	@Test
-	void equals4() {
+	@DisplayName("Should not consider positions with different columns equal")
+	void equalsDifferentColumn() {
 		Position other = new Position(2, 4);
-		assertFalse(position.equals(other), "Positions with the same row but different column should not be equal");
+
+		assertFalse(position.equals(other));
 	}
 
 	@Test
-	void equals5() {
-		assertTrue(position.equals(position), "A position should be equal to itself");
+	@DisplayName("Should not consider positions with different rows equal")
+	void equalsDifferentRow() {
+		Position other = new Position(3, 3);
+
+		assertFalse(position.equals(other));
 	}
 
 	@Test
+	@DisplayName("Should consider a position equal to itself")
+	void equalsItself() {
+		assertTrue(position.equals(position));
+	}
+
+	@Test
+	@DisplayName("Should have equal hash codes for equal positions")
 	void hashCodeConsistency() {
 		Position same = new Position(2, 3);
-		assertEquals(position.hashCode(), same.hashCode(),
-				"Hash codes not consistent for equal positions");
+
+		assertEquals(position.hashCode(), same.hashCode());
 	}
 
 	@Test
+	@DisplayName("Should return the correct string representation")
 	void toStringFormat() {
-//		String expected = "Row = C, Column = 4";
-		String expected = "C4";
-		assertEquals(expected, position.toString(),
-				"Incorrect string representation: expected '" + expected +
-						"' but got '" + position.toString() + "'");
+		assertEquals("C4", position.toString());
+	}
+	@Test
+	@DisplayName("Should return false when columns are not adjacent")
+	void isAdjacentToWithNonAdjacentColumns() {
+		Position other = new Position(2, 5);
+
+		assertFalse(position.isAdjacentTo(other));
 	}
 }
