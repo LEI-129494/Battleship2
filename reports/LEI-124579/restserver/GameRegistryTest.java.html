@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameRegistryTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">restserver in BattleshipGamePlayer Coverage Results</a> &gt; <a href="index.source.html" class="el_package">restserver</a> &gt; <span class="el_source">GameRegistryTest.java</span></div><h1>GameRegistryTest.java</h1><pre class="source lang-java linenums">package restserver;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+<span class="fc" id="L9">class GameRegistryTest {</span>
+
+    private GameRegistry registry;
+
+    @BeforeEach
+    void setUp() {
+<span class="fc" id="L15">        registry = new GameRegistry();</span>
+<span class="fc" id="L16">    }</span>
+
+    @Test
+    @DisplayName(&quot;Deve criar e armazenar uma nova sessão com sucesso&quot;)
+    void testCreateAndGetSession() {
+<span class="fc" id="L21">        GameSession session = registry.createSession(&quot;Player1&quot;, &quot;http://localhost:8080&quot;);</span>
+
+<span class="fc" id="L23">        assertNotNull(session, &quot;A sessão devolvida não deve ser nula&quot;);</span>
+<span class="fc" id="L24">        assertNotNull(session.getGameId(), &quot;O gameId deve ser gerado&quot;);</span>
+
+<span class="fc" id="L26">        GameSession fetched = registry.getSession(session.getGameId());</span>
+<span class="fc" id="L27">        assertNotNull(fetched, &quot;A sessão deve ser encontrada no registry&quot;);</span>
+<span class="fc" id="L28">        assertEquals(&quot;Player1&quot;, fetched.getPlayerName());</span>
+<span class="fc" id="L29">        assertEquals(&quot;http://localhost:8080&quot;, fetched.getCallbackUrl());</span>
+<span class="fc" id="L30">    }</span>
+
+    @Test
+    @DisplayName(&quot;Deve devolver null ao procurar uma sessão inexistente&quot;)
+    void testGetSessionNotFound() {
+<span class="fc" id="L35">        assertNull(registry.getSession(&quot;id-que-nao-existe&quot;));</span>
+<span class="fc" id="L36">    }</span>
+
+    @Test
+    @DisplayName(&quot;Deve remover uma sessão corretamente&quot;)
+    void testRemoveSession() {
+<span class="fc" id="L41">        GameSession session = registry.createSession(&quot;Player2&quot;, &quot;http://localhost:8081&quot;);</span>
+<span class="fc" id="L42">        String gameId = session.getGameId();</span>
+
+<span class="fc" id="L44">        assertNotNull(registry.getSession(gameId));</span>
+
+<span class="fc" id="L46">        registry.removeSession(gameId);</span>
+
+<span class="fc" id="L48">        assertNull(registry.getSession(gameId), &quot;A sessão deve ter sido removida&quot;);</span>
+<span class="fc" id="L49">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameSessionTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">restserver in BattleshipGamePlayer Coverage Results</a> &gt; <a href="index.source.html" class="el_package">restserver</a> &gt; <span class="el_source">GameSessionTest.java</span></div><h1>GameSessionTest.java</h1><pre class="source lang-java linenums">package restserver;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+<span class="fc" id="L9">class GameSessionTest {</span>
+
+    private GameSession session;
+<span class="fc" id="L12">    private final String gameId = &quot;test-game-id&quot;;</span>
+<span class="fc" id="L13">    private final String playerName = &quot;Tester&quot;;</span>
+<span class="fc" id="L14">    private final String callbackUrl = &quot;http://localhost:9090&quot;;</span>
+
+    @BeforeEach
+    void setUp() {
+<span class="fc" id="L18">        session = new GameSession(gameId, playerName, callbackUrl);</span>
+<span class="fc" id="L19">    }</span>
+
+    @Test
+    @DisplayName(&quot;Deve inicializar a sessão com os valores corretos&quot;)
+    void testConstructorAndGetters() {
+<span class="fc" id="L24">        assertEquals(gameId, session.getGameId());</span>
+<span class="fc" id="L25">        assertEquals(playerName, session.getPlayerName());</span>
+<span class="fc" id="L26">        assertEquals(callbackUrl, session.getCallbackUrl());</span>
+<span class="fc" id="L27">        assertNotNull(session.getGame(), &quot;O jogo deve ser instanciado&quot;);</span>
+<span class="fc" id="L28">        assertEquals(3, session.getShotsPerTurn(), &quot;O número de tiros padrão é 3&quot;);</span>
+
+<span class="fc" id="L30">        assertFalse(session.isGameOver(), &quot;O jogo não deve começar terminado&quot;);</span>
+<span class="fc" id="L31">        assertNull(session.getWinner(), &quot;Não deve haver vencedor no início&quot;);</span>
+<span class="fc" id="L32">    }</span>
+
+    @Test
+    @DisplayName(&quot;Deve terminar o jogo com vitória da IA&quot;)
+    void testMarkAiWins() {
+<span class="fc" id="L37">        session.markAiWins();</span>
+
+<span class="fc" id="L39">        assertTrue(session.isGameOver());</span>
+<span class="fc" id="L40">        assertEquals(&quot;AI_WINS&quot;, session.getWinner());</span>
+<span class="fc" id="L41">    }</span>
+
+    @Test
+    @DisplayName(&quot;Deve terminar o jogo com vitória do Aluno&quot;)
+    void testMarkStudentWins() {
+<span class="fc" id="L46">        session.markStudentWins();</span>
+
+<span class="fc" id="L48">        assertTrue(session.isGameOver());</span>
+<span class="fc" id="L49">        assertEquals(&quot;STUDENT_WINS&quot;, session.getWinner());</span>
+<span class="fc" id="L50">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
