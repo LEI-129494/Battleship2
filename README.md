@@ -126,8 +126,6 @@ We use high-coverage unit testing to ensure game stability. Run tests using:
 ```bash
 mvn test
 ```
-
----
 ## ⚙️ Continuous Integration (CI)
 
 This project uses **GitHub Actions** to automatically run the unit test suite (JUnit 5) on every push to any branch and on every pull request targeting the `main` branch.
@@ -136,10 +134,10 @@ The workflow is defined in `.github/workflows/maven.yml` and runs:
 
 ```bash
 mvn -B test
+```
 
-The status of the latest run is shown by the badge at the top of this README and can also be checked in the Actions tab of the repository.
+The status of the latest run is shown by the badge at the top of this README and can also be checked in the **Actions** tab of the repository.
 
----
 
 > [!TIP]
 > Use the `-Dtest=ClassName` flag to run specific test suites during development.
