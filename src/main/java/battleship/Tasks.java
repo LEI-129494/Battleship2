@@ -172,7 +172,7 @@ public class Tasks {
 	 * @return one of the {@code CMD_*} constants, or {@link #CMD_UNKNOWN} if the
 	 *         token does not match any known command in the active language
 	 */
-	private static String canonical(String input) {
+	static String canonical(String input) {
 		if (input == null) return CMD_UNKNOWN;
 		String t = input.toLowerCase();
 		if (t.equals(Messages.get("cmd.help").toLowerCase()))      return CMD_HELP;
