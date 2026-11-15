@@ -6,9 +6,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test class for Position.
- */
 public class PositionTest {
 
 	private Position position;
@@ -85,7 +82,6 @@ public class PositionTest {
 	@DisplayName("Should identify a valid position at the beginning of the board")
 	void isInsideAtBeginning() {
 		position = new Position(0, 0);
-
 		assertTrue(position.isInside());
 	}
 
@@ -104,7 +100,6 @@ public class PositionTest {
 	@DisplayName("Should reject a position with negative row")
 	void isInsideWithNegativeRow() {
 		position = new Position(-1, 5);
-
 		assertFalse(position.isInside());
 	}
 
@@ -112,7 +107,6 @@ public class PositionTest {
 	@DisplayName("Should reject a position with negative column")
 	void isInsideWithNegativeColumn() {
 		position = new Position(5, -1);
-
 		assertFalse(position.isInside());
 	}
 
@@ -120,7 +114,6 @@ public class PositionTest {
 	@DisplayName("Should reject a position with row outside the board")
 	void isInsideWithRowOutsideBoard() {
 		position = new Position(Game.BOARD_SIZE, 5);
-
 		assertFalse(position.isInside());
 	}
 
@@ -128,7 +121,6 @@ public class PositionTest {
 	@DisplayName("Should reject a position with column outside the board")
 	void isInsideWithColumnOutsideBoard() {
 		position = new Position(5, Game.BOARD_SIZE);
-
 		assertFalse(position.isInside());
 	}
 
@@ -136,7 +128,6 @@ public class PositionTest {
 	@DisplayName("Should detect horizontal adjacency")
 	void isAdjacentToHorizontal() {
 		Position other = new Position(2, 4);
-
 		assertTrue(position.isAdjacentTo(other));
 	}
 
@@ -144,7 +135,6 @@ public class PositionTest {
 	@DisplayName("Should detect vertical adjacency")
 	void isAdjacentToVertical() {
 		Position other = new Position(3, 3);
-
 		assertTrue(position.isAdjacentTo(other));
 	}
 
@@ -152,7 +142,6 @@ public class PositionTest {
 	@DisplayName("Should detect diagonal adjacency")
 	void isAdjacentToDiagonal() {
 		Position other = new Position(3, 4);
-
 		assertTrue(position.isAdjacentTo(other));
 	}
 
@@ -160,7 +149,6 @@ public class PositionTest {
 	@DisplayName("Should detect non-adjacent positions")
 	void isAdjacentToNonAdjacent() {
 		Position other = new Position(4, 5);
-
 		assertFalse(position.isAdjacentTo(other));
 	}
 
@@ -183,7 +171,6 @@ public class PositionTest {
 	@DisplayName("Should return eight adjacent positions from the center")
 	void adjacentPositionsFromCenter() {
 		Position pos = new Position(5, 5);
-
 		List<IPosition> adjacent = pos.adjacentPositions();
 
 		assertEquals(8, adjacent.size());
@@ -193,7 +180,6 @@ public class PositionTest {
 	@DisplayName("Should return three adjacent positions from a corner")
 	void adjacentPositionsFromCorner() {
 		Position pos = new Position(0, 0);
-
 		List<IPosition> adjacent = pos.adjacentPositions();
 
 		assertEquals(3, adjacent.size());
@@ -203,7 +189,6 @@ public class PositionTest {
 	@DisplayName("Should return five adjacent positions from an edge")
 	void adjacentPositionsFromEdge() {
 		Position pos = new Position(0, 5);
-
 		List<IPosition> adjacent = pos.adjacentPositions();
 
 		assertEquals(5, adjacent.size());
@@ -213,8 +198,40 @@ public class PositionTest {
 	@DisplayName("Should return valid adjacent positions only")
 	void adjacentPositionsShouldAllBeInside() {
 		Position pos = new Position(0, 0);
+		List<IPosition> adjacent = pos.adjacentPositions();
+
+		for (IPosition adjacentPosition : adjacent) {
+			assertTrue(adjacentPosition.isInside());
+		}
+	}
+
+	@Test
+	@DisplayName("Should return all eight expected adjacent positions")
+	void adjacentPositionsShouldReturnExpectedPositions() {
+		Position pos = new Position(5, 5);
+		List<IPosition> adjacent = pos.adjacentPositions();
+
+		assertTrue(adjacent.contains(new Position(4, 5)));
+		assertTrue(adjacent.contains(new Position(5, 6)));
+		assertTrue(adjacent.contains(new Position(6, 5)));
+		assertTrue(adjacent.contains(new Position(5, 4)));
+		assertTrue(adjacent.contains(new Position(6, 6)));
+		assertTrue(adjacent.contains(new Position(6, 4)));
+		assertTrue(adjacent.contains(new Position(4, 6)));
+		assertTrue(adjacent.contains(new Position(4, 4)));
+	}
+
+	@Test
+	@DisplayName("Should return three adjacent positions from bottom right corner")
+	void adjacentPositionsFromBottomRightCorner() {
+		Position pos = new Position(
+				Game.BOARD_SIZE - 1,
+				Game.BOARD_SIZE - 1
+		);
 
 		List<IPosition> adjacent = pos.adjacentPositions();
+
+		assertEquals(3, adjacent.size());
 
 		for (IPosition adjacentPosition : adjacent) {
 			assertTrue(adjacentPosition.isInside());
@@ -242,10 +259,27 @@ public class PositionTest {
 	}
 
 	@Test
+	@DisplayName("Should not become hit when occupied")
+	void occupyingShouldNotMarkPositionAsHit() {
+		position.occupy();
+
+		assertTrue(position.isOccupied());
+		assertFalse(position.isHit());
+	}
+
+	@Test
+	@DisplayName("Should not become occupied when hit")
+	void shootingShouldNotOccupyPosition() {
+		position.shoot();
+
+		assertTrue(position.isHit());
+		assertFalse(position.isOccupied());
+	}
+
+	@Test
 	@DisplayName("Should consider positions with the same coordinates equal")
 	void equalsSameCoordinates() {
 		Position same = new Position(2, 3);
-
 		assertTrue(position.equals(same));
 	}
 
@@ -259,7 +293,6 @@ public class PositionTest {
 	@DisplayName("Should not consider a different object equal")
 	void equalsDifferentObject() {
 		Object other = new Object();
-
 		assertFalse(position.equals(other));
 	}
 
@@ -267,7 +300,6 @@ public class PositionTest {
 	@DisplayName("Should not consider positions with different columns equal")
 	void equalsDifferentColumn() {
 		Position other = new Position(2, 4);
-
 		assertFalse(position.equals(other));
 	}
 
@@ -275,7 +307,6 @@ public class PositionTest {
 	@DisplayName("Should not consider positions with different rows equal")
 	void equalsDifferentRow() {
 		Position other = new Position(3, 3);
-
 		assertFalse(position.equals(other));
 	}
 
@@ -289,8 +320,20 @@ public class PositionTest {
 	@DisplayName("Should have equal hash codes for equal positions")
 	void hashCodeConsistency() {
 		Position same = new Position(2, 3);
-
 		assertEquals(position.hashCode(), same.hashCode());
+	}
+
+	@Test
+	@DisplayName("Should have equal hash codes even when occupation or hit state differs")
+	void hashCodeShouldIgnoreOccupationAndHit() {
+		Position first = new Position(2, 3);
+		Position second = new Position(2, 3);
+
+		second.occupy();
+		second.shoot();
+
+		assertEquals(first, second);
+		assertEquals(first.hashCode(), second.hashCode());
 	}
 
 	@Test
@@ -298,11 +341,11 @@ public class PositionTest {
 	void toStringFormat() {
 		assertEquals("C4", position.toString());
 	}
+
 	@Test
 	@DisplayName("Should return false when columns are not adjacent")
 	void isAdjacentToWithNonAdjacentColumns() {
 		Position other = new Position(2, 5);
-
 		assertFalse(position.isAdjacentTo(other));
 	}
 }
