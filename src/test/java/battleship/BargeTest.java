@@ -137,5 +137,6 @@ public class BargeTest {
 				"Error: NullPointerException should be thrown for null input.");
 		assertThrows(NullPointerException.class, () -> new Barge(Compass.NORTH, null),
 				"Error: NullPointerException should be thrown for null position.");
+
 	}
 }
