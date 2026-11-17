@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PdfExporter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PositionTest Coverage Results</a> &gt; <a href="index.source.html" class="el_package">battleship</a> &gt; <span class="el_source">PdfExporter.java</span></div><h1>PdfExporter.java</h1><pre class="source lang-java linenums">package battleship;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+/**
+ * Exporta o histórico de jogadas de uma partida de Battleship para um ficheiro PDF.
+ *
+ * &lt;p&gt;Usa a biblioteca Apache PDFBox 3.x. O PDF é gravado na diretoria {@code output/}
+ * com um nome do tipo {@code battleship_YYYYMMDD_HHmmss.pdf}.&lt;/p&gt;
+ *
+ * &lt;p&gt;Conteúdo do PDF:&lt;/p&gt;
+ * &lt;ul&gt;
+ *   &lt;li&gt;Cabeçalho com data/hora e resumo da partida;&lt;/li&gt;
+ *   &lt;li&gt;Lista das jogadas do inimigo (tiros no meu tabuleiro);&lt;/li&gt;
+ *   &lt;li&gt;Lista das minhas jogadas (tiros no tabuleiro inimigo).&lt;/li&gt;
+ * &lt;/ul&gt;
+ */
+<span class="nc" id="L31">public class PdfExporter {</span>
+
+    /** Diretoria onde o PDF é gravado. */
+    private static final String OUTPUT_DIR = &quot;output&quot;;
+
+    /** Prefixo do nome do ficheiro gerado. */
+    private static final String FILE_PREFIX = &quot;battleship_&quot;;
+
+    /** Formato do timestamp usado no nome do ficheiro. */
+<span class="nc" id="L40">    private static final DateTimeFormatter TIMESTAMP =</span>
+<span class="nc" id="L41">            DateTimeFormatter.ofPattern(&quot;yyyyMMdd_HHmmss&quot;);</span>
+
+    /** Formato do timestamp mostrado no corpo do PDF. */
+<span class="nc" id="L44">    private static final DateTimeFormatter HUMAN_TIMESTAMP =</span>
+<span class="nc" id="L45">            DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm:ss&quot;);</span>
+
+    // --- Layout ---
+    private static final float MARGIN = 50f;
+    private static final float LINE_HEIGHT = 14f;
+    private static final float FONT_SIZE_TITLE = 18f;
+    private static final float FONT_SIZE_SECTION = 12f;
+    private static final float FONT_SIZE_TEXT = 10f;
+
+    /**
+     * Gera o PDF com o histórico de jogadas da partida indicada.
+     *
+     * @param game a partida a exportar (não pode ser {@code null})
+     * @return o caminho do PDF gerado
+     * @throws IOException se a escrita do ficheiro falhar
+     */
+    public static Path export(IGame game) throws IOException {
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (game == null) throw new IllegalArgumentException(&quot;game must not be null&quot;);</span>
+
+        // Garantir que a diretoria existe
+<span class="nc" id="L65">        Path dir = Paths.get(OUTPUT_DIR);</span>
+<span class="nc" id="L66">        Files.createDirectories(dir);</span>
+
+<span class="nc" id="L68">        String filename = FILE_PREFIX + LocalDateTime.now().format(TIMESTAMP) + &quot;.pdf&quot;;</span>
+<span class="nc" id="L69">        Path target = dir.resolve(filename);</span>
+
+<span class="nc" id="L71">        try (PDDocument doc = new PDDocument()) {</span>
+<span class="nc" id="L72">            PDType1Font bold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);</span>
+<span class="nc" id="L73">            PDType1Font regular = new PDType1Font(Standard14Fonts.FontName.HELVETICA);</span>
+
+<span class="nc" id="L75">            PDPage page = new PDPage(PDRectangle.A4);</span>
+<span class="nc" id="L76">            doc.addPage(page);</span>
+
+<span class="nc" id="L78">            PDPageContentStream cs = new PDPageContentStream(doc, page);</span>
+<span class="nc" id="L79">            float y = page.getMediaBox().getHeight() - MARGIN;</span>
+
+            // --- Cabeçalho ---
+<span class="nc" id="L82">            y = writeLine(cs, bold, FONT_SIZE_TITLE, MARGIN, y,</span>
+                    &quot;Battleship - Historico de Jogadas&quot;);
+<span class="nc" id="L84">            y -= LINE_HEIGHT / 2;</span>
+<span class="nc" id="L85">            y = writeLine(cs, regular, FONT_SIZE_TEXT, MARGIN, y,</span>
+<span class="nc" id="L86">                    &quot;Gerado em: &quot; + LocalDateTime.now().format(HUMAN_TIMESTAMP));</span>
+
+            // --- Resumo da partida ---
+<span class="nc" id="L89">            y -= LINE_HEIGHT;</span>
+<span class="nc" id="L90">            y = writeLine(cs, regular, FONT_SIZE_TEXT, MARGIN, y,</span>
+<span class="nc" id="L91">                    String.format(</span>
+                            &quot;Navios a flutuar: %d | Afundados: %d | Tiros certeiros: %d | Repetidos: %d | Invalidos: %d&quot;,
+<span class="nc" id="L93">                            game.getRemainingShips(), game.getSunkShips(),</span>
+<span class="nc" id="L94">                            game.getHits(), game.getRepeatedShots(), game.getInvalidShots()));</span>
+
+            // --- Jogadas do inimigo ---
+<span class="nc" id="L97">            y -= LINE_HEIGHT * 2;</span>
+<span class="nc" id="L98">            y = writeLine(cs, bold, FONT_SIZE_SECTION, MARGIN, y,</span>
+                    &quot;Jogadas do inimigo (tiros no meu tabuleiro):&quot;);
+<span class="nc" id="L100">            y -= LINE_HEIGHT / 2;</span>
+
+<span class="nc bnc" id="L102" title="All 2 branches missed.">            for (IMove move : game.getAlienMoves()) {</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">                if (y &lt; MARGIN + LINE_HEIGHT) {</span>
+<span class="nc" id="L104">                    cs.close();</span>
+<span class="nc" id="L105">                    page = new PDPage(PDRectangle.A4);</span>
+<span class="nc" id="L106">                    doc.addPage(page);</span>
+<span class="nc" id="L107">                    cs = new PDPageContentStream(doc, page);</span>
+<span class="nc" id="L108">                    y = page.getMediaBox().getHeight() - MARGIN;</span>
+                }
+<span class="nc" id="L110">                y = writeLine(cs, regular, FONT_SIZE_TEXT, MARGIN, y, describeMove(move));</span>
+<span class="nc" id="L111">            }</span>
+
+            // --- Minhas jogadas ---
+<span class="nc" id="L114">            y -= LINE_HEIGHT;</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">            if (y &lt; MARGIN + LINE_HEIGHT) {</span>
+<span class="nc" id="L116">                cs.close();</span>
+<span class="nc" id="L117">                page = new PDPage(PDRectangle.A4);</span>
+<span class="nc" id="L118">                doc.addPage(page);</span>
+<span class="nc" id="L119">                cs = new PDPageContentStream(doc, page);</span>
+<span class="nc" id="L120">                y = page.getMediaBox().getHeight() - MARGIN;</span>
+            }
+<span class="nc" id="L122">            y = writeLine(cs, bold, FONT_SIZE_SECTION, MARGIN, y,</span>
+                    &quot;Minhas jogadas (tiros no tabuleiro inimigo):&quot;);
+<span class="nc" id="L124">            y -= LINE_HEIGHT / 2;</span>
+
+<span class="nc bnc" id="L126" title="All 2 branches missed.">            for (IMove move : game.getMyMoves()) {</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">                if (y &lt; MARGIN + LINE_HEIGHT) {</span>
+<span class="nc" id="L128">                    cs.close();</span>
+<span class="nc" id="L129">                    page = new PDPage(PDRectangle.A4);</span>
+<span class="nc" id="L130">                    doc.addPage(page);</span>
+<span class="nc" id="L131">                    cs = new PDPageContentStream(doc, page);</span>
+<span class="nc" id="L132">                    y = page.getMediaBox().getHeight() - MARGIN;</span>
+                }
+<span class="nc" id="L134">                y = writeLine(cs, regular, FONT_SIZE_TEXT, MARGIN, y, describeMove(move));</span>
+<span class="nc" id="L135">            }</span>
+
+<span class="nc" id="L137">            cs.close();</span>
+<span class="nc" id="L138">            doc.save(target.toFile());</span>
+        }
+
+<span class="nc" id="L141">        return target;</span>
+    }
+
+    /**
+     * Escreve uma linha de texto no PDF e devolve o {@code y} atualizado
+     * (já subtraída a altura da linha).
+     */
+    private static float writeLine(PDPageContentStream cs, PDType1Font font, float size,
+                                   float x, float y, String text) throws IOException {
+<span class="nc" id="L150">        cs.beginText();</span>
+<span class="nc" id="L151">        cs.setFont(font, size);</span>
+<span class="nc" id="L152">        cs.newLineAtOffset(x, y);</span>
+<span class="nc" id="L153">        cs.showText(sanitize(text));</span>
+<span class="nc" id="L154">        cs.endText();</span>
+<span class="nc" id="L155">        return y - LINE_HEIGHT;</span>
+    }
+
+    /**
+     * Constrói a descrição textual de uma jogada, com os tiros e o resumo dos resultados.
+     */
+    private static String describeMove(IMove move) {
+<span class="nc" id="L162">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L163">        sb.append(&quot;Jogada &quot;).append(move.getNumber()).append(&quot;: &quot;);</span>
+
+<span class="nc" id="L165">        List&lt;IPosition&gt; shots = move.getShots();</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        for (int i = 0; i &lt; shots.size(); i++) {</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">            if (i &gt; 0) sb.append(&quot; &quot;);</span>
+<span class="nc" id="L168">            sb.append(shots.get(i).toString());</span>
+        }
+
+<span class="nc" id="L171">        int hits = 0, misses = 0, repeated = 0;</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">        for (IGame.ShotResult r : move.getShotResults()) {</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">            if (!r.valid()) continue;</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">            if (r.repeated()) repeated++;</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">            else if (r.ship() != null) hits++;</span>
+<span class="nc" id="L176">            else misses++;</span>
+<span class="nc" id="L177">        }</span>
+
+<span class="nc" id="L179">        sb.append(&quot;  -&gt;  acertos=&quot;).append(hits)</span>
+<span class="nc" id="L180">          .append(&quot;, agua=&quot;).append(misses)</span>
+<span class="nc" id="L181">          .append(&quot;, repetidos=&quot;).append(repeated);</span>
+
+<span class="nc" id="L183">        return sb.toString();</span>
+    }
+
+    /**
+     * As fontes standard-14 do PDFBox apenas suportam WinAnsi.
+     * Remove caracteres de controlo e substitui tabs por espaço.
+     */
+    private static String sanitize(String s) {
+<span class="nc bnc" id="L191" title="All 2 branches missed.">        if (s == null) return &quot;&quot;;</span>
+<span class="nc" id="L192">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc bnc" id="L193" title="All 2 branches missed.">        for (char c : s.toCharArray()) {</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">            if (c == '\t') sb.append(' ');</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">            else if (c &lt; 32) continue;</span>
+<span class="nc" id="L196">            else sb.append(c);</span>
+        }
+<span class="nc" id="L198">        return sb.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

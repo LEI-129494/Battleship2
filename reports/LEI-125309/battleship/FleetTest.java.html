@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FleetTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ShipTest Coverage Results, PositionTest Coverage Results, MoveTest Coverage Results</a> &gt; <a href="index.source.html" class="el_package">battleship</a> &gt; <span class="el_source">FleetTest.java</span></div><h1>FleetTest.java</h1><pre class="source lang-java linenums">package battleship;
+
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+<span class="nc" id="L11">class FleetTest {</span>
+
+	private Fleet fleet;
+
+	@BeforeEach
+	void setUp() {
+<span class="nc" id="L17">		fleet = new Fleet();</span>
+<span class="nc" id="L18">	}</span>
+
+	@AfterEach
+	void tearDown() {
+<span class="nc" id="L22">		fleet = null;</span>
+<span class="nc" id="L23">	}</span>
+
+	private String captureOutput(Runnable action) {
+<span class="nc" id="L26">		ByteArrayOutputStream output = new ByteArrayOutputStream();</span>
+<span class="nc" id="L27">		PrintStream originalOut = System.out;</span>
+
+<span class="nc" id="L29">		try (PrintStream capture = new PrintStream(</span>
+				output, true, StandardCharsets.UTF_8)) {
+
+<span class="nc" id="L32">			System.setOut(capture);</span>
+<span class="nc" id="L33">			action.run();</span>
+
+		} finally {
+<span class="nc" id="L36">			System.setOut(originalOut);</span>
+		}
+
+<span class="nc" id="L39">		return output.toString(StandardCharsets.UTF_8);</span>
+	}
+
+	@Test
+	@DisplayName(&quot;Constructor: Should initialize an empty fleet&quot;)
+	void testConstructor() {
+<span class="nc" id="L45">		assertAll(</span>
+<span class="nc" id="L46">				() -&gt; assertNotNull(fleet,</span>
+						&quot;Error: Fleet should not be null&quot;),
+<span class="nc" id="L48">				() -&gt; assertTrue(fleet.getShips().isEmpty(),</span>
+						&quot;Error: Fleet should initially be empty&quot;)
+		);
+<span class="nc" id="L51">	}</span>
+
+	@Test
+	@DisplayName(&quot;CreateRandom: Should generate a full fleet&quot;)
+	void testCreateRandom() {
+<span class="nc" id="L56">		IFleet randomFleet = Fleet.createRandom();</span>
+
+<span class="nc" id="L58">		assertAll(</span>
+<span class="nc" id="L59">				() -&gt; assertNotNull(randomFleet,</span>
+						&quot;Error: Random fleet should not be null&quot;),
+<span class="nc" id="L61">				() -&gt; assertEquals(Fleet.FLEET_SIZE,</span>
+<span class="nc" id="L62">						randomFleet.getShips().size(),</span>
+						&quot;Error: Random fleet should contain the expected number of ships&quot;)
+		);
+<span class="nc" id="L65">	}</span>
+
+	@Test
+	@DisplayName(&quot;AddShip: Should add a valid ship&quot;)
+	void testAddShip1() {
+<span class="nc" id="L70">		IShip ship = new Barge(</span>
+				Compass.NORTH, new Position(1, 1));
+
+<span class="nc" id="L73">		assertTrue(fleet.addShip(ship),</span>
+				&quot;Error: Valid ship should be added&quot;);
+
+<span class="nc" id="L76">		assertEquals(1, fleet.getShips().size(),</span>
+				&quot;Error: Fleet should contain one ship&quot;);
+<span class="nc" id="L78">	}</span>
+
+	@Test
+	@DisplayName(&quot;AddShip: Should reject a ship when fleet exceeds capacity&quot;)
+	void testAddShip2() {
+
+<span class="nc bnc" id="L84" title="All 2 branches missed.">		for (int i = 0; i &lt;= Fleet.FLEET_SIZE; i++) {</span>
+<span class="nc" id="L85">			fleet.getShips().add(</span>
+					new Barge(
+							Compass.NORTH,
+							new Position(0, 0)));
+		}
+
+<span class="nc" id="L91">		int originalSize = fleet.getShips().size();</span>
+
+<span class="nc" id="L93">		IShip extraShip = new Barge(</span>
+				Compass.NORTH, new Position(5, 5));
+
+<span class="nc" id="L96">		assertAll(</span>
+<span class="nc" id="L97">				() -&gt; assertFalse(fleet.addShip(extraShip),</span>
+						&quot;Error: Ship should be rejected when capacity is exceeded&quot;),
+
+<span class="nc" id="L100">				() -&gt; assertEquals(originalSize,</span>
+<span class="nc" id="L101">						fleet.getShips().size(),</span>
+						&quot;Error: Fleet size should not increase&quot;)
+		);
+<span class="nc" id="L104">	}</span>
+
+	@Test
+	@DisplayName(&quot;AddShip: Should reject ships outside the board&quot;)
+	void testAddShip3() {
+<span class="nc" id="L109">		IShip ship = new Barge(</span>
+				Compass.NORTH, new Position(99, 99));
+
+<span class="nc" id="L112">		assertFalse(fleet.addShip(ship),</span>
+				&quot;Error: Ship outside the board should be rejected&quot;);
+<span class="nc" id="L114">	}</span>
+
+	@Test
+	@DisplayName(&quot;AddShip: Should reject overlapping ships&quot;)
+	void testAddShip4() {
+<span class="nc" id="L119">		IShip ship1 = new Barge(</span>
+				Compass.NORTH, new Position(1, 1));
+
+<span class="nc" id="L122">		IShip ship2 = new Barge(</span>
+				Compass.NORTH, new Position(1, 1));
+
+<span class="nc" id="L125">		assertTrue(fleet.addShip(ship1),</span>
+				&quot;Error: First ship should be added&quot;);
+
+<span class="nc" id="L128">		assertFalse(fleet.addShip(ship2),</span>
+				&quot;Error: Overlapping ship should be rejected&quot;);
+<span class="nc" id="L130">	}</span>
+
+	@Test
+	@DisplayName(&quot;AddShip: Should reject null&quot;)
+	void testAddShipNull() {
+<span class="nc" id="L135">		assertThrows(AssertionError.class,</span>
+<span class="nc" id="L136">				() -&gt; fleet.addShip(null),</span>
+				&quot;Error: Null ship should throw AssertionError&quot;);
+<span class="nc" id="L138">	}</span>
+
+	@Test
+	@DisplayName(&quot;GetShips: Should return the fleet ships&quot;)
+	void testGetShips() {
+
+<span class="nc" id="L144">		assertTrue(fleet.getShips().isEmpty(),</span>
+				&quot;Error: Fleet should initially be empty&quot;);
+
+<span class="nc" id="L147">		IShip ship = new Barge(</span>
+				Compass.NORTH, new Position(1, 1));
+
+<span class="nc" id="L150">		fleet.addShip(ship);</span>
+
+<span class="nc" id="L152">		assertAll(</span>
+<span class="nc" id="L153">				() -&gt; assertEquals(1,</span>
+<span class="nc" id="L154">						fleet.getShips().size(),</span>
+						&quot;Error: Fleet should contain one ship&quot;),
+
+<span class="nc" id="L157">				() -&gt; assertEquals(ship,</span>
+<span class="nc" id="L158">						fleet.getShips().get(0),</span>
+						&quot;Error: Returned ship should match&quot;)
+		);
+<span class="nc" id="L161">	}</span>
+
+	@Test
+	@DisplayName(&quot;GetShipsLike: Should filter by category&quot;)
+	void testGetShipsLike() {
+<span class="nc" id="L166">		IShip barge = new Barge(</span>
+				Compass.NORTH, new Position(1, 1));
+
+<span class="nc" id="L169">		IShip caravel = new Caravel(</span>
+				Compass.NORTH, new Position(4, 4));
+
+<span class="nc" id="L172">		fleet.addShip(barge);</span>
+<span class="nc" id="L173">		fleet.addShip(caravel);</span>
+
+<span class="nc" id="L175">		List&lt;IShip&gt; barges = fleet.getShipsLike(&quot;Barca&quot;);</span>
+
+<span class="nc" id="L177">		assertAll(</span>
+<span class="nc" id="L178">				() -&gt; assertEquals(1, barges.size(),</span>
+						&quot;Error: One Barge should be returned&quot;),
+
+<span class="nc" id="L181">				() -&gt; assertEquals(barge, barges.get(0),</span>
+						&quot;Error: Returned ship should be the Barge&quot;),
+
+<span class="nc" id="L184">				() -&gt; assertTrue(</span>
+<span class="nc" id="L185">						fleet.getShipsLike(&quot;Galeao&quot;).isEmpty(),</span>
+						&quot;Error: Unknown fleet category should return an empty list&quot;)
+		);
+<span class="nc" id="L188">	}</span>
+
+	@Test
+	@DisplayName(&quot;GetShipsLike: Should reject null category&quot;)
+	void testGetShipsLikeNull() {
+<span class="nc" id="L193">		assertThrows(AssertionError.class,</span>
+<span class="nc" id="L194">				() -&gt; fleet.getShipsLike(null),</span>
+				&quot;Error: Null category should throw AssertionError&quot;);
+<span class="nc" id="L196">	}</span>
+
+	@Test
+	@DisplayName(&quot;GetFloatingShips: Should return floating ships&quot;)
+	void testGetFloatingShips() {
+<span class="nc" id="L201">		IShip barge = new Barge(</span>
+				Compass.NORTH, new Position(1, 1));
+
+<span class="nc" id="L204">		IShip caravel = new Caravel(</span>
+				Compass.NORTH, new Position(4, 4));
+
+<span class="nc" id="L207">		fleet.addShip(barge);</span>
+<span class="nc" id="L208">		fleet.addShip(caravel);</span>
+
+<span class="nc" id="L210">		assertEquals(2, fleet.getFloatingShips().size(),</span>
+				&quot;Error: Both ships should initially be floating&quot;);
+
+<span class="nc" id="L213">		barge.getPositions().get(0).shoot();</span>
+
+<span class="nc" id="L215">		List&lt;IShip&gt; floating = fleet.getFloatingShips();</span>
+
+<span class="nc" id="L217">		assertAll(</span>
+<span class="nc" id="L218">				() -&gt; assertEquals(1, floating.size(),</span>
+						&quot;Error: Only one ship should still be floating&quot;),
+
+<span class="nc" id="L221">				() -&gt; assertEquals(caravel, floating.get(0),</span>
+						&quot;Error: Caravel should be the remaining floating ship&quot;)
+		);
+<span class="nc" id="L224">	}</span>
+
+	@Test
+	@DisplayName(&quot;GetSunkShips: Should return sunk ships&quot;)
+	void testGetSunkShips() {
+<span class="nc" id="L229">		IShip barge = new Barge(</span>
+				Compass.NORTH, new Position(1, 1));
+
+<span class="nc" id="L232">		IShip caravel = new Caravel(</span>
+				Compass.NORTH, new Position(4, 4));
+
+<span class="nc" id="L235">		fleet.addShip(barge);</span>
+<span class="nc" id="L236">		fleet.addShip(caravel);</span>
+
+<span class="nc" id="L238">		assertTrue(fleet.getSunkShips().isEmpty(),</span>
+				&quot;Error: No ships should initially be sunk&quot;);
+
+<span class="nc" id="L241">		barge.getPositions().get(0).shoot();</span>
+
+<span class="nc" id="L243">		List&lt;IShip&gt; sunk = fleet.getSunkShips();</span>
+
+<span class="nc" id="L245">		assertAll(</span>
+<span class="nc" id="L246">				() -&gt; assertEquals(1, sunk.size(),</span>
+						&quot;Error: Only one ship should be sunk&quot;),
+
+<span class="nc" id="L249">				() -&gt; assertEquals(barge, sunk.get(0),</span>
+						&quot;Error: Barge should be the sunk ship&quot;)
+		);
+<span class="nc" id="L252">	}</span>
+
+	@Test
+	@DisplayName(&quot;ShipAt: Should find ships by position&quot;)
+	void testShipAt() {
+<span class="nc" id="L257">		IShip ship = new Barge(</span>
+				Compass.NORTH, new Position(1, 1));
+
+<span class="nc" id="L260">		fleet.addShip(ship);</span>
+
+<span class="nc" id="L262">		assertAll(</span>
+<span class="nc" id="L263">				() -&gt; assertEquals(ship,</span>
+<span class="nc" id="L264">						fleet.shipAt(new Position(1, 1)),</span>
+						&quot;Error: Ship should be found at its position&quot;),
+
+<span class="nc" id="L267">				() -&gt; assertNull(</span>
+<span class="nc" id="L268">						fleet.shipAt(new Position(5, 5)),</span>
+						&quot;Error: Empty position should return null&quot;)
+		);
+<span class="nc" id="L271">	}</span>
+
+	@Test
+	@DisplayName(&quot;ShipAt: Should reject null position&quot;)
+	void testShipAtNull() {
+<span class="nc" id="L276">		assertThrows(AssertionError.class,</span>
+<span class="nc" id="L277">				() -&gt; fleet.shipAt(null),</span>
+				&quot;Error: Null position should throw AssertionError&quot;);
+<span class="nc" id="L279">	}</span>
+
+	@Test
+	@DisplayName(&quot;ColisionRisk: Should identify collisions&quot;)
+	void testColisionRisk() throws Exception {
+<span class="nc" id="L284">		var method = Fleet.class.getDeclaredMethod(</span>
+				&quot;colisionRisk&quot;, IShip.class);
+
+<span class="nc" id="L287">		method.setAccessible(true);</span>
+
+<span class="nc" id="L289">		IShip ship1 = new Barge(</span>
+				Compass.NORTH, new Position(1, 1));
+
+<span class="nc" id="L292">		IShip ship2 = new Barge(</span>
+				Compass.NORTH, new Position(1, 1));
+
+<span class="nc" id="L295">		fleet.addShip(ship1);</span>
+
+<span class="nc" id="L297">		assertAll(</span>
+<span class="nc" id="L298">				() -&gt; assertTrue(</span>
+<span class="nc" id="L299">						(Boolean) method.invoke(fleet, ship2),</span>
+						&quot;Error: Overlapping ships should collide&quot;),
+
+<span class="nc" id="L302">				() -&gt; assertFalse(</span>
+<span class="nc" id="L303">						(Boolean) method.invoke(</span>
+								fleet,
+								new Barge(
+										Compass.NORTH,
+										new Position(5, 5))),
+						&quot;Error: Separated ships should not collide&quot;)
+		);
+
+<span class="nc" id="L311">		assertThrows(</span>
+				java.lang.reflect.InvocationTargetException.class,
+<span class="nc" id="L313">				() -&gt; method.invoke(fleet, (IShip) null),</span>
+				&quot;Error: Null ship should cause an invocation exception&quot;);
+<span class="nc" id="L315">	}</span>
+
+	@Test
+	@DisplayName(&quot;PrintStatus: Should print fleet status&quot;)
+	void testPrintStatus() {
+<span class="nc" id="L320">		fleet.addShip(new Barge(</span>
+				Compass.NORTH, new Position(1, 1)));
+
+<span class="nc" id="L323">		String output = captureOutput(fleet::printStatus);</span>
+
+<span class="nc" id="L325">		assertTrue(output.contains(&quot;Estado da Frota&quot;),</span>
+				&quot;Error: Fleet status message should be printed&quot;);
+<span class="nc" id="L327">	}</span>
+
+	@Test
+	@DisplayName(&quot;PrintMethods: Should print ship lists&quot;)
+	void testPrintMethods() {
+<span class="nc" id="L332">		IShip barge = new Barge(</span>
+				Compass.NORTH, new Position(1, 1));
+
+<span class="nc" id="L335">		IShip caravel = new Caravel(</span>
+				Compass.NORTH, new Position(4, 4));
+
+<span class="nc" id="L338">		assertTrue(fleet.addShip(barge),</span>
+				&quot;Error: Barge should be added&quot;);
+
+<span class="nc" id="L341">		assertTrue(fleet.addShip(caravel),</span>
+				&quot;Error: Caravel should be added&quot;);
+
+		// Afunda todas as posições da Caravela.
+<span class="nc bnc" id="L345" title="All 2 branches missed.">		for (IPosition position : caravel.getPositions()) {</span>
+<span class="nc" id="L346">			position.shoot();</span>
+<span class="nc" id="L347">		}</span>
+
+<span class="nc" id="L349">		assertFalse(caravel.stillFloating(),</span>
+				&quot;Error: Caravel should be sunk&quot;);
+
+<span class="nc" id="L352">		String all = captureOutput(fleet::printAllShips);</span>
+
+<span class="nc" id="L354">		assertAll(</span>
+<span class="nc" id="L355">				() -&gt; assertTrue(all.contains(&quot;Barca&quot;),</span>
+						&quot;Error: All ships should include Barge&quot;),
+
+<span class="nc" id="L358">				() -&gt; assertTrue(all.contains(&quot;Caravela&quot;),</span>
+						&quot;Error: All ships should include Caravel&quot;)
+		);
+
+<span class="nc" id="L362">		String floating = captureOutput(fleet::printFloatingShips);</span>
+
+<span class="nc" id="L364">		assertAll(</span>
+<span class="nc" id="L365">				() -&gt; assertTrue(floating.contains(&quot;Barca&quot;),</span>
+						&quot;Error: Floating Barge should be printed&quot;),
+
+<span class="nc" id="L368">				() -&gt; assertFalse(floating.contains(&quot;Caravela&quot;),</span>
+						&quot;Error: Sunk Caravel should not be printed&quot;)
+		);
+
+<span class="nc" id="L372">		String category = captureOutput(</span>
+<span class="nc" id="L373">				() -&gt; fleet.printShipsByCategory(&quot;Barca&quot;));</span>
+
+<span class="nc" id="L375">		assertAll(</span>
+<span class="nc" id="L376">				() -&gt; assertTrue(category.contains(&quot;Barca&quot;),</span>
+						&quot;Error: Barge category should be printed&quot;),
+
+<span class="nc" id="L379">				() -&gt; assertFalse(category.contains(&quot;Caravela&quot;),</span>
+						&quot;Error: Caravel should not be printed&quot;)
+		);
+
+<span class="nc" id="L383">		String direct = captureOutput(</span>
+<span class="nc" id="L384">				() -&gt; fleet.printShips(fleet.getShips()));</span>
+
+<span class="nc" id="L386">		assertAll(</span>
+<span class="nc" id="L387">				() -&gt; assertTrue(direct.contains(&quot;Barca&quot;),</span>
+						&quot;Error: Barge should be printed&quot;),
+
+<span class="nc" id="L390">				() -&gt; assertTrue(direct.contains(&quot;Caravela&quot;),</span>
+						&quot;Error: Caravel should be printed&quot;)
+		);
+
+<span class="nc" id="L394">		assertThrows(AssertionError.class,</span>
+<span class="nc" id="L395">				() -&gt; fleet.printShips(null),</span>
+				&quot;Error: Null list should throw AssertionError&quot;);
+<span class="nc" id="L397">	}</span>
+
+	@Test
+	@DisplayName(&quot;PrintShipsByCategory: Should reject null&quot;)
+	void testPrintShipsByCategoryNull() {
+<span class="nc" id="L402">		assertThrows(AssertionError.class,</span>
+<span class="nc" id="L403">				() -&gt; fleet.printShipsByCategory(null),</span>
+				&quot;Error: Null category should throw AssertionError&quot;);
+<span class="nc" id="L405">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Game.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PositionTest Coverage Results</a> &gt; <a href="index.source.html" class="el_package">battleship</a> &gt; <span class="el_source">Game.java</span></div><h1>Game.java</h1><pre class="source lang-java linenums">package battleship;
+
+import java.util.*;
+
+<span class="nc" id="L5">public class Game implements IGame</span>
+{
+
+	//------------------------------------------------------------------
+	public static final int BOARD_SIZE = 10;
+	public static final int NUMBER_SHOTS = 3;
+	private static final int MAX_SHIPS = 11;
+
+	//------------------------------------------------------------------
+	private final IFleet myFleet;
+	private final List&lt;IMove&gt; alienMoves;
+
+	private final IFleet alienFleet;
+	private final List&lt;IMove&gt; myMoves;
+
+	private Integer countInvalidShots;
+	private Integer countRepeatedShots;
+	private Integer countHits;
+	private Integer countSinks;
+	private int moveNumber;
+
+	//------------------------------------------------------------------
+	public Game(IFleet myFleet)
+<span class="nc" id="L28">	{</span>
+<span class="nc" id="L29">		this.moveNumber = 1;</span>
+
+<span class="nc" id="L31">		this.alienMoves = new ArrayList&lt;IMove&gt;();</span>
+<span class="nc" id="L32">		this.myMoves = new ArrayList&lt;IMove&gt;();</span>
+
+<span class="nc" id="L34">		this.alienFleet = new Fleet();</span>
+<span class="nc" id="L35">		this.myFleet = myFleet;</span>
+
+<span class="nc" id="L37">		this.countInvalidShots = 0;</span>
+<span class="nc" id="L38">		this.countRepeatedShots = 0;</span>
+<span class="nc" id="L39">		this.countHits = 0;</span>
+<span class="nc" id="L40">		this.countSinks = 0;</span>
+<span class="nc" id="L41">	}</span>
+
+	@Override
+	public IFleet getMyFleet()
+	{
+<span class="nc" id="L46">		return myFleet;</span>
+	}
+
+	@Override
+	public IFleet getAlienFleet()
+	{
+<span class="nc" id="L52">		return alienFleet;</span>
+	}
+
+	@Override
+	public List&lt;IMove&gt; getMyMoves()
+	{
+<span class="nc" id="L58">		return myMoves;</span>
+	}
+
+	@Override
+	public List&lt;IMove&gt; getAlienMoves()
+	{
+<span class="nc" id="L64">		return alienMoves;</span>
+	}
+
+	/**
+	 * Simulates a random firing action by the enemy, generating a set of unique shot coordinates
+	 * and serializing them into a JSON string. The method ensures that the random shots are valid
+	 * and do not duplicate existing shots in the game or previous enemy moves. After generating
+	 * the shots, it applies the firing logic and serializes the result for further processing.
+	 *
+	 * @return A JSON string representing the list of randomly generated enemy shots.
+	 * @throws RuntimeException if there is an error during the JSON serialization of the shots.
+	 */
+	public String randomEnemyFire() {
+
+<span class="nc" id="L78">		Random random = new Random(System.currentTimeMillis());</span>
+
+<span class="nc" id="L80">		Set&lt;IPosition&gt; usablePositions = new HashSet&lt;IPosition&gt;();</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">		for (int r = 0; r &lt; BOARD_SIZE; r++)</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">			for (int c = 0; c &lt; BOARD_SIZE; c++)</span>
+<span class="nc" id="L83">				usablePositions.add(new Position(r, c));</span>
+
+<span class="nc" id="L85">		this.myFleet.getSunkShips().forEach(ship -&gt; usablePositions.removeAll(ship.getAdjacentPositions()));</span>
+<span class="nc" id="L86">		this.alienMoves.forEach(move -&gt;  usablePositions.removeAll(move.getShots()));</span>
+
+<span class="nc" id="L88">		List&lt;IPosition&gt; candidateShots = new ArrayList&lt;&gt;(usablePositions);</span>
+
+<span class="nc" id="L90">		List&lt;IPosition&gt; shots = new ArrayList&lt;IPosition&gt;();</span>
+
+<span class="nc" id="L92">		System.out.println();</span>
+
+<span class="nc" id="L94">		IPosition newShot = null;</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">		if (candidateShots.size() &gt;= Game.NUMBER_SHOTS)</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">			while (shots.size() &lt; Game.NUMBER_SHOTS) {</span>
+<span class="nc" id="L97">				newShot = candidateShots.get(random.nextInt(candidateShots.size()));</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">				if (!shots.contains(newShot))</span>
+<span class="nc" id="L99">					shots.add(newShot);</span>
+			}
+		else {
+<span class="nc bnc" id="L102" title="All 2 branches missed.">			while (shots.size() &lt; candidateShots.size()) {</span>
+<span class="nc" id="L103">				newShot = candidateShots.get(random.nextInt(candidateShots.size()));</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">				if (!shots.contains(newShot))</span>
+<span class="nc" id="L105">					shots.add(newShot);</span>
+			}
+<span class="nc bnc" id="L107" title="All 2 branches missed.">			while (shots.size() &lt; Game.NUMBER_SHOTS)</span>
+<span class="nc" id="L108">				shots.add(newShot);</span>
+		}
+
+<span class="nc" id="L111">		System.out.print(Messages.get(&quot;move.burst.label&quot;) + &quot; &quot;);</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">		for (IPosition shot : shots)</span>
+<span class="nc" id="L113">			System.out.print(shot + &quot; &quot;);</span>
+<span class="nc" id="L114">		System.out.println();</span>
+
+<span class="nc" id="L116">		this.fireShots(shots);</span>
+
+<span class="nc" id="L118">		return ShotJsonSerializer.jsonShots(shots);</span>
+	}
+
+
+	/**
+	 * Reads and processes the enemy fire input from the specified scanner.
+	 * The method expects input describing positions for enemy shots. It verifies
+	 * the format, ensures the correct number of positions are provided, and then fires
+	 * on those positions.
+	 *
+	 * @param in the scanner object to read the enemy fire positions from, input must
+	 *           be formatted either as a single token combining the column and row
+	 *           (e.g., &quot;A3&quot;) or as separate tokens (e.g., &quot;A&quot; followed by &quot;3&quot;).
+	 * @throws IllegalArgumentException if the provided positions are incomplete,
+	 *                                  incorrectly formatted, or do not match the
+	 *                                  required number of shots (NUMBER_SHOTS).
+	 */
+	public String readEnemyFire(Scanner in) {
+
+<span class="nc bnc" id="L137" title="All 2 branches missed.">		assert in != null;</span>
+
+<span class="nc" id="L139">		String input = in.nextLine().trim();</span>
+
+<span class="nc" id="L141">		List&lt;IPosition&gt; shots = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L143">		Scanner inputScanner = new Scanner(input);</span>
+<span class="nc bnc" id="L144" title="All 4 branches missed.">		while (shots.size() &lt; NUMBER_SHOTS &amp;&amp; inputScanner.hasNext()) {</span>
+<span class="nc" id="L145">			String token = inputScanner.next();</span>
+
+<span class="nc bnc" id="L147" title="All 2 branches missed.">			if (token.matches(&quot;[A-Za-z]&quot;)) {</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">				if (inputScanner.hasNextInt()) {</span>
+<span class="nc" id="L149">					int row = inputScanner.nextInt();</span>
+<span class="nc" id="L150">					shots.add(new Position(token.toUpperCase().charAt(0), row));</span>
+<span class="nc" id="L151">				} else {</span>
+<span class="nc" id="L152">					throw new IllegalArgumentException(</span>
+<span class="nc" id="L153">							Messages.format(&quot;error.incompletePosition&quot;, token));</span>
+				}
+			} else {
+<span class="nc" id="L156">				Scanner singleScanner = new Scanner(token);</span>
+<span class="nc" id="L157">				shots.add(Tasks.readClassicPosition(singleScanner));</span>
+			}
+<span class="nc" id="L159">		}</span>
+
+<span class="nc bnc" id="L161" title="All 2 branches missed.">		if (shots.size() != NUMBER_SHOTS) {</span>
+<span class="nc" id="L162">			throw new IllegalArgumentException(</span>
+<span class="nc" id="L163">					Messages.format(&quot;error.invalidPositionCount&quot;, NUMBER_SHOTS));</span>
+		}
+
+<span class="nc" id="L166">		this.fireShots(shots);</span>
+
+<span class="nc" id="L168">		return ShotJsonSerializer.jsonShots(shots);</span>
+	}
+
+	/**
+	 * Fires a set of shots during a player's move. Each shot is resolved and
+	 * consolidated into a move, which is processed and added to the list of alien moves.
+	 * The method ensures exactly {@code NUMBER_SHOTS} shots are fired, validates
+	 * each shot's position, and increments the move counter after completing the operation.
+	 *
+	 * @param shots a list of positions representing the locations to fire shots at.
+	 *              The positions should be unique and valid within the bounds of the game board.
+	 *              The size of the list must be equal to {@code NUMBER_SHOTS}.
+	 * @throws IllegalArgumentException if the list of shots is null, contains an invalid
+	 *                                  number of positions, or includes duplicate positions.
+	 */
+	public void fireShots(List&lt;IPosition&gt; shots)
+	{
+<span class="nc bnc" id="L185" title="All 2 branches missed.">		assert shots != null;</span>
+
+<span class="nc" id="L187">		List&lt;ShotResult&gt; shotResults = new ArrayList&lt;ShotResult&gt;();</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">		if (shots.size() != NUMBER_SHOTS) {</span>
+<span class="nc" id="L189">			throw new IllegalArgumentException(</span>
+<span class="nc" id="L190">					Messages.format(&quot;error.mustFireExactly&quot;, NUMBER_SHOTS));</span>
+		}
+
+<span class="nc" id="L193">		List&lt;IPosition&gt; alreadyShot = new ArrayList&lt;IPosition&gt;();</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">		for (IPosition pos : shots) {</span>
+<span class="nc" id="L195">			shotResults.add(fireSingleShot(pos, alreadyShot.contains(pos)));</span>
+<span class="nc" id="L196">			alreadyShot.add(pos);</span>
+<span class="nc" id="L197">		}</span>
+
+<span class="nc" id="L199">		Move move = new Move(moveNumber, shots, shotResults);</span>
+
+<span class="nc" id="L201">		move.processEnemyFire(true);</span>
+
+<span class="nc" id="L203">		alienMoves.add(move);</span>
+
+<span class="nc" id="L205">		moveNumber++;</span>
+<span class="nc" id="L206">	}</span>
+
+	/**
+	 * Fires a single shot at the specified position, handling scenarios such as invalid positions,
+	 * repeated shots, hits, misses, and sinking a ship. The method updates the necessary counters
+	 * for invalid shots, repeated shots, hits, and sunk ships.
+	 *
+	 * @param pos the position to fire the shot at; must be valid and within the game board boundaries.
+	 * @param isRepeated true if the shot is marked as a repeat attempt, false otherwise.
+	 * @return a ShotResult object containing the result of the shot, including whether the shot was
+	 *         valid, repeated, a hit, and whether a ship was sunk.
+	 */
+	public ShotResult fireSingleShot(IPosition pos, boolean isRepeated) {
+
+<span class="nc bnc" id="L220" title="All 2 branches missed.">		assert pos != null;</span>
+
+<span class="nc bnc" id="L222" title="All 2 branches missed.">		if (!pos.isInside()) {</span>
+<span class="nc" id="L223">			countInvalidShots++;</span>
+<span class="nc" id="L224">			return new ShotResult(false, false, null, false);</span>
+		}
+
+<span class="nc bnc" id="L227" title="All 4 branches missed.">		if (isRepeated || repeatedShot(pos)) {</span>
+<span class="nc" id="L228">			countRepeatedShots++;</span>
+<span class="nc" id="L229">			return new ShotResult(true, true, null, false);</span>
+		}
+
+<span class="nc" id="L232">		IShip ship = myFleet.shipAt(pos);</span>
+
+<span class="nc bnc" id="L234" title="All 2 branches missed.">		if (ship == null) {</span>
+<span class="nc" id="L235">			return new ShotResult(true, false, null, false);</span>
+		}
+
+<span class="nc" id="L238">		ship.shoot(pos);</span>
+<span class="nc" id="L239">		countHits++;</span>
+
+<span class="nc bnc" id="L241" title="All 2 branches missed.">		if (!ship.stillFloating()) {</span>
+<span class="nc" id="L242">			countSinks++;</span>
+<span class="nc" id="L243">			return new ShotResult(true, false, ship, true);</span>
+		}
+
+<span class="nc" id="L246">		SoundManager.playHit();</span>
+
+<span class="nc" id="L248">		return new ShotResult(true, false, ship, false);</span>
+	}
+
+	@Override
+	public int getRepeatedShots()
+	{
+<span class="nc" id="L254">		return this.countRepeatedShots;</span>
+	}
+
+	@Override
+	public int getInvalidShots()
+	{
+<span class="nc" id="L260">		return this.countInvalidShots;</span>
+	}
+
+	@Override
+	public int getHits()
+	{
+<span class="nc" id="L266">		return this.countHits;</span>
+	}
+
+	@Override
+	public int getSunkShips()
+	{
+<span class="nc" id="L272">		return this.countSinks;</span>
+	}
+
+	@Override
+	public int getRemainingShips()
+	{
+<span class="nc" id="L278">		List&lt;IShip&gt; floatingShips = myFleet.getFloatingShips();</span>
+<span class="nc" id="L279">		return floatingShips.size();</span>
+	}
+
+	public boolean repeatedShot(IPosition pos)
+	{
+<span class="nc bnc" id="L284" title="All 2 branches missed.">		assert pos != null;</span>
+
+<span class="nc bnc" id="L286" title="All 2 branches missed.">		for (IMove move : alienMoves)</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">			if (move.getShots().contains(pos))</span>
+<span class="nc" id="L288">				return true;</span>
+<span class="nc" id="L289">		return false;</span>
+	}
+
+	public void printMyBoard(boolean show_shots, boolean show_legend) {
+<span class="nc" id="L293">		BoardPrinter.printBoard(</span>
+				this.myFleet, this.alienMoves, show_shots, show_legend);
+<span class="nc" id="L295">	}</span>
+
+	public void printAlienBoard(boolean show_shots, boolean show_legend) {
+<span class="nc" id="L298">		BoardPrinter.printBoard(</span>
+				this.alienFleet, this.myMoves, show_shots, show_legend);
+<span class="nc" id="L300">	}</span>
+
+	public void over() {
+<span class="nc" id="L303">		System.out.println();</span>
+<span class="nc" id="L304">		System.out.println(Messages.get(&quot;game.over.line1&quot;));</span>
+<span class="nc" id="L305">		System.out.println(Messages.get(&quot;game.over.message&quot;));</span>
+<span class="nc" id="L306">		System.out.println(Messages.get(&quot;game.over.line2&quot;));</span>
+<span class="nc" id="L307">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

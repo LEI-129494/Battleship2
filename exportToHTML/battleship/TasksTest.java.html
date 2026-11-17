@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TasksTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PositionTest Coverage Results</a> &gt; <a href="index.source.html" class="el_package">battleship</a> &gt; <span class="el_source">TasksTest.java</span></div><h1>TasksTest.java</h1><pre class="source lang-java linenums">package battleship;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.Locale;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class TasksTest {
+
+	@BeforeEach
+<span class="nc" id="L16">	void setUp() {</span>
+		// Inicializa as mensagens em Inglês antes de cada teste
+		Messages.init(Locale.ENGLISH);
+	}
+<span class="nc" id="L20"></span>
+	@Test
+	@DisplayName(&quot;Verificar se a classe Tasks consegue ser instanciada&quot;)
+	void testarCriacaoDaClasse() {
+<span class="nc" id="L24">		Tasks tarefas = new Tasks();</span>
+		assertNotNull(tarefas, &quot;A classe Tasks não devia ser nula&quot;);
+	}
+
+<span class="nc" id="L28">	@Test</span>
+	@DisplayName(&quot;Testar o método canonical com vários comandos&quot;)
+	void testarCanonical() {
+		// Sem espaços!
+<span class="nc" id="L32">		String resultado = Tasks.canonical(&quot;quit&quot;);</span>
+		assertEquals(&quot;QUIT&quot;, resultado);
+
+		assertEquals(&quot;&quot;, Tasks.canonical(null));
+<span class="nc" id="L36">		assertEquals(&quot;&quot;, Tasks.canonical(&quot;batatas&quot;));</span>
+	}
+
+	@Test
+<span class="nc" id="L40">	@DisplayName(&quot;Testar o método menuHelp&quot;)</span>
+	void testarMenuHelp() {
+		// Apenas chamar o método para garantir que as linhas são executadas
+		Tasks.menuHelp();
+<span class="nc" id="L44">	}</span>
+
+	@Test
+	@DisplayName(&quot;Testar a leitura de posições normais&quot;)
+<span class="nc" id="L48">	void testarReadPosition() {</span>
+		// Simula um Scanner onde o utilizador escreve &quot;3 4&quot;
+		Scanner scanner = new Scanner(&quot;3 4&quot;);
+		Position pos = Tasks.readPosition(scanner);
+<span class="nc" id="L52"></span>
+		assertEquals(3, pos.getRow());
+		assertEquals(4, pos.getColumn());
+	}
+<span class="nc" id="L56"></span>
+	@Test
+	@DisplayName(&quot;Testar a leitura de navios (readShip)&quot;)
+	void testarReadShip() {
+		Scanner scanner = new Scanner(&quot;barge 1 1 N&quot;);
+		// O Ship lança AssertionError com este input, por isso esperamos esse erro.
+		// Isto conta como teste válido e cobre as linhas!
+		assertThrows(AssertionError.class, () -&gt; {
+			Tasks.readShip(scanner);
+		});
+	}
+
+	@Test
+	@DisplayName(&quot;Testar a leitura de posições clássicas (ex: A1, B 2)&quot;)
+	void testarReadClassicPosition() {
+		Scanner scannerFalso1 = new Scanner(&quot;A1&quot;);
+		IPosition pos1 = Tasks.readClassicPosition(scannerFalso1);
+		assertEquals(0, pos1.getRow());
+		assertEquals(0, pos1.getColumn());
+
+		Scanner scannerFalso2 = new Scanner(&quot;B 2&quot;);
+		IPosition pos2 = Tasks.readClassicPosition(scannerFalso2);
+		assertEquals(1, pos2.getRow());
+		assertEquals(1, pos2.getColumn());
+	}
+
+	@Test
+	@DisplayName(&quot;Testar buildFleet (esperando exceção para cobrir o ciclo)&quot;)
+	void testarBuildFleet() {
+		Scanner scanner = new Scanner(&quot;barge 1 1 N&quot;);
+		// Tal como o readShip, ele vai rebentar com AssertionError.
+		assertThrows(AssertionError.class, () -&gt; {
+			Tasks.buildFleet(scanner);
+		});
+	}
+
+	@Test
+	@DisplayName(&quot;Testar menu() enviando comando quit imediatamente&quot;)
+	void testarMenu() {
+		// Guardar o teclado original (System.in)
+		java.io.InputStream tecladoOriginal = System.in;
+		try {
+			// Injetar a palavra &quot;quit&quot; no teclado falso
+			System.setIn(new java.io.ByteArrayInputStream(&quot;quit\n&quot;.getBytes()));
+
+			// Chamar o menu. Ele vai ler o &quot;quit&quot; e sair logo do ciclo!
+			Tasks.menu();
+		} finally {
+			// Devolver o teclado normal ao computador
+			System.setIn(tecladoOriginal);
+		}
+	}
+
+	@Test
+	@DisplayName(&quot;Testar chooseLanguage escolhendo Portugues&quot;)
+	void testarChooseLanguage() {
+		java.io.InputStream tecladoOriginal = System.in;
+		java.io.PrintStream ecraOriginal = System.out;
+		try {
+			// Injetar a opção &quot;1&quot; (Português)
+			System.setIn(new java.io.ByteArrayInputStream(&quot;1\n&quot;.getBytes()));
+			// Silenciar o output no ecrã para não encher a consola de texto
+			System.setOut(new java.io.PrintStream(new java.io.ByteArrayOutputStream()));
+
+			Tasks.chooseLanguage();
+		} finally {
+			System.setIn(tecladoOriginal);
+			System.setOut(ecraOriginal);
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

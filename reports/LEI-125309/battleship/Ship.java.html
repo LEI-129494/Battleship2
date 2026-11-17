@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Ship.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ShipTest Coverage Results, PositionTest Coverage Results, MoveTest Coverage Results</a> &gt; <a href="index.source.html" class="el_package">battleship</a> &gt; <span class="el_source">Ship.java</span></div><h1>Ship.java</h1><pre class="source lang-java linenums">
+package battleship;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * The type Ship.
+ */
+<span class="fc" id="L12">public abstract class Ship implements IShip {</span>
+
+	private static final String GALEAO = &quot;galeao&quot;;
+	private static final String FRAGATA = &quot;fragata&quot;;
+	private static final String NAU = &quot;nau&quot;;
+	private static final String CARAVELA = &quot;caravela&quot;;
+	private static final String BARCA = &quot;barca&quot;;
+
+	private String category;
+	private Compass bearing;
+	private IPosition pos;
+	private Integer size;
+
+	protected List&lt;IPosition&gt; positions;
+
+	/**
+	 * Create a new ship.
+	 *
+	 * @param shipKind the ship kind
+	 * @param bearing the bearing
+	 * @param pos the position
+	 * @return a ship
+	 */
+	static Ship buildShip(String shipKind, Compass bearing, Position pos) {
+<span class="fc bfc" id="L36" title="All 2 branches covered.">		assert shipKind != null;</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">		assert bearing != null;</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">		assert pos != null;</span>
+
+		Ship ship;
+
+<span class="fc bfc" id="L42" title="All 6 branches covered.">		switch (shipKind) {</span>
+			case BARCA:
+<span class="fc" id="L44">				ship = new Barge(bearing, pos);</span>
+<span class="fc" id="L45">				break;</span>
+			case CARAVELA:
+<span class="fc" id="L47">				ship = new Caravel(bearing, pos);</span>
+<span class="fc" id="L48">				break;</span>
+			case NAU:
+<span class="fc" id="L50">				ship = new Carrack(bearing, pos);</span>
+<span class="fc" id="L51">				break;</span>
+			case FRAGATA:
+<span class="fc" id="L53">				ship = new Frigate(bearing, pos);</span>
+<span class="fc" id="L54">				break;</span>
+			case GALEAO:
+<span class="fc" id="L56">				ship = new Galleon(bearing, pos);</span>
+<span class="fc" id="L57">				break;</span>
+			default:
+<span class="fc" id="L59">				ship = null;</span>
+		}
+
+<span class="fc" id="L62">		return ship;</span>
+	}
+
+	/**
+	 * Create ships.
+	 *
+	 * @param category the category
+	 * @param bearing the bearing
+	 * @param pos the position
+	 * @param size the number of positions occupied
+	 */
+<span class="fc" id="L73">	public Ship(String category, Compass bearing, IPosition pos, int size) {</span>
+<span class="fc" id="L74">		this.category = Objects.requireNonNull(</span>
+				category, &quot;Ship's category must not be null&quot;);
+<span class="fc" id="L76">		this.bearing = Objects.requireNonNull(</span>
+				bearing, &quot;Ship's bearing must not be null&quot;);
+<span class="fc" id="L78">		this.pos = Objects.requireNonNull(</span>
+				pos, &quot;Ship's position must not be null&quot;);
+
+<span class="fc" id="L81">		this.size = size;</span>
+<span class="fc" id="L82">		this.positions = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L83">	}</span>
+
+	@Override
+	public String getCategory() {
+<span class="fc" id="L87">		return category;</span>
+	}
+
+	@Override
+	public List&lt;IPosition&gt; getPositions() {
+<span class="fc" id="L92">		return positions;</span>
+	}
+
+	@Override
+	public List&lt;IPosition&gt; getAdjacentPositions() {
+<span class="fc" id="L97">		List&lt;IPosition&gt; adjacentPositions = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L99" title="All 2 branches covered.">		for (IPosition position : getPositions()) {</span>
+<span class="fc" id="L100">			List&lt;IPosition&gt; adjacents = position.adjacentPositions();</span>
+
+<span class="fc bfc" id="L102" title="All 2 branches covered.">			for (IPosition adj : adjacents) {</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">				if (!getPositions().contains(adj)</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">						&amp;&amp; !adjacentPositions.contains(adj)) {</span>
+<span class="fc" id="L105">					adjacentPositions.add(adj);</span>
+				}
+<span class="fc" id="L107">			}</span>
+<span class="fc" id="L108">		}</span>
+
+<span class="fc" id="L110">		return adjacentPositions;</span>
+	}
+
+	@Override
+	public IPosition getPosition() {
+<span class="fc" id="L115">		return pos;</span>
+	}
+
+	@Override
+	public Compass getBearing() {
+<span class="fc" id="L120">		return bearing;</span>
+	}
+
+	@Override
+	public Integer getSize() {
+<span class="fc" id="L125">		return size;</span>
+	}
+
+	@Override
+	public boolean stillFloating() {
+<span class="fc bfc" id="L130" title="All 2 branches covered.">		for (int i = 0; i &lt; getSize(); i++) {</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">			if (!getPositions().get(i).isHit()) {</span>
+<span class="fc" id="L132">				return true;</span>
+			}
+		}
+
+<span class="fc" id="L136">		return false;</span>
+	}
+
+	@Override
+	public int getTopMostPos() {
+<span class="fc" id="L141">		int top = getPositions().get(0).getRow();</span>
+
+<span class="fc bfc" id="L143" title="All 2 branches covered.">		for (int i = 1; i &lt; getSize(); i++) {</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">			if (getPositions().get(i).getRow() &lt; top) {</span>
+<span class="fc" id="L145">				top = getPositions().get(i).getRow();</span>
+			}
+		}
+
+<span class="fc" id="L149">		return top;</span>
+	}
+
+	@Override
+	public int getBottomMostPos() {
+<span class="fc" id="L154">		int bottom = getPositions().get(0).getRow();</span>
+
+<span class="fc bfc" id="L156" title="All 2 branches covered.">		for (int i = 1; i &lt; getSize(); i++) {</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">			if (getPositions().get(i).getRow() &gt; bottom) {</span>
+<span class="fc" id="L158">				bottom = getPositions().get(i).getRow();</span>
+			}
+		}
+
+<span class="fc" id="L162">		return bottom;</span>
+	}
+
+	@Override
+	public int getLeftMostPos() {
+<span class="fc" id="L167">		int left = getPositions().get(0).getColumn();</span>
+
+<span class="fc bfc" id="L169" title="All 2 branches covered.">		for (int i = 1; i &lt; getSize(); i++) {</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">			if (getPositions().get(i).getColumn() &lt; left) {</span>
+<span class="fc" id="L171">				left = getPositions().get(i).getColumn();</span>
+			}
+		}
+
+<span class="fc" id="L175">		return left;</span>
+	}
+
+	@Override
+	public int getRightMostPos() {
+<span class="fc" id="L180">		int right = getPositions().get(0).getColumn();</span>
+
+<span class="fc bfc" id="L182" title="All 2 branches covered.">		for (int i = 1; i &lt; getSize(); i++) {</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">			if (getPositions().get(i).getColumn() &gt; right) {</span>
+<span class="fc" id="L184">				right = getPositions().get(i).getColumn();</span>
+			}
+		}
+
+<span class="fc" id="L188">		return right;</span>
+	}
+
+	@Override
+	public boolean occupies(IPosition pos) {
+<span class="fc bfc" id="L193" title="All 2 branches covered.">		assert pos != null;</span>
+
+<span class="fc bfc" id="L195" title="All 2 branches covered.">		for (int i = 0; i &lt; getSize(); i++) {</span>
+<span class="fc bfc" id="L196" title="All 2 branches covered.">			if (getPositions().get(i).equals(pos)) {</span>
+<span class="fc" id="L197">				return true;</span>
+			}
+		}
+
+<span class="fc" id="L201">		return false;</span>
+	}
+
+	@Override
+	public boolean tooCloseTo(IShip other) {
+<span class="fc bfc" id="L206" title="All 2 branches covered.">		assert other != null;</span>
+
+<span class="fc" id="L208">		Iterator&lt;IPosition&gt; otherPos = other.getPositions().iterator();</span>
+
+<span class="fc bfc" id="L210" title="All 2 branches covered.">		while (otherPos.hasNext()) {</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">			if (tooCloseTo(otherPos.next())) {</span>
+<span class="fc" id="L212">				return true;</span>
+			}
+		}
+
+<span class="fc" id="L216">		return false;</span>
+	}
+
+	@Override
+	public boolean tooCloseTo(IPosition pos) {
+<span class="fc bfc" id="L221" title="All 2 branches covered.">		assert pos != null;</span>
+
+<span class="fc bfc" id="L223" title="All 2 branches covered.">		for (int i = 0; i &lt; this.getSize(); i++) {</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">			if (getPositions().get(i).isAdjacentTo(pos)) {</span>
+<span class="fc" id="L225">				return true;</span>
+			}
+		}
+
+<span class="fc" id="L229">		return false;</span>
+	}
+
+	@Override
+	public boolean isInsideBoard() {
+<span class="fc bfc" id="L234" title="All 2 branches covered.">		return getLeftMostPos() &gt;= 0</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">				&amp;&amp; getRightMostPos() &lt;= Game.BOARD_SIZE - 1</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">				&amp;&amp; getTopMostPos() &gt;= 0</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">				&amp;&amp; getBottomMostPos() &lt;= Game.BOARD_SIZE - 1;</span>
+	}
+
+	@Override
+	public void shoot(IPosition pos) {
+<span class="fc bfc" id="L242" title="All 2 branches covered.">		assert pos != null;</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">		assert pos.isInside();</span>
+
+<span class="fc bfc" id="L245" title="All 2 branches covered.">		for (IPosition position : getPositions()) {</span>
+<span class="fc bfc" id="L246" title="All 2 branches covered.">			if (position.equals(pos)) {</span>
+<span class="fc" id="L247">				position.shoot();</span>
+			}
+<span class="fc" id="L249">		}</span>
+<span class="fc" id="L250">	}</span>
+
+	@Override
+	public void sink() {
+<span class="fc bfc" id="L254" title="All 2 branches covered.">		for (IPosition position : getPositions()) {</span>
+<span class="fc" id="L255">			position.shoot();</span>
+<span class="fc" id="L256">		}</span>
+<span class="fc" id="L257">	}</span>
+
+	@Override
+	public String toString() {
+<span class="fc" id="L261">		return &quot;[&quot; + category + &quot; &quot; + bearing + &quot; &quot; + pos + &quot;]&quot;;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

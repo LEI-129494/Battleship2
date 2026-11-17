@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Tasks.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PositionTest Coverage Results</a> &gt; <a href="index.source.html" class="el_package">battleship</a> &gt; <span class="el_source">Tasks.java</span></div><h1>Tasks.java</h1><pre class="source lang-java linenums">package battleship;
+
+import java.util.Scanner;
+import java.util.Locale;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * The type Tasks.
+ */
+<span class="nc" id="L13">public class Tasks {</span>
+
+	/**
+	 * The constant LOGGER.
+	 */
+<span class="nc" id="L18">	private static final Logger LOGGER = LogManager.getLogger();</span>
+
+	// ---------------------------------------------------------------
+	// Identificadores canonicos (internos, independentes do idioma).
+	// As strings que o utilizador escreve sao lidas do bundle de
+	// mensagens (chaves cmd.*) e podem diferir entre idiomas,
+	// ex.: &quot;ajuda&quot; (pt) vs &quot;help&quot; (en).
+	// ---------------------------------------------------------------
+	private static final String CMD_HELP      = &quot;HELP&quot;;
+	private static final String CMD_NEWFLEET  = &quot;NEWFLEET&quot;;
+	private static final String CMD_LOADFLEET = &quot;LOADFLEET&quot;;
+	private static final String CMD_STATUS    = &quot;STATUS&quot;;
+	private static final String CMD_MAP       = &quot;MAP&quot;;
+	private static final String CMD_SHOT      = &quot;SHOT&quot;;
+	private static final String CMD_SHOTS     = &quot;SHOTS&quot;;
+	private static final String CMD_SIMULATE  = &quot;SIMULATE&quot;;
+	private static final String CMD_EXPORTPDF = &quot;EXPORTPDF&quot;;
+	private static final String CMD_QUIT      = &quot;QUIT&quot;;
+	private static final String CMD_HISTORY = &quot;HISTORY&quot;;
+	private static final String CMD_UNKNOWN   = &quot;&quot;;
+
+
+	/**
+	 * Apresenta um menu bilingue de escolha de idioma no arranque do jogo e
+	 * reinicializa o bundle de mensagens com o locale escolhido.
+	 *
+	 * &lt;p&gt;Este menu é intencionalmente bilingue (nao traduzido) porque, por
+	 * definicao, o idioma ainda nao foi escolhido. Depois desta chamada, todas
+	 * as mensagens subsequentes sao obtidas no idioma selecionado.&lt;/p&gt;
+	 *
+	 * &lt;p&gt;Aceita &quot;1&quot; ou &quot;pt&quot; para Portugues e &quot;2&quot; ou &quot;en&quot; para Ingles. Qualquer
+	 * outra entrada e tratada como Portugues (idioma por omissao).&lt;/p&gt;
+	 */
+	public static void chooseLanguage() {
+<span class="nc" id="L52">		System.out.println(&quot;==========================================&quot;);</span>
+<span class="nc" id="L53">		System.out.println(&quot; Escolha o idioma / Choose language:&quot;);</span>
+<span class="nc" id="L54">		System.out.println(&quot;   1 - Portugues&quot;);</span>
+<span class="nc" id="L55">		System.out.println(&quot;   2 - English&quot;);</span>
+<span class="nc" id="L56">		System.out.println(&quot;==========================================&quot;);</span>
+<span class="nc" id="L57">		System.out.print(&quot;&gt; &quot;);</span>
+
+<span class="nc" id="L59">		Scanner in = new Scanner(System.in);</span>
+<span class="nc" id="L60">		String opt = in.next().trim().toLowerCase();</span>
+
+<span class="nc bnc" id="L62" title="All 4 branches missed.">		if (&quot;2&quot;.equals(opt) || &quot;en&quot;.equals(opt)) {</span>
+<span class="nc" id="L63">			Messages.init(Locale.ENGLISH);</span>
+		} else {
+<span class="nc" id="L65">			Messages.init(Locale.of(&quot;pt&quot;));</span>
+		}
+<span class="nc" id="L67">		System.out.println();</span>
+<span class="nc" id="L68">	}</span>
+
+	/**
+	 * This task also tests the fighting element of a round of three shots
+	 */
+	public static void menu() {
+
+<span class="nc" id="L75">		IFleet myFleet = null;</span>
+<span class="nc" id="L76">		IGame game = null;</span>
+<span class="nc" id="L77">		menuHelp();</span>
+
+<span class="nc" id="L79">		System.out.print(&quot;&gt; &quot;);</span>
+<span class="nc" id="L80">		Scanner in = new Scanner(System.in);</span>
+<span class="nc" id="L81">		String command = in.next();</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">		while (!CMD_QUIT.equals(canonical(command))) {</span>
+
+<span class="nc bnc" id="L84" title="All 11 branches missed.">			switch (canonical(command)) {</span>
+				case CMD_HISTORY:
+<span class="nc" id="L86">					DatabaseManager.printHistory();</span>
+<span class="nc" id="L87">					break;</span>
+				case CMD_NEWFLEET:
+<span class="nc" id="L89">					myFleet = Fleet.createRandom();</span>
+<span class="nc" id="L90">					game = new Game(myFleet);</span>
+<span class="nc" id="L91">					game.printMyBoard(false, true);</span>
+<span class="nc" id="L92">					break;</span>
+				case CMD_LOADFLEET:
+<span class="nc" id="L94">					myFleet = buildFleet(in);</span>
+<span class="nc" id="L95">					game = new Game(myFleet);</span>
+<span class="nc" id="L96">					game.printMyBoard(false, true);</span>
+<span class="nc" id="L97">					break;</span>
+				case CMD_STATUS:
+<span class="nc bnc" id="L99" title="All 2 branches missed.">					if (myFleet != null)</span>
+<span class="nc" id="L100">						myFleet.printStatus();</span>
+					break;
+				case CMD_MAP:
+<span class="nc bnc" id="L103" title="All 2 branches missed.">					if (myFleet != null)</span>
+<span class="nc" id="L104">						game.printMyBoard(false, true);</span>
+					break;
+				case CMD_SHOT:
+<span class="nc bnc" id="L107" title="All 2 branches missed.">					if (game != null) {</span>
+<span class="nc" id="L108">						game.readEnemyFire(in);</span>
+<span class="nc" id="L109">						myFleet.printStatus();</span>
+<span class="nc" id="L110">						game.printMyBoard(true, false);</span>
+
+<span class="nc bnc" id="L112" title="All 2 branches missed.">						if (game.getRemainingShips() == 0) {</span>
+<span class="nc" id="L113">							game.over();</span>
+<span class="nc" id="L114">							System.exit(0);</span>
+						}
+					}
+					break;
+				case CMD_SIMULATE:
+<span class="nc bnc" id="L119" title="All 2 branches missed.">					if (game != null) {</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">						while (game.getRemainingShips() &gt; 0){</span>
+<span class="nc" id="L121">							game.randomEnemyFire();</span>
+<span class="nc" id="L122">							myFleet.printStatus();</span>
+<span class="nc" id="L123">							game.printMyBoard(true, false);</span>
+							try {
+<span class="nc" id="L125">								Thread.sleep(3000);</span>
+<span class="nc" id="L126">							} catch (InterruptedException e) {</span>
+<span class="nc" id="L127">								Thread.currentThread().interrupt();</span>
+<span class="nc" id="L128">							}</span>
+						}
+
+<span class="nc bnc" id="L131" title="All 2 branches missed.">						if (game.getRemainingShips() == 0) {</span>
+<span class="nc" id="L132">							game.over();</span>
+<span class="nc" id="L133">							System.exit(0);</span>
+						}
+					}
+					break;
+				case CMD_SHOTS:
+<span class="nc bnc" id="L138" title="All 2 branches missed.">					if (game != null)</span>
+<span class="nc" id="L139">						game.printMyBoard(true, true);</span>
+					break;
+				case CMD_EXPORTPDF:
+<span class="nc bnc" id="L142" title="All 2 branches missed.">					if (game != null) {</span>
+						try {
+<span class="nc" id="L144">							java.nio.file.Path pdf = PdfExporter.export(game);</span>
+<span class="nc" id="L145">							System.out.println(Messages.format(&quot;msg.pdfExported&quot;, pdf.toAbsolutePath()));</span>
+<span class="nc" id="L146">						} catch (java.io.IOException e) {</span>
+<span class="nc" id="L147">							LOGGER.error(Messages.get(&quot;error.pdfExport&quot;), e);</span>
+<span class="nc" id="L148">							System.out.println(Messages.get(&quot;error.pdfExport&quot;));</span>
+<span class="nc" id="L149">						}</span>
+					} else {
+<span class="nc" id="L151">						System.out.println(Messages.get(&quot;msg.noActiveGame&quot;));</span>
+					}
+<span class="nc" id="L153">					break;</span>
+				case CMD_HELP:
+<span class="nc" id="L155">					menuHelp();</span>
+<span class="nc" id="L156">					break;</span>
+				default:
+<span class="nc" id="L158">					System.out.println(Messages.get(&quot;msg.unknownCommand&quot;));</span>
+			}
+<span class="nc" id="L160">			System.out.print(&quot;&gt; &quot;);</span>
+<span class="nc" id="L161">			command = in.next();</span>
+		}
+<span class="nc" id="L163">		System.out.println(Messages.get(&quot;msg.goodbye&quot;));</span>
+<span class="nc" id="L164">	}</span>
+
+	/**
+	 * Maps a user-typed token (in the currently active language) to the
+	 * canonical, language-independent command identifier used by the
+	 * {@code switch} in {@link #menu()}.
+	 *
+	 * @param input raw token typed by the user (case-insensitive)
+	 * @return one of the {@code CMD_*} constants, or {@link #CMD_UNKNOWN} if the
+	 *         token does not match any known command in the active language
+	 */
+	static String canonical(String input) {
+<span class="nc bnc" id="L176" title="All 2 branches missed.">		if (input == null) return CMD_UNKNOWN;</span>
+<span class="nc" id="L177">		String t = input.toLowerCase();</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">		if (t.equals(Messages.get(&quot;cmd.help&quot;).toLowerCase()))      return CMD_HELP;</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">		if (t.equals(Messages.get(&quot;cmd.newfleet&quot;).toLowerCase()))  return CMD_NEWFLEET;</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">		if (t.equals(Messages.get(&quot;cmd.loadfleet&quot;).toLowerCase())) return CMD_LOADFLEET;</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">		if (t.equals(Messages.get(&quot;cmd.status&quot;).toLowerCase()))    return CMD_STATUS;</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">		if (t.equals(Messages.get(&quot;cmd.map&quot;).toLowerCase()))       return CMD_MAP;</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">		if (t.equals(Messages.get(&quot;cmd.shot&quot;).toLowerCase()))      return CMD_SHOT;</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">		if (t.equals(Messages.get(&quot;cmd.shots&quot;).toLowerCase()))     return CMD_SHOTS;</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">		if (t.equals(Messages.get(&quot;cmd.simulate&quot;).toLowerCase()))  return CMD_SIMULATE;</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">		if (t.equals(Messages.get(&quot;cmd.exportpdf&quot;).toLowerCase())) return CMD_EXPORTPDF;</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">		if (t.equals(Messages.get(&quot;cmd.quit&quot;).toLowerCase()))      return CMD_QUIT;</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">		if (t.equals(Messages.get(&quot;cmd.history&quot;).toLowerCase())) return CMD_HISTORY;</span>
+<span class="nc" id="L189">		return CMD_UNKNOWN;</span>
+	}
+
+	/**
+	 * This function provides help information about the menu commands.
+	 * The command names shown are those of the active language.
+	 */
+	public static void menuHelp() {
+<span class="nc" id="L197">		System.out.println(Messages.get(&quot;menu.help.title&quot;));</span>
+<span class="nc" id="L198">		System.out.println(Messages.get(&quot;menu.help.intro&quot;));</span>
+<span class="nc" id="L199">		System.out.println(Messages.format(&quot;menu.help.help&quot;,      Messages.get(&quot;cmd.help&quot;)));</span>
+<span class="nc" id="L200">		System.out.println(Messages.format(&quot;menu.help.newfleet&quot;,  Messages.get(&quot;cmd.newfleet&quot;)));</span>
+<span class="nc" id="L201">		System.out.println(Messages.format(&quot;menu.help.loadfleet&quot;, Messages.get(&quot;cmd.loadfleet&quot;)));</span>
+<span class="nc" id="L202">		System.out.println(Messages.format(&quot;menu.help.status&quot;,    Messages.get(&quot;cmd.status&quot;)));</span>
+<span class="nc" id="L203">		System.out.println(Messages.format(&quot;menu.help.map&quot;,       Messages.get(&quot;cmd.map&quot;)));</span>
+<span class="nc" id="L204">		System.out.println(Messages.format(&quot;menu.help.shot&quot;,      Messages.get(&quot;cmd.shot&quot;)));</span>
+<span class="nc" id="L205">		System.out.println(Messages.format(&quot;menu.help.simulate&quot;,  Messages.get(&quot;cmd.simulate&quot;)));</span>
+<span class="nc" id="L206">		System.out.println(Messages.format(&quot;menu.help.shots&quot;,     Messages.get(&quot;cmd.shots&quot;)));</span>
+<span class="nc" id="L207">		System.out.println(Messages.format(&quot;menu.help.exportpdf&quot;, Messages.get(&quot;cmd.exportpdf&quot;)));</span>
+<span class="nc" id="L208">		System.out.println(Messages.format(&quot;menu.help.history&quot;, Messages.get(&quot;cmd.history&quot;)));</span>
+<span class="nc" id="L209">		System.out.println(Messages.format(&quot;menu.help.quit&quot;,      Messages.get(&quot;cmd.quit&quot;)));</span>
+<span class="nc" id="L210">		System.out.println(Messages.get(&quot;menu.help.footer&quot;));</span>
+<span class="nc" id="L211">	}</span>
+
+	/**
+	 * This operation allows the build up of a fleet, given user data
+	 *
+	 * @param in The scanner to read from
+	 * @return The fleet that has been built
+	 */
+	public static Fleet buildFleet(Scanner in) {
+
+<span class="nc bnc" id="L221" title="All 2 branches missed.">		assert in != null;</span>
+
+<span class="nc" id="L223">		Fleet fleet = new Fleet();</span>
+<span class="nc" id="L224">		int i = 0; // i represents the total of successfully created ships</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">		while (i &lt; Fleet.FLEET_SIZE) {</span>
+<span class="nc" id="L226">			IShip s = readShip(in);</span>
+<span class="nc bnc" id="L227" title="All 2 branches missed.">			if (s != null) {</span>
+<span class="nc" id="L228">				boolean success = fleet.addShip(s);</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">				if (success)</span>
+<span class="nc" id="L230">					i++;</span>
+				else
+<span class="nc" id="L232">					LOGGER.info(Messages.format(&quot;msg.shipAddFailure&quot;,</span>
+<span class="nc" id="L233">							s.getCategory(), s.getBearing(), s.getPosition()));</span>
+<span class="nc" id="L234">			} else {</span>
+<span class="nc" id="L235">				LOGGER.info(Messages.get(&quot;msg.unknownShip&quot;));</span>
+			}
+<span class="nc" id="L237">		}</span>
+<span class="nc" id="L238">		LOGGER.info(Messages.format(&quot;msg.shipsAdded&quot;, i));</span>
+<span class="nc" id="L239">		return fleet;</span>
+	}
+
+	/**
+	 * This operation reads data about a ship, build it and returns it
+	 *
+	 * @param in The scanner to read from
+	 * @return The created ship based on the data that has been read
+	 */
+	public static Ship readShip(Scanner in) {
+
+<span class="nc bnc" id="L250" title="All 2 branches missed.">		assert in != null;</span>
+
+<span class="nc" id="L252">		String shipKind = in.next();</span>
+<span class="nc" id="L253">		Position pos = readPosition(in);</span>
+<span class="nc" id="L254">		char c = in.next().charAt(0);</span>
+<span class="nc" id="L255">		Compass bearing = Compass.charToCompass(c);</span>
+<span class="nc" id="L256">		return Ship.buildShip(shipKind, bearing, pos);</span>
+	}
+
+	/**
+	 * This operation allows reading a position in the map
+	 *
+	 * @param in The scanner to read from
+	 * @return The position that has been read
+	 */
+	public static Position readPosition(Scanner in) {
+
+<span class="nc bnc" id="L267" title="All 2 branches missed.">		assert in != null;</span>
+
+<span class="nc" id="L269">		int row = in.nextInt();</span>
+<span class="nc" id="L270">		int column = in.nextInt();</span>
+<span class="nc" id="L271">		return new Position(row, column);</span>
+	}
+
+	/**
+	 * This operation allows reading a position in the map
+	 *
+	 * @param in The scanner to read from
+	 * @return The classic position that has been read
+	 */
+	public static IPosition readClassicPosition(@NotNull Scanner in) {
+		// Verifica se ainda ha tokens disponiveis
+<span class="nc bnc" id="L282" title="All 2 branches missed.">		if (!in.hasNext()) {</span>
+<span class="nc" id="L283">			throw new IllegalArgumentException(Messages.get(&quot;error.noValidPosition&quot;));</span>
+		}
+
+<span class="nc" id="L286">		String part1 = in.next(); // Primeiro token</span>
+<span class="nc" id="L287">		String part2 = null;</span>
+
+<span class="nc bnc" id="L289" title="All 2 branches missed.">		if (in.hasNextInt()) {</span>
+<span class="nc" id="L290">			part2 = in.next(); // Segundo token, se disponivel</span>
+		}
+
+<span class="nc bnc" id="L293" title="All 2 branches missed.">		String input = (part2 != null) ? part1 + part2 : part1;</span>
+
+		// Normalizar o input para tratar letras maiusculas e minusculas
+<span class="nc" id="L296">		input = input.toUpperCase();</span>
+
+		// Verificar os dois formatos possiveis: compactos e com espaco
+<span class="nc bnc" id="L299" title="All 2 branches missed.">		if (input.matches(&quot;[A-Z]\\d+&quot;)) {</span>
+<span class="nc" id="L300">			char column = input.charAt(0); // Extrair a coluna</span>
+<span class="nc" id="L301">			int row = Integer.parseInt(input.substring(1)); // Extrair a linha</span>
+<span class="nc" id="L302">			return new Position(column, row);</span>
+<span class="nc bnc" id="L303" title="All 6 branches missed.">		} else if (part2 != null &amp;&amp; part1.matches(&quot;[A-Z]&quot;) &amp;&amp; part2.matches(&quot;\\d+&quot;)) {</span>
+<span class="nc" id="L304">			char column = part1.charAt(0); // Extrair a coluna</span>
+<span class="nc" id="L305">			int row = Integer.parseInt(part2); // Extrair a linha</span>
+<span class="nc" id="L306">			return new Position(column, row);</span>
+		} else {
+<span class="nc" id="L308">			throw new IllegalArgumentException(Messages.get(&quot;error.invalidPositionFormat&quot;));</span>
+		}
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PositionTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PositionTest Coverage Results</a> &gt; <a href="index.source.html" class="el_package">battleship</a> &gt; <span class="el_source">PositionTest.java</span></div><h1>PositionTest.java</h1><pre class="source lang-java linenums">package battleship;
+
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Test class for Position.
+ * Author: britoeabreu
+ * Date: 2024-03-19 15:30
+ * Cyclomatic Complexity for each method:
+ * - Constructor: 1
+<span class="fc" id="L12"> * - getRow: 1</span>
+ * - getColumn: 1
+ * - isValid: 4
+ * - isAdjacentTo: 4
+ * - isOccupied: 1
+ * - isHit: 1
+<span class="fc" id="L18"> * - occupy: 1</span>
+<span class="fc" id="L19"> * - shoot: 1</span>
+ * - equals: 3
+ * - hashCode: 1
+ * - toString: 1
+<span class="fc" id="L23"> */</span>
+<span class="fc" id="L24">public class PositionTest {</span>
+	private Position position;
+
+	@BeforeEach
+	void setUp() {
+<span class="fc" id="L29">		position = new Position(2, 3);</span>
+	//	position = new Position('C', 4);
+<span class="fc" id="L31">	}</span>
+<span class="fc" id="L32"></span>
+<span class="fc" id="L33">	@AfterEach</span>
+<span class="fc" id="L34">	void tearDown() {</span>
+<span class="fc" id="L35">		position = null;</span>
+<span class="fc" id="L36">	}</span>
+
+	@Test
+	void constructor() {
+		Position pos = new Position(1, 1);
+<span class="fc" id="L41">		assertNotNull(pos, &quot;Failed to create Position: object is null&quot;);</span>
+		assertEquals(1, pos.getRow(), &quot;Failed to set row: expected 1 but got &quot; + pos.getRow());
+<span class="fc" id="L43">		assertEquals(1, pos.getColumn(), &quot;Failed to set column: expected 1 but got &quot; + pos.getColumn());</span>
+<span class="fc" id="L44">		assertFalse(pos.isOccupied(), &quot;New position should not be occupied&quot;);</span>
+<span class="fc" id="L45">		assertFalse(pos.isHit(), &quot;New position should not be hit&quot;);</span>
+<span class="fc" id="L46">	}</span>
+<span class="fc" id="L47"></span>
+<span class="fc" id="L48">	@Test</span>
+<span class="fc" id="L49">	void getRow() {</span>
+		assertEquals(2, position.getRow(), &quot;Failed to get row: expected 2 but got &quot; + position.getRow());
+	}
+
+	@Test
+<span class="fc" id="L54">	void getColumn() {</span>
+<span class="fc" id="L55">		assertEquals(3, position.getColumn(), &quot;Failed to get column: expected 3 but got &quot; + position.getColumn());</span>
+	}
+
+	@Test
+	void getClassicRow() {
+<span class="fc" id="L60">		assertEquals('C', position.getClassicRow(), &quot;Failed to get row: expected 2 but got &quot; + position.getRow());</span>
+<span class="fc" id="L61">	}</span>
+
+	@Test
+	void getClassicColumn() {
+		assertEquals(3, position.getColumn(), &quot;Failed to get column: expected 3 but got &quot; + position.getColumn());
+<span class="fc" id="L66">	}</span>
+<span class="fc" id="L67"></span>
+	@Test
+	void isValid1() {
+		position = new Position(0, 0);
+		assertTrue(position.isInside(), &quot;Position (0,0) should be valid&quot;);
+<span class="fc" id="L72">	}</span>
+<span class="fc" id="L73"></span>
+	@Test
+	void isValid2() {
+		position = new Position(-1, 5);
+		assertFalse(position.isInside(), &quot;Position with negative row should be invalid&quot;);
+<span class="fc" id="L78">	}</span>
+
+<span class="fc" id="L80">	@Test</span>
+<span class="fc" id="L81">	void isValid3() {</span>
+<span class="fc" id="L82">		position = new Position(5, -1);</span>
+		assertFalse(position.isInside(), &quot;Position with negative column should be invalid&quot;);
+	}
+
+	@Test
+<span class="fc" id="L87">	void isValid4() {</span>
+		position = new Position(Game.BOARD_SIZE, 5);
+<span class="fc" id="L89">		assertFalse(position.isInside(), &quot;Position with row &gt;= BOARD_SIZE should be invalid&quot;);</span>
+<span class="fc" id="L90">	}</span>
+
+	@Test
+	void isValid5() {
+		position = new Position(5, Game.BOARD_SIZE);
+<span class="fc" id="L95">		assertFalse(position.isInside(), &quot;Position with column &gt;= BOARD_SIZE should be invalid&quot;);</span>
+	}
+
+	@Test
+	void isAdjacentTo1() {
+<span class="fc" id="L100">		Position other = new Position(2, 4);</span>
+<span class="fc" id="L101">		assertTrue(position.isAdjacentTo(other), &quot;Failed to detect horizontally adjacent position&quot;);</span>
+	}
+
+	@Test
+	void isAdjacentTo2() {
+<span class="fc" id="L106">		Position other = new Position(3, 3);</span>
+		assertTrue(position.isAdjacentTo(other), &quot;Failed to detect vertically adjacent position&quot;);
+<span class="fc" id="L108">	}</span>
+<span class="fc" id="L109"></span>
+	@Test
+	void isAdjacentTo3() {
+		Position other = new Position(3, 4);
+		assertTrue(position.isAdjacentTo(other), &quot;Failed to detect diagonally adjacent position&quot;);
+<span class="fc" id="L114">	}</span>
+
+<span class="fc" id="L116">	@Test</span>
+<span class="fc" id="L117">	void isAdjacentTo4() {</span>
+		Position other = new Position(4, 5);
+		assertFalse(position.isAdjacentTo(other), &quot;Non-adjacent position incorrectly identified as adjacent&quot;);
+	}
+
+<span class="fc" id="L122">	@Test</span>
+	void isAdjacentToWithNull() {
+<span class="fc" id="L124">		assertThrows(NullPointerException.class, () -&gt; position.isAdjacentTo(null),</span>
+<span class="fc" id="L125">				&quot;isAdjacentTo should throw NullPointerException for null input&quot;);</span>
+	}
+
+	@Test
+	void isOccupied() {
+<span class="fc" id="L130">		assertFalse(position.isOccupied(), &quot;New position should not be occupied&quot;);</span>
+		position.occupy();
+<span class="fc" id="L132">		assertTrue(position.isOccupied(), &quot;Position should be occupied after occupy()&quot;);</span>
+<span class="fc" id="L133">	}</span>
+
+	@Test
+	void isHit() {
+		assertFalse(position.isHit(), &quot;New position should not be hit&quot;);
+<span class="fc" id="L138">		position.shoot();</span>
+		assertTrue(position.isHit(), &quot;Position should be hit after shoot()&quot;);
+<span class="fc" id="L140">	}</span>
+<span class="fc" id="L141"></span>
+	@Test
+	void equals1() {
+		Position same = new Position(2, 3);
+		assertTrue(position.equals(same), &quot;Equal positions not identified as equal&quot;);
+<span class="fc" id="L146">	}</span>
+
+<span class="fc" id="L148">	@Test</span>
+<span class="fc" id="L149">	void equals2() {</span>
+		assertFalse(position.equals(null), &quot;Position should not equal null&quot;);
+	}
+
+	@Test
+<span class="fc" id="L154">	void equals3() {</span>
+		Object other = new Object();
+<span class="fc" id="L156">		assertFalse(position.equals(other), &quot;Position should not equal non-Position object&quot;);</span>
+<span class="fc" id="L157">	}</span>
+
+	@Test
+	void equals4() {
+		Position other = new Position(2, 4);
+<span class="fc" id="L162">		assertFalse(position.equals(other), &quot;Positions with the same row but different column should not be equal&quot;);</span>
+	}
+<span class="fc" id="L164"></span>
+<span class="fc" id="L165">	@Test</span>
+	void equals5() {
+		assertTrue(position.equals(position), &quot;A position should be equal to itself&quot;);
+	}
+
+<span class="fc" id="L170">	@Test</span>
+<span class="fc" id="L171">	void hashCodeConsistency() {</span>
+		Position same = new Position(2, 3);
+		assertEquals(position.hashCode(), same.hashCode(),
+				&quot;Hash codes not consistent for equal positions&quot;);
+	}
+<span class="fc" id="L176"></span>
+	@Test
+<span class="nc" id="L178">	void toStringFormat() {</span>
+//		String expected = &quot;Row = C, Column = 4&quot;;
+<span class="fc" id="L180">		String expected = &quot;C4&quot;;</span>
+		assertEquals(expected, position.toString(),
+				&quot;Incorrect string representation: expected '&quot; + expected +
+						&quot;' but got '&quot; + position.toString() + &quot;'&quot;);
+	}
+<span class="fc" id="L185">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

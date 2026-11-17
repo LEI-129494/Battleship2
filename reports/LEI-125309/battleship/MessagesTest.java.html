@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MessagesTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ShipTest Coverage Results, PositionTest Coverage Results, MoveTest Coverage Results</a> &gt; <a href="index.source.html" class="el_package">battleship</a> &gt; <span class="el_source">MessagesTest.java</span></div><h1>MessagesTest.java</h1><pre class="source lang-java linenums">package battleship;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.MissingResourceException;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+<span class="nc" id="L15">class MessagesTest {</span>
+
+    private Locale defaultLocale;
+
+    @BeforeEach
+    void setUp() {
+<span class="nc" id="L21">        defaultLocale = Locale.getDefault();</span>
+<span class="nc" id="L22">        Messages.init(Locale.of(&quot;pt&quot;));</span>
+<span class="nc" id="L23">    }</span>
+
+    @AfterEach
+    void tearDown() {
+<span class="nc" id="L27">        Locale.setDefault(defaultLocale);</span>
+<span class="nc" id="L28">        Messages.init(defaultLocale);</span>
+<span class="nc" id="L29">    }</span>
+
+    @Test
+    @DisplayName(&quot;Init: Null locale should fallback to JVM default locale&quot;)
+    void init1() {
+<span class="nc" id="L34">        Messages.init(null);</span>
+<span class="nc" id="L35">        assertEquals(defaultLocale, Messages.getCurrentLocale(),</span>
+<span class="nc" id="L36">                &quot;Error: expected JVM default locale but got &quot; + Messages.getCurrentLocale());</span>
+<span class="nc" id="L37">    }</span>
+
+    @Test
+    @DisplayName(&quot;Init: Valid locale 'en' should load the English bundle successfully&quot;)
+    void init2() {
+<span class="nc" id="L42">        Locale targetLocale = Locale.of(&quot;en&quot;);</span>
+<span class="nc" id="L43">        Messages.init(targetLocale);</span>
+<span class="nc" id="L44">        assertEquals(targetLocale, Messages.getCurrentLocale(),</span>
+<span class="nc" id="L45">                &quot;Error: expected 'en' locale but got &quot; + Messages.getCurrentLocale());</span>
+<span class="nc" id="L46">    }</span>
+
+    @Test
+    @DisplayName(&quot;Init: Unsupported locale should trigger MissingResourceException and fallback to 'pt'&quot;)
+    void init3() {
+<span class="nc" id="L51">        Locale.setDefault(Locale.of(&quot;xx&quot;, &quot;XX&quot;));</span>
+<span class="nc" id="L52">        Messages.init(Locale.of(&quot;fr&quot;));</span>
+<span class="nc" id="L53">        assertEquals(Locale.of(&quot;pt&quot;), Messages.getCurrentLocale(),</span>
+<span class="nc" id="L54">                &quot;Error: expected fallback to 'pt' but got &quot; + Messages.getCurrentLocale());</span>
+<span class="nc" id="L55">    }</span>
+
+    @Test
+    @DisplayName(&quot;GetCurrentLocale: Should return the currently active locale&quot;)
+    void getCurrentLocale() {
+<span class="nc" id="L60">        Locale current = Messages.getCurrentLocale();</span>
+<span class="nc" id="L61">        assertEquals(Locale.of(&quot;pt&quot;), current,</span>
+                &quot;Error: expected 'pt' locale but got &quot; + current);
+<span class="nc" id="L63">    }</span>
+
+    @Test
+    @DisplayName(&quot;Get: Should return message string for an existing key&quot;)
+    void get() {
+<span class="nc" id="L68">        String key = &quot;app.title&quot;;</span>
+<span class="nc" id="L69">        String result = Messages.get(key);</span>
+<span class="nc" id="L70">        assertEquals(&quot;***  Battleship  ***&quot;, result,</span>
+                &quot;Error: expected the app title but got &quot; + result);
+<span class="nc" id="L72">    }</span>
+
+    @Test
+    @DisplayName(&quot;Get: Should throw MissingResourceException for an unknown key&quot;)
+    void getException() {
+<span class="nc" id="L77">        String invalidKey = &quot;this.key.does.not.exist.12345&quot;;</span>
+<span class="nc" id="L78">        assertThrows(MissingResourceException.class, () -&gt; {</span>
+<span class="nc" id="L79">            Messages.get(invalidKey);</span>
+<span class="nc" id="L80">        }, &quot;Error: expected MissingResourceException for invalid key&quot;);</span>
+<span class="nc" id="L81">    }</span>
+
+    @Test
+    @DisplayName(&quot;Format: Should format message with positional arguments&quot;)
+    void format() {
+<span class="nc" id="L86">        String key = &quot;move.line&quot;;</span>
+<span class="nc" id="L87">        String result = Messages.format(key, 1, &quot;A1&quot;);</span>
+<span class="nc" id="L88">        assertEquals(&quot;Jogada n.1 -&gt; A1&quot;, result,</span>
+                &quot;Error: expected 'Jogada n.1 -&gt; A1' but got &quot; + result);
+<span class="nc" id="L90">    }</span>
+
+    @Test
+    @DisplayName(&quot;Format Map: Should format message with named arguments&quot;)
+    void testFormat() {
+<span class="nc" id="L95">        String key = &quot;fleet.status&quot;;</span>
+
+<span class="nc" id="L97">        Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L98">        args.put(&quot;floating&quot;, 2);</span>
+<span class="nc" id="L99">        args.put(&quot;sunk&quot;, 1);</span>
+
+<span class="nc" id="L101">        String result = Messages.format(key, args);</span>
+<span class="nc" id="L102">        assertEquals(&quot;Estado da Frota: 2 a flutuar, 1 afundado!&quot;, result,</span>
+                &quot;Error: expected formatted fleet status but got &quot; + result);
+<span class="nc" id="L104">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

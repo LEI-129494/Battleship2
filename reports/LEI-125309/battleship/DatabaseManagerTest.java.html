@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DatabaseManagerTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ShipTest Coverage Results, PositionTest Coverage Results, MoveTest Coverage Results</a> &gt; <a href="index.source.html" class="el_package">battleship</a> &gt; <span class="el_source">DatabaseManagerTest.java</span></div><h1>DatabaseManagerTest.java</h1><pre class="source lang-java linenums">package battleship;
+
+import org.junit.jupiter.api.*;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.sql.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+<span class="nc" id="L16">class DatabaseManagerTest {</span>
+
+<span class="nc" id="L18">    private final Path dataDir = Paths.get(&quot;data&quot;);</span>
+<span class="nc" id="L19">    private final Path dbFile = dataDir.resolve(&quot;battleship.db&quot;);</span>
+
+    private Path backupFile;
+
+    @BeforeEach
+    void setUp() throws Exception {
+<span class="nc" id="L25">        Files.createDirectories(dataDir);</span>
+<span class="nc" id="L26">        assertFalse(Files.isDirectory(dbFile),</span>
+                &quot;Erro: battleship.db não deveria ser uma diretoria&quot;);
+
+<span class="nc bnc" id="L29" title="All 2 branches missed.">        if (Files.exists(dbFile)) {</span>
+<span class="nc" id="L30">            backupFile = Files.createTempFile(</span>
+                    dataDir, &quot;battleship-backup-&quot;, &quot;.db&quot;);
+
+<span class="nc" id="L33">            Files.move(dbFile, backupFile,</span>
+                    StandardCopyOption.REPLACE_EXISTING);
+        }
+<span class="nc" id="L36">    }</span>
+
+    @AfterEach
+    void tearDown() throws Exception {
+        try {
+<span class="nc" id="L41">            Files.deleteIfExists(dbFile);</span>
+        } finally {
+<span class="nc bnc" id="L43" title="All 2 branches missed.">            if (backupFile != null) {</span>
+<span class="nc" id="L44">                Files.move(backupFile, dbFile,</span>
+                        StandardCopyOption.REPLACE_EXISTING);
+<span class="nc" id="L46">                backupFile = null;</span>
+            }
+        }
+<span class="nc" id="L49">    }</span>
+
+    private String captureOutput(Runnable action) {
+<span class="nc" id="L52">        ByteArrayOutputStream output =</span>
+                new ByteArrayOutputStream();
+
+<span class="nc" id="L55">        PrintStream originalOut = System.out;</span>
+
+<span class="nc" id="L57">        try (PrintStream capture = new PrintStream(</span>
+                output, true, StandardCharsets.UTF_8)) {
+
+<span class="nc" id="L60">            System.setOut(capture);</span>
+<span class="nc" id="L61">            action.run();</span>
+
+        } finally {
+<span class="nc" id="L64">            System.setOut(originalOut);</span>
+        }
+
+<span class="nc" id="L67">        return output.toString(StandardCharsets.UTF_8);</span>
+    }
+
+    private String captureError(Runnable action) {
+<span class="nc" id="L71">        ByteArrayOutputStream output =</span>
+                new ByteArrayOutputStream();
+
+<span class="nc" id="L74">        PrintStream originalErr = System.err;</span>
+
+<span class="nc" id="L76">        try (PrintStream capture = new PrintStream(</span>
+                output, true, StandardCharsets.UTF_8)) {
+
+<span class="nc" id="L79">            System.setErr(capture);</span>
+<span class="nc" id="L80">            action.run();</span>
+
+        } finally {
+<span class="nc" id="L83">            System.setErr(originalErr);</span>
+        }
+
+<span class="nc" id="L86">        return output.toString(StandardCharsets.UTF_8);</span>
+    }
+
+    private void simulateDatabaseError() throws Exception {
+<span class="nc" id="L90">        Files.createDirectory(dbFile);</span>
+<span class="nc" id="L91">    }</span>
+
+    @Test
+    @DisplayName(&quot;Inicialização cria a tabela shots&quot;)
+    void initializeDatabase() throws Exception {
+
+<span class="nc" id="L97">        DatabaseManager.initializeDatabase();</span>
+
+<span class="nc" id="L99">        try (Connection connection = DriverManager.getConnection(</span>
+                &quot;jdbc:sqlite:data/battleship.db&quot;);
+<span class="nc" id="L101">             Statement statement = connection.createStatement();</span>
+<span class="nc" id="L102">             ResultSet result = statement.executeQuery(</span>
+                     &quot;SELECT name FROM sqlite_master &quot; +
+                             &quot;WHERE type = 'table' AND name = 'shots'&quot;)) {
+
+<span class="nc" id="L106">            assertTrue(result.next(),</span>
+                    &quot;Erro: a tabela shots deveria existir&quot;);
+        }
+
+        // A segunda inicialização também deve funcionar.
+<span class="nc" id="L111">        assertDoesNotThrow(</span>
+                DatabaseManager::initializeDatabase,
+                &quot;Erro: inicializar uma tabela existente não deveria falhar&quot;);
+<span class="nc" id="L114">    }</span>
+
+    @Test
+    @DisplayName(&quot;Inicialização trata erros de ligação SQLite&quot;)
+    void initializeDatabaseException() throws Exception {
+
+<span class="nc" id="L120">        simulateDatabaseError();</span>
+
+<span class="nc" id="L122">        String error = captureError(</span>
+                DatabaseManager::initializeDatabase
+        );
+
+<span class="nc" id="L126">        assertTrue(</span>
+<span class="nc" id="L127">                error.contains(&quot;Erro ao inicializar base de dados:&quot;),</span>
+                &quot;Erro: deveria apresentar a mensagem de falha na inicialização&quot;);
+<span class="nc" id="L129">    }</span>
+
+    @Test
+    @DisplayName(&quot;Guarda uma jogada corretamente&quot;)
+    void saveShot() throws Exception {
+
+<span class="nc" id="L135">        DatabaseManager.initializeDatabase();</span>
+
+<span class="nc" id="L137">        int turnNumber = 1;</span>
+<span class="nc" id="L138">        String row = &quot;B&quot;;</span>
+<span class="nc" id="L139">        int column = 2;</span>
+<span class="nc" id="L140">        String shotResult = &quot;HIT&quot;;</span>
+
+<span class="nc" id="L142">        DatabaseManager.saveShot(</span>
+                turnNumber, row, column, shotResult
+        );
+
+<span class="nc" id="L146">        try (Connection connection = DriverManager.getConnection(</span>
+                &quot;jdbc:sqlite:data/battleship.db&quot;);
+<span class="nc" id="L148">             Statement statement = connection.createStatement();</span>
+<span class="nc" id="L149">             ResultSet result = statement.executeQuery(</span>
+                     &quot;SELECT turn_number, row_position, &quot; +
+                             &quot;column_position, result FROM shots&quot;)) {
+
+<span class="nc" id="L153">            assertTrue(result.next(),</span>
+                    &quot;Erro: a jogada deveria estar guardada&quot;);
+
+<span class="nc" id="L156">            assertAll(</span>
+<span class="nc" id="L157">                    () -&gt; assertEquals(</span>
+                            turnNumber,
+<span class="nc" id="L159">                            result.getInt(&quot;turn_number&quot;),</span>
+                            &quot;Erro: número da jogada incorreto&quot;),
+
+<span class="nc" id="L162">                    () -&gt; assertEquals(</span>
+                            row,
+<span class="nc" id="L164">                            result.getString(&quot;row_position&quot;),</span>
+                            &quot;Erro: linha incorreta&quot;),
+
+<span class="nc" id="L167">                    () -&gt; assertEquals(</span>
+                            column,
+<span class="nc" id="L169">                            result.getInt(&quot;column_position&quot;),</span>
+                            &quot;Erro: coluna incorreta&quot;),
+
+<span class="nc" id="L172">                    () -&gt; assertEquals(</span>
+                            shotResult,
+<span class="nc" id="L174">                            result.getString(&quot;result&quot;),</span>
+                            &quot;Erro: resultado incorreto&quot;)
+            );
+
+<span class="nc" id="L178">            assertFalse(result.next(),</span>
+                    &quot;Erro: deveria existir apenas uma jogada&quot;);
+        }
+<span class="nc" id="L181">    }</span>
+
+    @Test
+    @DisplayName(&quot;SaveShot trata erros de ligação SQLite&quot;)
+    void saveShotException() throws Exception {
+
+<span class="nc" id="L187">        simulateDatabaseError();</span>
+
+<span class="nc" id="L189">        String error = captureError(</span>
+<span class="nc" id="L190">                () -&gt; DatabaseManager.saveShot(1, &quot;A&quot;, 1, &quot;HIT&quot;)</span>
+        );
+
+<span class="nc" id="L193">        assertTrue(</span>
+<span class="nc" id="L194">                error.contains(&quot;Erro ao guardar jogada:&quot;),</span>
+                &quot;Erro: deveria apresentar a mensagem de falha ao guardar&quot;);
+<span class="nc" id="L196">    }</span>
+
+    @Test
+    @DisplayName(&quot;Apresenta mensagem quando o histórico está vazio&quot;)
+    void printHistory1() {
+
+<span class="nc" id="L202">        DatabaseManager.initializeDatabase();</span>
+
+<span class="nc" id="L204">        String output = captureOutput(</span>
+                DatabaseManager::printHistory
+        );
+
+<span class="nc" id="L208">        assertAll(</span>
+<span class="nc" id="L209">                () -&gt; assertTrue(</span>
+<span class="nc" id="L210">                        output.contains(&quot;===== HISTÓRICO DE JOGADAS =====&quot;),</span>
+                        &quot;Erro: deveria apresentar o cabeçalho&quot;),
+
+<span class="nc" id="L213">                () -&gt; assertTrue(</span>
+<span class="nc" id="L214">                        output.contains(&quot;Ainda não existem jogadas guardadas.&quot;),</span>
+                        &quot;Erro: deveria indicar que o histórico está vazio&quot;)
+        );
+<span class="nc" id="L217">    }</span>
+
+    @Test
+    @DisplayName(&quot;Apresenta corretamente as jogadas guardadas&quot;)
+    void printHistory2() {
+
+<span class="nc" id="L223">        DatabaseManager.initializeDatabase();</span>
+
+<span class="nc" id="L225">        DatabaseManager.saveShot(1, &quot;B&quot;, 2, &quot;HIT&quot;);</span>
+<span class="nc" id="L226">        DatabaseManager.saveShot(2, &quot;C&quot;, 3, &quot;MISS&quot;);</span>
+
+<span class="nc" id="L228">        String output = captureOutput(</span>
+                DatabaseManager::printHistory
+        );
+
+<span class="nc" id="L232">        assertAll(</span>
+<span class="nc" id="L233">                () -&gt; assertTrue(</span>
+<span class="nc" id="L234">                        output.contains(&quot;Jogada 1 | B2 | HIT&quot;),</span>
+                        &quot;Erro: deveria apresentar a primeira jogada&quot;),
+
+<span class="nc" id="L237">                () -&gt; assertTrue(</span>
+<span class="nc" id="L238">                        output.contains(&quot;Jogada 2 | C3 | MISS&quot;),</span>
+                        &quot;Erro: deveria apresentar a segunda jogada&quot;),
+
+<span class="nc" id="L241">                () -&gt; assertFalse(</span>
+<span class="nc" id="L242">                        output.contains(&quot;Ainda não existem jogadas guardadas.&quot;),</span>
+                        &quot;Erro: não deveria indicar histórico vazio&quot;)
+        );
+<span class="nc" id="L245">    }</span>
+
+    @Test
+    @DisplayName(&quot;PrintHistory trata erros de ligação SQLite&quot;)
+    void printHistoryException() throws Exception {
+
+<span class="nc" id="L251">        simulateDatabaseError();</span>
+
+<span class="nc" id="L253">        String error = captureError(</span>
+                DatabaseManager::printHistory
+        );
+
+<span class="nc" id="L257">        assertTrue(</span>
+<span class="nc" id="L258">                error.contains(&quot;Erro ao consultar histórico:&quot;),</span>
+                &quot;Erro: deveria apresentar a mensagem de falha na consulta&quot;);
+<span class="nc" id="L260">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

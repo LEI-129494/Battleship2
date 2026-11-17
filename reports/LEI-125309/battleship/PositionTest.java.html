@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PositionTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ShipTest Coverage Results, PositionTest Coverage Results, MoveTest Coverage Results</a> &gt; <a href="index.source.html" class="el_package">battleship</a> &gt; <span class="el_source">PositionTest.java</span></div><h1>PositionTest.java</h1><pre class="source lang-java linenums">
+package battleship;
+
+import org.junit.jupiter.api.*;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+<span class="fc" id="L9">public class PositionTest {</span>
+
+	private Position position;
+
+	@BeforeEach
+	void setUp() {
+<span class="fc" id="L15">		position = new Position(2, 3);</span>
+<span class="fc" id="L16">	}</span>
+
+	@AfterEach
+	void tearDown() {
+<span class="fc" id="L20">		position = null;</span>
+<span class="fc" id="L21">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should create a position with integer coordinates&quot;)
+	void constructor() {
+<span class="fc" id="L26">		Position pos = new Position(1, 1);</span>
+
+<span class="fc" id="L28">		assertNotNull(pos);</span>
+<span class="fc" id="L29">		assertEquals(1, pos.getRow());</span>
+<span class="fc" id="L30">		assertEquals(1, pos.getColumn());</span>
+<span class="fc" id="L31">		assertFalse(pos.isOccupied());</span>
+<span class="fc" id="L32">		assertFalse(pos.isHit());</span>
+<span class="fc" id="L33">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should create a position using classic coordinates&quot;)
+	void constructorWithClassicCoordinates() {
+<span class="fc" id="L38">		Position pos = new Position('C', 4);</span>
+
+<span class="fc" id="L40">		assertEquals(2, pos.getRow());</span>
+<span class="fc" id="L41">		assertEquals(3, pos.getColumn());</span>
+<span class="fc" id="L42">		assertEquals('C', pos.getClassicRow());</span>
+<span class="fc" id="L43">		assertEquals(4, pos.getClassicColumn());</span>
+<span class="fc" id="L44">		assertFalse(pos.isOccupied());</span>
+<span class="fc" id="L45">		assertFalse(pos.isHit());</span>
+<span class="fc" id="L46">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should return the row&quot;)
+	void getRow() {
+<span class="fc" id="L51">		assertEquals(2, position.getRow());</span>
+<span class="fc" id="L52">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should return the column&quot;)
+	void getColumn() {
+<span class="fc" id="L57">		assertEquals(3, position.getColumn());</span>
+<span class="fc" id="L58">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should return the classic row&quot;)
+	void getClassicRow() {
+<span class="fc" id="L63">		assertEquals('C', position.getClassicRow());</span>
+<span class="fc" id="L64">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should return the classic column&quot;)
+	void getClassicColumn() {
+<span class="fc" id="L69">		assertEquals(4, position.getClassicColumn());</span>
+<span class="fc" id="L70">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should generate a random position inside the board&quot;)
+	void randomPosition() {
+<span class="fc" id="L75">		Position random = Position.randomPosition();</span>
+
+<span class="fc" id="L77">		assertNotNull(random);</span>
+<span class="fc" id="L78">		assertTrue(random.isInside());</span>
+<span class="fc" id="L79">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should identify a valid position at the beginning of the board&quot;)
+	void isInsideAtBeginning() {
+<span class="fc" id="L84">		position = new Position(0, 0);</span>
+<span class="fc" id="L85">		assertTrue(position.isInside());</span>
+<span class="fc" id="L86">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should identify a valid position at the end of the board&quot;)
+	void isInsideAtEnd() {
+<span class="fc" id="L91">		position = new Position(</span>
+				Game.BOARD_SIZE - 1,
+				Game.BOARD_SIZE - 1
+		);
+
+<span class="fc" id="L96">		assertTrue(position.isInside());</span>
+<span class="fc" id="L97">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should reject a position with negative row&quot;)
+	void isInsideWithNegativeRow() {
+<span class="fc" id="L102">		position = new Position(-1, 5);</span>
+<span class="fc" id="L103">		assertFalse(position.isInside());</span>
+<span class="fc" id="L104">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should reject a position with negative column&quot;)
+	void isInsideWithNegativeColumn() {
+<span class="fc" id="L109">		position = new Position(5, -1);</span>
+<span class="fc" id="L110">		assertFalse(position.isInside());</span>
+<span class="fc" id="L111">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should reject a position with row outside the board&quot;)
+	void isInsideWithRowOutsideBoard() {
+<span class="fc" id="L116">		position = new Position(Game.BOARD_SIZE, 5);</span>
+<span class="fc" id="L117">		assertFalse(position.isInside());</span>
+<span class="fc" id="L118">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should reject a position with column outside the board&quot;)
+	void isInsideWithColumnOutsideBoard() {
+<span class="fc" id="L123">		position = new Position(5, Game.BOARD_SIZE);</span>
+<span class="fc" id="L124">		assertFalse(position.isInside());</span>
+<span class="fc" id="L125">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should detect horizontal adjacency&quot;)
+	void isAdjacentToHorizontal() {
+<span class="fc" id="L130">		Position other = new Position(2, 4);</span>
+<span class="fc" id="L131">		assertTrue(position.isAdjacentTo(other));</span>
+<span class="fc" id="L132">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should detect vertical adjacency&quot;)
+	void isAdjacentToVertical() {
+<span class="fc" id="L137">		Position other = new Position(3, 3);</span>
+<span class="fc" id="L138">		assertTrue(position.isAdjacentTo(other));</span>
+<span class="fc" id="L139">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should detect diagonal adjacency&quot;)
+	void isAdjacentToDiagonal() {
+<span class="fc" id="L144">		Position other = new Position(3, 4);</span>
+<span class="fc" id="L145">		assertTrue(position.isAdjacentTo(other));</span>
+<span class="fc" id="L146">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should detect non-adjacent positions&quot;)
+	void isAdjacentToNonAdjacent() {
+<span class="fc" id="L151">		Position other = new Position(4, 5);</span>
+<span class="fc" id="L152">		assertFalse(position.isAdjacentTo(other));</span>
+<span class="fc" id="L153">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should consider a position adjacent to itself&quot;)
+	void isAdjacentToItself() {
+<span class="fc" id="L158">		assertTrue(position.isAdjacentTo(position));</span>
+<span class="fc" id="L159">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should throw NullPointerException when checking adjacency with null&quot;)
+	void isAdjacentToWithNull() {
+<span class="fc" id="L164">		assertThrows(</span>
+				NullPointerException.class,
+<span class="nc" id="L166">				() -&gt; position.isAdjacentTo(null)</span>
+		);
+<span class="fc" id="L168">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should return eight adjacent positions from the center&quot;)
+	void adjacentPositionsFromCenter() {
+<span class="fc" id="L173">		Position pos = new Position(5, 5);</span>
+<span class="fc" id="L174">		List&lt;IPosition&gt; adjacent = pos.adjacentPositions();</span>
+
+<span class="fc" id="L176">		assertEquals(8, adjacent.size());</span>
+<span class="fc" id="L177">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should return three adjacent positions from a corner&quot;)
+	void adjacentPositionsFromCorner() {
+<span class="fc" id="L182">		Position pos = new Position(0, 0);</span>
+<span class="fc" id="L183">		List&lt;IPosition&gt; adjacent = pos.adjacentPositions();</span>
+
+<span class="fc" id="L185">		assertEquals(3, adjacent.size());</span>
+<span class="fc" id="L186">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should return five adjacent positions from an edge&quot;)
+	void adjacentPositionsFromEdge() {
+<span class="fc" id="L191">		Position pos = new Position(0, 5);</span>
+<span class="fc" id="L192">		List&lt;IPosition&gt; adjacent = pos.adjacentPositions();</span>
+
+<span class="fc" id="L194">		assertEquals(5, adjacent.size());</span>
+<span class="fc" id="L195">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should return valid adjacent positions only&quot;)
+	void adjacentPositionsShouldAllBeInside() {
+<span class="fc" id="L200">		Position pos = new Position(0, 0);</span>
+<span class="fc" id="L201">		List&lt;IPosition&gt; adjacent = pos.adjacentPositions();</span>
+
+<span class="fc bfc" id="L203" title="All 2 branches covered.">		for (IPosition adjacentPosition : adjacent) {</span>
+<span class="fc" id="L204">			assertTrue(adjacentPosition.isInside());</span>
+<span class="fc" id="L205">		}</span>
+<span class="fc" id="L206">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should return all eight expected adjacent positions&quot;)
+	void adjacentPositionsShouldReturnExpectedPositions() {
+<span class="fc" id="L211">		Position pos = new Position(5, 5);</span>
+<span class="fc" id="L212">		List&lt;IPosition&gt; adjacent = pos.adjacentPositions();</span>
+
+<span class="fc" id="L214">		assertTrue(adjacent.contains(new Position(4, 5)));</span>
+<span class="fc" id="L215">		assertTrue(adjacent.contains(new Position(5, 6)));</span>
+<span class="fc" id="L216">		assertTrue(adjacent.contains(new Position(6, 5)));</span>
+<span class="fc" id="L217">		assertTrue(adjacent.contains(new Position(5, 4)));</span>
+<span class="fc" id="L218">		assertTrue(adjacent.contains(new Position(6, 6)));</span>
+<span class="fc" id="L219">		assertTrue(adjacent.contains(new Position(6, 4)));</span>
+<span class="fc" id="L220">		assertTrue(adjacent.contains(new Position(4, 6)));</span>
+<span class="fc" id="L221">		assertTrue(adjacent.contains(new Position(4, 4)));</span>
+<span class="fc" id="L222">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should return three adjacent positions from bottom right corner&quot;)
+	void adjacentPositionsFromBottomRightCorner() {
+<span class="fc" id="L227">		Position pos = new Position(</span>
+				Game.BOARD_SIZE - 1,
+				Game.BOARD_SIZE - 1
+		);
+
+<span class="fc" id="L232">		List&lt;IPosition&gt; adjacent = pos.adjacentPositions();</span>
+
+<span class="fc" id="L234">		assertEquals(3, adjacent.size());</span>
+
+<span class="fc bfc" id="L236" title="All 2 branches covered.">		for (IPosition adjacentPosition : adjacent) {</span>
+<span class="fc" id="L237">			assertTrue(adjacentPosition.isInside());</span>
+<span class="fc" id="L238">		}</span>
+<span class="fc" id="L239">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should initially not be occupied and become occupied&quot;)
+	void isOccupied() {
+<span class="fc" id="L244">		assertFalse(position.isOccupied());</span>
+
+<span class="fc" id="L246">		position.occupy();</span>
+
+<span class="fc" id="L248">		assertTrue(position.isOccupied());</span>
+<span class="fc" id="L249">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should initially not be hit and become hit&quot;)
+	void isHit() {
+<span class="fc" id="L254">		assertFalse(position.isHit());</span>
+
+<span class="fc" id="L256">		position.shoot();</span>
+
+<span class="fc" id="L258">		assertTrue(position.isHit());</span>
+<span class="fc" id="L259">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should not become hit when occupied&quot;)
+	void occupyingShouldNotMarkPositionAsHit() {
+<span class="fc" id="L264">		position.occupy();</span>
+
+<span class="fc" id="L266">		assertTrue(position.isOccupied());</span>
+<span class="fc" id="L267">		assertFalse(position.isHit());</span>
+<span class="fc" id="L268">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should not become occupied when hit&quot;)
+	void shootingShouldNotOccupyPosition() {
+<span class="fc" id="L273">		position.shoot();</span>
+
+<span class="fc" id="L275">		assertTrue(position.isHit());</span>
+<span class="fc" id="L276">		assertFalse(position.isOccupied());</span>
+<span class="fc" id="L277">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should consider positions with the same coordinates equal&quot;)
+	void equalsSameCoordinates() {
+<span class="fc" id="L282">		Position same = new Position(2, 3);</span>
+<span class="fc" id="L283">		assertTrue(position.equals(same));</span>
+<span class="fc" id="L284">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should not consider null equal&quot;)
+	void equalsNull() {
+<span class="fc" id="L289">		assertFalse(position.equals(null));</span>
+<span class="fc" id="L290">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should not consider a different object equal&quot;)
+	void equalsDifferentObject() {
+<span class="fc" id="L295">		Object other = new Object();</span>
+<span class="fc" id="L296">		assertFalse(position.equals(other));</span>
+<span class="fc" id="L297">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should not consider positions with different columns equal&quot;)
+	void equalsDifferentColumn() {
+<span class="fc" id="L302">		Position other = new Position(2, 4);</span>
+<span class="fc" id="L303">		assertFalse(position.equals(other));</span>
+<span class="fc" id="L304">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should not consider positions with different rows equal&quot;)
+	void equalsDifferentRow() {
+<span class="fc" id="L309">		Position other = new Position(3, 3);</span>
+<span class="fc" id="L310">		assertFalse(position.equals(other));</span>
+<span class="fc" id="L311">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should consider a position equal to itself&quot;)
+	void equalsItself() {
+<span class="fc" id="L316">		assertTrue(position.equals(position));</span>
+<span class="fc" id="L317">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should have equal hash codes for equal positions&quot;)
+	void hashCodeConsistency() {
+<span class="fc" id="L322">		Position same = new Position(2, 3);</span>
+<span class="fc" id="L323">		assertEquals(position.hashCode(), same.hashCode());</span>
+<span class="fc" id="L324">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should have equal hash codes even when occupation or hit state differs&quot;)
+	void hashCodeShouldIgnoreOccupationAndHit() {
+<span class="fc" id="L329">		Position first = new Position(2, 3);</span>
+<span class="fc" id="L330">		Position second = new Position(2, 3);</span>
+
+<span class="fc" id="L332">		second.occupy();</span>
+<span class="fc" id="L333">		second.shoot();</span>
+
+<span class="fc" id="L335">		assertEquals(first, second);</span>
+<span class="fc" id="L336">		assertEquals(first.hashCode(), second.hashCode());</span>
+<span class="fc" id="L337">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should return the correct string representation&quot;)
+	void toStringFormat() {
+<span class="fc" id="L342">		assertEquals(&quot;C4&quot;, position.toString());</span>
+<span class="fc" id="L343">	}</span>
+
+	@Test
+	@DisplayName(&quot;Should return false when columns are not adjacent&quot;)
+	void isAdjacentToWithNonAdjacentColumns() {
+<span class="fc" id="L348">		Position other = new Position(2, 5);</span>
+<span class="fc" id="L349">		assertFalse(position.isAdjacentTo(other));</span>
+<span class="fc" id="L350">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
