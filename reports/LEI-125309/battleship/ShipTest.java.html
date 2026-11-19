@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ShipTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ShipTest Coverage Results, PositionTest Coverage Results, MoveTest Coverage Results</a> &gt; <a href="index.source.html" class="el_package">battleship</a> &gt; <span class="el_source">ShipTest.java</span></div><h1>ShipTest.java</h1><pre class="source lang-java linenums">
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ShipTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MoveTest Coverage Results</a> &gt; <a href="index.source.html" class="el_package">battleship</a> &gt; <span class="el_source">ShipTest.java</span></div><h1>ShipTest.java</h1><pre class="source lang-java linenums">
 package battleship;
 
 import org.junit.jupiter.api.*;
@@ -7,277 +7,277 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Arrays;
 import java.util.List;
 
-<span class="fc" id="L10">public class ShipTest {</span>
+<span class="nc" id="L10">public class ShipTest {</span>
 
     private Ship ship, shipBorder;
 
     @BeforeEach
     void setUp() {
-<span class="fc" id="L16">        ship = new Barge(Compass.NORTH, new Position(5, 5));</span>
-<span class="fc" id="L17">        shipBorder = new Barge(Compass.NORTH, new Position(0, 0));</span>
-<span class="fc" id="L18">    }</span>
+<span class="nc" id="L16">        ship = new Barge(Compass.NORTH, new Position(5, 5));</span>
+<span class="nc" id="L17">        shipBorder = new Barge(Compass.NORTH, new Position(0, 0));</span>
+<span class="nc" id="L18">    }</span>
 
     // Classe auxiliar para testar navios com várias posições
     private static class TestShip extends Ship {
 
         TestShip(Compass bearing, Position... positions) {
-<span class="fc" id="L24">            super(&quot;Test&quot;, bearing, positions[0], positions.length);</span>
-<span class="fc" id="L25">            this.positions.addAll(Arrays.asList(positions));</span>
-<span class="fc" id="L26">        }</span>
+<span class="nc" id="L24">            super(&quot;Test&quot;, bearing, positions[0], positions.length);</span>
+<span class="nc" id="L25">            this.positions.addAll(Arrays.asList(positions));</span>
+<span class="nc" id="L26">        }</span>
     }
 
     @Test
     void testConstructor() {
-<span class="fc" id="L31">        assertNotNull(ship);</span>
-<span class="fc" id="L32">        assertEquals(&quot;Barca&quot;, ship.getCategory());</span>
-<span class="fc" id="L33">        assertEquals(Compass.NORTH, ship.getBearing());</span>
-<span class="fc" id="L34">        assertEquals(1, ship.getSize());</span>
-<span class="fc" id="L35">        assertFalse(ship.getPositions().isEmpty());</span>
-<span class="fc" id="L36">    }</span>
+<span class="nc" id="L31">        assertNotNull(ship);</span>
+<span class="nc" id="L32">        assertEquals(&quot;Barca&quot;, ship.getCategory());</span>
+<span class="nc" id="L33">        assertEquals(Compass.NORTH, ship.getBearing());</span>
+<span class="nc" id="L34">        assertEquals(1, ship.getSize());</span>
+<span class="nc" id="L35">        assertFalse(ship.getPositions().isEmpty());</span>
+<span class="nc" id="L36">    }</span>
 
     @Test
     void testGetCategory() {
-<span class="fc" id="L40">        assertEquals(&quot;Barca&quot;, ship.getCategory());</span>
-<span class="fc" id="L41">    }</span>
+<span class="nc" id="L40">        assertEquals(&quot;Barca&quot;, ship.getCategory());</span>
+<span class="nc" id="L41">    }</span>
 
     @Test
     void testGetSize() {
-<span class="fc" id="L45">        assertEquals(1, ship.getSize());</span>
-<span class="fc" id="L46">    }</span>
+<span class="nc" id="L45">        assertEquals(1, ship.getSize());</span>
+<span class="nc" id="L46">    }</span>
 
     @Test
     void testGetBearing() {
-<span class="fc" id="L50">        assertEquals(Compass.NORTH, ship.getBearing());</span>
-<span class="fc" id="L51">    }</span>
+<span class="nc" id="L50">        assertEquals(Compass.NORTH, ship.getBearing());</span>
+<span class="nc" id="L51">    }</span>
 
     @Test
     void testGetPositions() {
-<span class="fc" id="L55">        List&lt;IPosition&gt; positions = ship.getPositions();</span>
+<span class="nc" id="L55">        List&lt;IPosition&gt; positions = ship.getPositions();</span>
 
-<span class="fc" id="L57">        assertNotNull(positions);</span>
-<span class="fc" id="L58">        assertEquals(1, positions.size());</span>
-<span class="fc" id="L59">        assertEquals(5, positions.get(0).getRow());</span>
-<span class="fc" id="L60">        assertEquals(5, positions.get(0).getColumn());</span>
-<span class="fc" id="L61">    }</span>
+<span class="nc" id="L57">        assertNotNull(positions);</span>
+<span class="nc" id="L58">        assertEquals(1, positions.size());</span>
+<span class="nc" id="L59">        assertEquals(5, positions.get(0).getRow());</span>
+<span class="nc" id="L60">        assertEquals(5, positions.get(0).getColumn());</span>
+<span class="nc" id="L61">    }</span>
 
     @Test
     void testGetPosition() {
-<span class="fc" id="L65">        assertEquals(new Position(5, 5), ship.getPosition());</span>
-<span class="fc" id="L66">    }</span>
+<span class="nc" id="L65">        assertEquals(new Position(5, 5), ship.getPosition());</span>
+<span class="nc" id="L66">    }</span>
 
     @Test
     void testStillFloating1() {
-<span class="fc" id="L70">        assertTrue(ship.stillFloating());</span>
-<span class="fc" id="L71">    }</span>
+<span class="nc" id="L70">        assertTrue(ship.stillFloating());</span>
+<span class="nc" id="L71">    }</span>
 
     @Test
     void testStillFloating2() {
-<span class="fc" id="L75">        ship.getPositions().get(0).shoot();</span>
-<span class="fc" id="L76">        assertFalse(ship.stillFloating());</span>
-<span class="fc" id="L77">    }</span>
+<span class="nc" id="L75">        ship.getPositions().get(0).shoot();</span>
+<span class="nc" id="L76">        assertFalse(ship.stillFloating());</span>
+<span class="nc" id="L77">    }</span>
 
     @Test
     void testStillFloatingMultiplePositions() {
-<span class="fc" id="L81">        Ship multiShip = new TestShip(</span>
+<span class="nc" id="L81">        Ship multiShip = new TestShip(</span>
                 Compass.NORTH,
                 new Position(5, 5),
                 new Position(5, 6)
         );
 
-<span class="fc" id="L87">        multiShip.getPositions().get(0).shoot();</span>
-<span class="fc" id="L88">        assertTrue(multiShip.stillFloating());</span>
+<span class="nc" id="L87">        multiShip.getPositions().get(0).shoot();</span>
+<span class="nc" id="L88">        assertTrue(multiShip.stillFloating());</span>
 
-<span class="fc" id="L90">        multiShip.getPositions().get(1).shoot();</span>
-<span class="fc" id="L91">        assertFalse(multiShip.stillFloating());</span>
-<span class="fc" id="L92">    }</span>
+<span class="nc" id="L90">        multiShip.getPositions().get(1).shoot();</span>
+<span class="nc" id="L91">        assertFalse(multiShip.stillFloating());</span>
+<span class="nc" id="L92">    }</span>
 
     @Test
     void testShoot1() {
-<span class="fc" id="L96">        Position target = new Position(5, 5);</span>
+<span class="nc" id="L96">        Position target = new Position(5, 5);</span>
 
-<span class="fc" id="L98">        ship.shoot(target);</span>
+<span class="nc" id="L98">        ship.shoot(target);</span>
 
-<span class="fc" id="L100">        assertTrue(ship.getPositions().get(0).isHit());</span>
-<span class="fc" id="L101">    }</span>
+<span class="nc" id="L100">        assertTrue(ship.getPositions().get(0).isHit());</span>
+<span class="nc" id="L101">    }</span>
 
     @Test
     void testShoot2() {
-<span class="fc" id="L105">        Position target = new Position(0, 0);</span>
+<span class="nc" id="L105">        Position target = new Position(0, 0);</span>
 
-<span class="fc" id="L107">        ship.shoot(target);</span>
+<span class="nc" id="L107">        ship.shoot(target);</span>
 
-<span class="fc" id="L109">        assertFalse(ship.getPositions().get(0).isHit());</span>
-<span class="fc" id="L110">    }</span>
+<span class="nc" id="L109">        assertFalse(ship.getPositions().get(0).isHit());</span>
+<span class="nc" id="L110">    }</span>
 
     @Test
     void testShootSecondPosition() {
-<span class="fc" id="L114">        Ship multiShip = new TestShip(</span>
+<span class="nc" id="L114">        Ship multiShip = new TestShip(</span>
                 Compass.NORTH,
                 new Position(5, 5),
                 new Position(5, 6)
         );
 
-<span class="fc" id="L120">        multiShip.shoot(new Position(5, 6));</span>
+<span class="nc" id="L120">        multiShip.shoot(new Position(5, 6));</span>
 
-<span class="fc" id="L122">        assertFalse(multiShip.getPositions().get(0).isHit());</span>
-<span class="fc" id="L123">        assertTrue(multiShip.getPositions().get(1).isHit());</span>
-<span class="fc" id="L124">    }</span>
+<span class="nc" id="L122">        assertFalse(multiShip.getPositions().get(0).isHit());</span>
+<span class="nc" id="L123">        assertTrue(multiShip.getPositions().get(1).isHit());</span>
+<span class="nc" id="L124">    }</span>
 
     @Test
     void testShootMultiplePositions() {
-<span class="fc" id="L128">        Ship multiShip = new TestShip(</span>
+<span class="nc" id="L128">        Ship multiShip = new TestShip(</span>
                 Compass.NORTH,
                 new Position(5, 5),
                 new Position(5, 6)
         );
 
-<span class="fc" id="L134">        multiShip.shoot(new Position(5, 5));</span>
+<span class="nc" id="L134">        multiShip.shoot(new Position(5, 5));</span>
 
-<span class="fc" id="L136">        assertTrue(multiShip.getPositions().get(0).isHit());</span>
-<span class="fc" id="L137">        assertFalse(multiShip.getPositions().get(1).isHit());</span>
-<span class="fc" id="L138">    }</span>
+<span class="nc" id="L136">        assertTrue(multiShip.getPositions().get(0).isHit());</span>
+<span class="nc" id="L137">        assertFalse(multiShip.getPositions().get(1).isHit());</span>
+<span class="nc" id="L138">    }</span>
 
     @Test
     void testShootNoMatchingPosition() {
-<span class="fc" id="L142">        Ship multiShip = new TestShip(</span>
+<span class="nc" id="L142">        Ship multiShip = new TestShip(</span>
                 Compass.NORTH,
                 new Position(5, 5),
                 new Position(5, 6)
         );
 
-<span class="fc" id="L148">        multiShip.shoot(new Position(7, 7));</span>
+<span class="nc" id="L148">        multiShip.shoot(new Position(7, 7));</span>
 
-<span class="fc" id="L150">        assertFalse(multiShip.getPositions().get(0).isHit());</span>
-<span class="fc" id="L151">        assertFalse(multiShip.getPositions().get(1).isHit());</span>
-<span class="fc" id="L152">    }</span>
+<span class="nc" id="L150">        assertFalse(multiShip.getPositions().get(0).isHit());</span>
+<span class="nc" id="L151">        assertFalse(multiShip.getPositions().get(1).isHit());</span>
+<span class="nc" id="L152">    }</span>
 
     @Test
     void testOccupies1() {
-<span class="fc" id="L156">        assertTrue(ship.occupies(new Position(5, 5)));</span>
-<span class="fc" id="L157">    }</span>
+<span class="nc" id="L156">        assertTrue(ship.occupies(new Position(5, 5)));</span>
+<span class="nc" id="L157">    }</span>
 
     @Test
     void testOccupies2() {
-<span class="fc" id="L161">        assertFalse(ship.occupies(new Position(1, 1)));</span>
-<span class="fc" id="L162">    }</span>
+<span class="nc" id="L161">        assertFalse(ship.occupies(new Position(1, 1)));</span>
+<span class="nc" id="L162">    }</span>
 
     @Test
     void testOccupiesSecondPosition() {
-<span class="fc" id="L166">        Ship multiShip = new TestShip(</span>
+<span class="nc" id="L166">        Ship multiShip = new TestShip(</span>
                 Compass.NORTH,
                 new Position(5, 5),
                 new Position(5, 6)
         );
 
-<span class="fc" id="L172">        assertTrue(multiShip.occupies(new Position(5, 6)));</span>
-<span class="fc" id="L173">    }</span>
+<span class="nc" id="L172">        assertTrue(multiShip.occupies(new Position(5, 6)));</span>
+<span class="nc" id="L173">    }</span>
 
     @Test
     void testOccupiesFirstPositionFalseThenSecondTrue() {
-<span class="fc" id="L177">        Ship multiShip = new TestShip(</span>
+<span class="nc" id="L177">        Ship multiShip = new TestShip(</span>
                 Compass.NORTH,
                 new Position(5, 5),
                 new Position(5, 6)
         );
 
-<span class="fc" id="L183">        assertTrue(multiShip.occupies(new Position(5, 6)));</span>
-<span class="fc" id="L184">    }</span>
+<span class="nc" id="L183">        assertTrue(multiShip.occupies(new Position(5, 6)));</span>
+<span class="nc" id="L184">    }</span>
 
     @Test
     void testTooCloseToShip1() {
-<span class="fc" id="L188">        Ship nearbyShip = new Barge(</span>
+<span class="nc" id="L188">        Ship nearbyShip = new Barge(</span>
                 Compass.NORTH, new Position(5, 6)
         );
 
-<span class="fc" id="L192">        assertTrue(ship.tooCloseTo(nearbyShip));</span>
-<span class="fc" id="L193">    }</span>
+<span class="nc" id="L192">        assertTrue(ship.tooCloseTo(nearbyShip));</span>
+<span class="nc" id="L193">    }</span>
 
     @Test
     void testTooCloseToShip2() {
-<span class="fc" id="L197">        Ship farShip = new Barge(</span>
+<span class="nc" id="L197">        Ship farShip = new Barge(</span>
                 Compass.NORTH, new Position(10, 10)
         );
 
-<span class="fc" id="L201">        assertFalse(ship.tooCloseTo(farShip));</span>
-<span class="fc" id="L202">    }</span>
+<span class="nc" id="L201">        assertFalse(ship.tooCloseTo(farShip));</span>
+<span class="nc" id="L202">    }</span>
 
     @Test
     void testTooCloseToShipSecondPosition() {
-<span class="fc" id="L206">        Ship otherShip = new TestShip(</span>
+<span class="nc" id="L206">        Ship otherShip = new TestShip(</span>
                 Compass.NORTH,
                 new Position(10, 10),
                 new Position(5, 6)
         );
 
-<span class="fc" id="L212">        assertTrue(ship.tooCloseTo(otherShip));</span>
-<span class="fc" id="L213">    }</span>
+<span class="nc" id="L212">        assertTrue(ship.tooCloseTo(otherShip));</span>
+<span class="nc" id="L213">    }</span>
 
     @Test
     void testTooCloseToShipFirstPositionFalseThenSecondTrue() {
-<span class="fc" id="L217">        Ship otherShip = new TestShip(</span>
+<span class="nc" id="L217">        Ship otherShip = new TestShip(</span>
                 Compass.NORTH,
                 new Position(10, 10),
                 new Position(5, 6)
         );
 
-<span class="fc" id="L223">        assertTrue(ship.tooCloseTo(otherShip));</span>
-<span class="fc" id="L224">    }</span>
+<span class="nc" id="L223">        assertTrue(ship.tooCloseTo(otherShip));</span>
+<span class="nc" id="L224">    }</span>
 
     @Test
     void testTooCloseToPosition1() {
-<span class="fc" id="L228">        assertTrue(ship.tooCloseTo(new Position(5, 6)));</span>
-<span class="fc" id="L229">    }</span>
+<span class="nc" id="L228">        assertTrue(ship.tooCloseTo(new Position(5, 6)));</span>
+<span class="nc" id="L229">    }</span>
 
     @Test
     void testTooCloseToPosition2() {
-<span class="fc" id="L233">        assertFalse(ship.tooCloseTo(new Position(7, 7)));</span>
-<span class="fc" id="L234">    }</span>
+<span class="nc" id="L233">        assertFalse(ship.tooCloseTo(new Position(7, 7)));</span>
+<span class="nc" id="L234">    }</span>
 
     @Test
     void testTooCloseToSecondPosition() {
-<span class="fc" id="L238">        Ship multiShip = new TestShip(</span>
+<span class="nc" id="L238">        Ship multiShip = new TestShip(</span>
                 Compass.NORTH,
                 new Position(5, 5),
                 new Position(10, 10)
         );
 
-<span class="fc" id="L244">        assertTrue(multiShip.tooCloseTo(new Position(10, 11)));</span>
-<span class="fc" id="L245">    }</span>
+<span class="nc" id="L244">        assertTrue(multiShip.tooCloseTo(new Position(10, 11)));</span>
+<span class="nc" id="L245">    }</span>
 
     @Test
     void testTooCloseToPositionSecondPositionFalseThenTrue() {
-<span class="fc" id="L249">        Ship multiShip = new TestShip(</span>
+<span class="nc" id="L249">        Ship multiShip = new TestShip(</span>
                 Compass.NORTH,
                 new Position(5, 5),
                 new Position(10, 10)
         );
 
-<span class="fc" id="L255">        assertTrue(multiShip.tooCloseTo(new Position(10, 11)));</span>
-<span class="fc" id="L256">    }</span>
+<span class="nc" id="L255">        assertTrue(multiShip.tooCloseTo(new Position(10, 11)));</span>
+<span class="nc" id="L256">    }</span>
 
     @Test
     void testGetTopMostPos() {
-<span class="fc" id="L260">        assertEquals(5, ship.getTopMostPos());</span>
-<span class="fc" id="L261">    }</span>
+<span class="nc" id="L260">        assertEquals(5, ship.getTopMostPos());</span>
+<span class="nc" id="L261">    }</span>
 
     @Test
     void testGetBottomMostPos() {
-<span class="fc" id="L265">        assertEquals(5, ship.getBottomMostPos());</span>
-<span class="fc" id="L266">    }</span>
+<span class="nc" id="L265">        assertEquals(5, ship.getBottomMostPos());</span>
+<span class="nc" id="L266">    }</span>
 
     @Test
     void testGetLeftMostPos() {
-<span class="fc" id="L270">        assertEquals(5, ship.getLeftMostPos());</span>
-<span class="fc" id="L271">    }</span>
+<span class="nc" id="L270">        assertEquals(5, ship.getLeftMostPos());</span>
+<span class="nc" id="L271">    }</span>
 
     @Test
     void testGetRightMostPos() {
-<span class="fc" id="L275">        assertEquals(5, ship.getRightMostPos());</span>
-<span class="fc" id="L276">    }</span>
+<span class="nc" id="L275">        assertEquals(5, ship.getRightMostPos());</span>
+<span class="nc" id="L276">    }</span>
 
     @Test
     void testGetExtremePositionsMultiplePositions() {
-<span class="fc" id="L280">        Ship multiShip = new TestShip(</span>
+<span class="nc" id="L280">        Ship multiShip = new TestShip(</span>
                 Compass.NORTH,
                 new Position(5, 5),
                 new Position(3, 7),
@@ -285,243 +285,243 @@ import java.util.List;
                 new Position(6, 9)
         );
 
-<span class="fc" id="L288">        assertEquals(3, multiShip.getTopMostPos());</span>
-<span class="fc" id="L289">        assertEquals(8, multiShip.getBottomMostPos());</span>
-<span class="fc" id="L290">        assertEquals(2, multiShip.getLeftMostPos());</span>
-<span class="fc" id="L291">        assertEquals(9, multiShip.getRightMostPos());</span>
-<span class="fc" id="L292">    }</span>
+<span class="nc" id="L288">        assertEquals(3, multiShip.getTopMostPos());</span>
+<span class="nc" id="L289">        assertEquals(8, multiShip.getBottomMostPos());</span>
+<span class="nc" id="L290">        assertEquals(2, multiShip.getLeftMostPos());</span>
+<span class="nc" id="L291">        assertEquals(9, multiShip.getRightMostPos());</span>
+<span class="nc" id="L292">    }</span>
 
     @Test
     void testGetAdjacentPositions() {
-<span class="fc" id="L296">        assertEquals(8, ship.getAdjacentPositions().size());</span>
-<span class="fc" id="L297">        assertEquals(3, shipBorder.getAdjacentPositions().size());</span>
-<span class="fc" id="L298">    }</span>
+<span class="nc" id="L296">        assertEquals(8, ship.getAdjacentPositions().size());</span>
+<span class="nc" id="L297">        assertEquals(3, shipBorder.getAdjacentPositions().size());</span>
+<span class="nc" id="L298">    }</span>
 
     @Test
     void testGetAdjacentPositionsMultiplePositions() {
-<span class="fc" id="L302">        Ship multiShip = new TestShip(</span>
+<span class="nc" id="L302">        Ship multiShip = new TestShip(</span>
                 Compass.NORTH,
                 new Position(5, 5),
                 new Position(5, 6)
         );
 
-<span class="fc" id="L308">        List&lt;IPosition&gt; adjacent = multiShip.getAdjacentPositions();</span>
+<span class="nc" id="L308">        List&lt;IPosition&gt; adjacent = multiShip.getAdjacentPositions();</span>
 
-<span class="fc" id="L310">        assertEquals(10, adjacent.size());</span>
-<span class="fc" id="L311">        assertFalse(adjacent.contains(new Position(5, 5)));</span>
-<span class="fc" id="L312">        assertFalse(adjacent.contains(new Position(5, 6)));</span>
-<span class="fc" id="L313">    }</span>
+<span class="nc" id="L310">        assertEquals(10, adjacent.size());</span>
+<span class="nc" id="L311">        assertFalse(adjacent.contains(new Position(5, 5)));</span>
+<span class="nc" id="L312">        assertFalse(adjacent.contains(new Position(5, 6)));</span>
+<span class="nc" id="L313">    }</span>
 
     @Test
     void testSink() {
-<span class="fc" id="L317">        ship.sink();</span>
+<span class="nc" id="L317">        ship.sink();</span>
 
-<span class="fc" id="L319">        assertFalse(ship.stillFloating());</span>
-<span class="fc" id="L320">        assertTrue(ship.getPositions().get(0).isHit());</span>
-<span class="fc" id="L321">    }</span>
+<span class="nc" id="L319">        assertFalse(ship.stillFloating());</span>
+<span class="nc" id="L320">        assertTrue(ship.getPositions().get(0).isHit());</span>
+<span class="nc" id="L321">    }</span>
 
     @Test
     void testSinkMultiplePositions() {
-<span class="fc" id="L325">        Ship multiShip = new TestShip(</span>
+<span class="nc" id="L325">        Ship multiShip = new TestShip(</span>
                 Compass.NORTH,
                 new Position(5, 5),
                 new Position(5, 6)
         );
 
-<span class="fc" id="L331">        multiShip.sink();</span>
+<span class="nc" id="L331">        multiShip.sink();</span>
 
-<span class="fc" id="L333">        assertFalse(multiShip.stillFloating());</span>
+<span class="nc" id="L333">        assertFalse(multiShip.stillFloating());</span>
 
-<span class="fc bfc" id="L335" title="All 2 branches covered.">        for (IPosition position : multiShip.getPositions()) {</span>
-<span class="fc" id="L336">            assertTrue(position.isHit());</span>
-<span class="fc" id="L337">        }</span>
-<span class="fc" id="L338">    }</span>
+<span class="nc bnc" id="L335" title="All 2 branches missed.">        for (IPosition position : multiShip.getPositions()) {</span>
+<span class="nc" id="L336">            assertTrue(position.isHit());</span>
+<span class="nc" id="L337">        }</span>
+<span class="nc" id="L338">    }</span>
 
     @Test
     void testIsInsideBoard() {
-<span class="fc" id="L342">        assertTrue(ship.isInsideBoard());</span>
-<span class="fc" id="L343">        assertTrue(shipBorder.isInsideBoard());</span>
-<span class="fc" id="L344">    }</span>
+<span class="nc" id="L342">        assertTrue(ship.isInsideBoard());</span>
+<span class="nc" id="L343">        assertTrue(shipBorder.isInsideBoard());</span>
+<span class="nc" id="L344">    }</span>
 
     @Test
     void testIsOutsideLeft() {
-<span class="fc" id="L348">        Ship outside = new TestShip(</span>
+<span class="nc" id="L348">        Ship outside = new TestShip(</span>
                 Compass.NORTH,
                 new Position(5, -1)
         );
 
-<span class="fc" id="L353">        assertFalse(outside.isInsideBoard());</span>
-<span class="fc" id="L354">    }</span>
+<span class="nc" id="L353">        assertFalse(outside.isInsideBoard());</span>
+<span class="nc" id="L354">    }</span>
 
     @Test
     void testIsOutsideRight() {
-<span class="fc" id="L358">        Ship outside = new TestShip(</span>
+<span class="nc" id="L358">        Ship outside = new TestShip(</span>
                 Compass.NORTH,
                 new Position(5, Game.BOARD_SIZE)
         );
 
-<span class="fc" id="L363">        assertFalse(outside.isInsideBoard());</span>
-<span class="fc" id="L364">    }</span>
+<span class="nc" id="L363">        assertFalse(outside.isInsideBoard());</span>
+<span class="nc" id="L364">    }</span>
 
     @Test
     void testIsOutsideTop() {
-<span class="fc" id="L368">        Ship outside = new TestShip(</span>
+<span class="nc" id="L368">        Ship outside = new TestShip(</span>
                 Compass.NORTH,
                 new Position(-1, 5)
         );
 
-<span class="fc" id="L373">        assertFalse(outside.isInsideBoard());</span>
-<span class="fc" id="L374">    }</span>
+<span class="nc" id="L373">        assertFalse(outside.isInsideBoard());</span>
+<span class="nc" id="L374">    }</span>
 
     @Test
     void testIsOutsideBottom() {
-<span class="fc" id="L378">        Ship outside = new TestShip(</span>
+<span class="nc" id="L378">        Ship outside = new TestShip(</span>
                 Compass.NORTH,
                 new Position(Game.BOARD_SIZE, 5)
         );
 
-<span class="fc" id="L383">        assertFalse(outside.isInsideBoard());</span>
-<span class="fc" id="L384">    }</span>
+<span class="nc" id="L383">        assertFalse(outside.isInsideBoard());</span>
+<span class="nc" id="L384">    }</span>
 
     @Test
     void testBuildShipBarge() {
-<span class="fc" id="L388">        Ship result = Ship.buildShip(</span>
+<span class="nc" id="L388">        Ship result = Ship.buildShip(</span>
                 &quot;barca&quot;,
                 Compass.NORTH,
                 new Position(5, 5)
         );
 
-<span class="fc" id="L394">        assertNotNull(result);</span>
-<span class="fc" id="L395">        assertEquals(&quot;Barca&quot;, result.getCategory());</span>
-<span class="fc" id="L396">    }</span>
+<span class="nc" id="L394">        assertNotNull(result);</span>
+<span class="nc" id="L395">        assertEquals(&quot;Barca&quot;, result.getCategory());</span>
+<span class="nc" id="L396">    }</span>
 
     @Test
     void testBuildShipCaravel() {
-<span class="fc" id="L400">        assertNotNull(Ship.buildShip(</span>
+<span class="nc" id="L400">        assertNotNull(Ship.buildShip(</span>
                 &quot;caravela&quot;,
                 Compass.NORTH,
                 new Position(5, 5)
         ));
-<span class="fc" id="L405">    }</span>
+<span class="nc" id="L405">    }</span>
 
     @Test
     void testBuildShipCarrack() {
-<span class="fc" id="L409">        assertNotNull(Ship.buildShip(</span>
+<span class="nc" id="L409">        assertNotNull(Ship.buildShip(</span>
                 &quot;nau&quot;,
                 Compass.NORTH,
                 new Position(5, 5)
         ));
-<span class="fc" id="L414">    }</span>
+<span class="nc" id="L414">    }</span>
 
     @Test
     void testBuildShipFrigate() {
-<span class="fc" id="L418">        assertNotNull(Ship.buildShip(</span>
+<span class="nc" id="L418">        assertNotNull(Ship.buildShip(</span>
                 &quot;fragata&quot;,
                 Compass.NORTH,
                 new Position(5, 5)
         ));
-<span class="fc" id="L423">    }</span>
+<span class="nc" id="L423">    }</span>
 
     @Test
     void testBuildShipGalleon() {
-<span class="fc" id="L427">        assertNotNull(Ship.buildShip(</span>
+<span class="nc" id="L427">        assertNotNull(Ship.buildShip(</span>
                 &quot;galeao&quot;,
                 Compass.NORTH,
                 new Position(5, 5)
         ));
-<span class="fc" id="L432">    }</span>
+<span class="nc" id="L432">    }</span>
 
     @Test
     void testBuildShipInvalidCategory() {
-<span class="fc" id="L436">        Ship result = Ship.buildShip(</span>
+<span class="nc" id="L436">        Ship result = Ship.buildShip(</span>
                 &quot;invalid&quot;,
                 Compass.NORTH,
                 new Position(5, 5)
         );
 
-<span class="fc" id="L442">        assertNull(result);</span>
-<span class="fc" id="L443">    }</span>
+<span class="nc" id="L442">        assertNull(result);</span>
+<span class="nc" id="L443">    }</span>
 
     @Test
     void testToString() {
-<span class="fc" id="L447">        assertEquals(&quot;[Barca n F6]&quot;, ship.toString());</span>
-<span class="fc" id="L448">    }</span>
+<span class="nc" id="L447">        assertEquals(&quot;[Barca n F6]&quot;, ship.toString());</span>
+<span class="nc" id="L448">    }</span>
 
     @Test
     void testGetAdjacentPositionsDoesNotAddDuplicates() {
-<span class="fc" id="L452">        Position first = new Position(5, 5);</span>
-<span class="fc" id="L453">        Position second = new Position(5, 6);</span>
+<span class="nc" id="L452">        Position first = new Position(5, 5);</span>
+<span class="nc" id="L453">        Position second = new Position(5, 6);</span>
 
-<span class="fc" id="L455">        Ship multiShip = new TestShip(</span>
+<span class="nc" id="L455">        Ship multiShip = new TestShip(</span>
                 Compass.NORTH,
                 first,
                 second
         );
 
-<span class="fc" id="L461">        List&lt;IPosition&gt; adjacent = multiShip.getAdjacentPositions();</span>
+<span class="nc" id="L461">        List&lt;IPosition&gt; adjacent = multiShip.getAdjacentPositions();</span>
 
-<span class="fc" id="L463">        assertEquals(</span>
-<span class="fc" id="L464">                adjacent.size(),</span>
-<span class="fc" id="L465">                adjacent.stream().distinct().count()</span>
+<span class="nc" id="L463">        assertEquals(</span>
+<span class="nc" id="L464">                adjacent.size(),</span>
+<span class="nc" id="L465">                adjacent.stream().distinct().count()</span>
         );
-<span class="fc" id="L467">    }</span>
+<span class="nc" id="L467">    }</span>
 
     // Novos testes para os argumentos nulos e inválidos
 
     @Test
     void testBuildShipNullCategory() {
-<span class="fc" id="L473">        assertThrows(AssertionError.class, () -&gt;</span>
+<span class="nc" id="L473">        assertThrows(AssertionError.class, () -&gt;</span>
 <span class="nc" id="L474">                Ship.buildShip(null, Compass.NORTH, new Position(5, 5))</span>
         );
-<span class="fc" id="L476">    }</span>
+<span class="nc" id="L476">    }</span>
 
     @Test
     void testBuildShipNullBearing() {
-<span class="fc" id="L480">        assertThrows(AssertionError.class, () -&gt;</span>
+<span class="nc" id="L480">        assertThrows(AssertionError.class, () -&gt;</span>
 <span class="nc" id="L481">                Ship.buildShip(&quot;barca&quot;, null, new Position(5, 5))</span>
         );
-<span class="fc" id="L483">    }</span>
+<span class="nc" id="L483">    }</span>
 
     @Test
     void testBuildShipNullPosition() {
-<span class="fc" id="L487">        assertThrows(AssertionError.class, () -&gt;</span>
+<span class="nc" id="L487">        assertThrows(AssertionError.class, () -&gt;</span>
 <span class="nc" id="L488">                Ship.buildShip(&quot;barca&quot;, Compass.NORTH, null)</span>
         );
-<span class="fc" id="L490">    }</span>
+<span class="nc" id="L490">    }</span>
 
     @Test
     void testShootNullPosition() {
-<span class="fc" id="L494">        assertThrows(AssertionError.class, () -&gt;</span>
+<span class="nc" id="L494">        assertThrows(AssertionError.class, () -&gt;</span>
 <span class="nc" id="L495">                ship.shoot(null)</span>
         );
-<span class="fc" id="L497">    }</span>
+<span class="nc" id="L497">    }</span>
 
     @Test
     void testShootPositionOutsideBoard() {
-<span class="fc" id="L501">        assertThrows(AssertionError.class, () -&gt;</span>
+<span class="nc" id="L501">        assertThrows(AssertionError.class, () -&gt;</span>
 <span class="nc" id="L502">                ship.shoot(new Position(-1, 5))</span>
         );
-<span class="fc" id="L504">    }</span>
+<span class="nc" id="L504">    }</span>
 
     @Test
     void testOccupiesNullPosition() {
-<span class="fc" id="L508">        assertThrows(AssertionError.class, () -&gt;</span>
+<span class="nc" id="L508">        assertThrows(AssertionError.class, () -&gt;</span>
 <span class="nc" id="L509">                ship.occupies(null)</span>
         );
-<span class="fc" id="L511">    }</span>
+<span class="nc" id="L511">    }</span>
 
     @Test
     void testTooCloseToNullPosition() {
-<span class="fc" id="L515">        assertThrows(AssertionError.class, () -&gt;</span>
+<span class="nc" id="L515">        assertThrows(AssertionError.class, () -&gt;</span>
 <span class="nc" id="L516">                ship.tooCloseTo((IPosition) null)</span>
         );
-<span class="fc" id="L518">    }</span>
+<span class="nc" id="L518">    }</span>
 
     @Test
     void testTooCloseToNullShip() {
-<span class="fc" id="L522">        assertThrows(AssertionError.class, () -&gt;</span>
+<span class="nc" id="L522">        assertThrows(AssertionError.class, () -&gt;</span>
 <span class="nc" id="L523">                ship.tooCloseTo((IShip) null)</span>
         );
-<span class="fc" id="L525">    }</span>
+<span class="nc" id="L525">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

@@ -12,6 +12,7 @@ import java.util.Objects;
  */
 public class Position implements IPosition {
 
+	public static final int MAX_ADJACENT_DISTANCE = 1;
 	private final int row;
 	private final int column;
 	private boolean isOccupied;
@@ -78,16 +79,14 @@ public class Position implements IPosition {
 
 	@Override
 	public boolean isAdjacentTo(IPosition other) {
-		return Math.abs(this.row - other.getRow()) <= 1
-				&& Math.abs(this.column - other.getColumn()) <= 1;
+		return Math.abs(this.row - other.getRow()) <= MAX_ADJACENT_DISTANCE
+				&& Math.abs(this.column - other.getColumn()) <= MAX_ADJACENT_DISTANCE ;
 	}
 
 	@Override
 	public List<IPosition> adjacentPositions() {
-
 		List<IPosition> adjacents = new ArrayList<>();
 
-		// Define possible directions
 		int[][] directions = {
 				{-1, 0},
 				{0, 1},
@@ -99,17 +98,30 @@ public class Position implements IPosition {
 				{-1, -1}
 		};
 
-		// Check each possible direction
 		for (int[] dir : directions) {
-			Position newPosition =
-					new Position(row + dir[0], column + dir[1]);
-
-			if (newPosition.isInside()) {
-				adjacents.add(newPosition);
-			}
+			addAdjacentPositionIfInside(
+					adjacents,
+					dir[0],
+					dir[1]
+			);
 		}
 
 		return adjacents;
+	}
+
+	private void addAdjacentPositionIfInside(
+			List<IPosition> adjacents,
+			int rowOffset,
+			int columnOffset) {
+
+		Position newPosition = new Position(
+				row + rowOffset,
+				column + columnOffset
+		);
+
+		if (newPosition.isInside()) {
+			adjacents.add(newPosition);
+		}
 	}
 
 	@Override

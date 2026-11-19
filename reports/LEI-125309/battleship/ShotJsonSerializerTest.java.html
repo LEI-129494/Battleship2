@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ShotJsonSerializerTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MoveTest Coverage Results</a> &gt; <a href="index.source.html" class="el_package">battleship</a> &gt; <span class="el_source">ShotJsonSerializerTest.java</span></div><h1>ShotJsonSerializerTest.java</h1><pre class="source lang-java linenums">package battleship;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+
+<span class="nc" id="L9">class ShotJsonSerializerTest {</span>
+
+    @Test
+    @DisplayName(&quot;Testar conversão de lista de posições para JSON&quot;)
+    void testJsonShots() {
+        // Inicializar as mensagens (necessário para o sistema)
+<span class="nc" id="L15">        Messages.init(java.util.Locale.ENGLISH);</span>
+
+        // Criar uma lista de tiros (posições)
+<span class="nc" id="L18">        List&lt;IPosition&gt; tiros = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L19">        tiros.add(new Position(1, 1));</span>
+<span class="nc" id="L20">        tiros.add(new Position('B', 2));</span>
+
+        // Chamar o método
+<span class="nc" id="L23">        String json = ShotJsonSerializer.jsonShots(tiros);</span>
+
+        // Verificar se o JSON foi gerado corretamente
+<span class="nc" id="L26">        assertNotNull(json);</span>
+<span class="nc" id="L27">        assertTrue(json.contains(&quot;\&quot;row\&quot;&quot;));</span>
+<span class="nc" id="L28">        assertTrue(json.contains(&quot;\&quot;column\&quot;&quot;));</span>
+<span class="nc" id="L29">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
