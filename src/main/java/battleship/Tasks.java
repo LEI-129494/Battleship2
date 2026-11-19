@@ -86,7 +86,7 @@ public class Tasks {
 					mostrarHistorico();
 					break;
 				case CMD_NEWFLEET:
-					myFleet = Fleet.createRandom();
+					myFleet = criarFrotaAleatoria();
 					game = new Game(myFleet);
 					game.printMyBoard(false, true);
 					break;
@@ -146,6 +146,10 @@ public class Tasks {
 			command = in.next();
 		}
 		System.out.println(Messages.get("msg.goodbye"));
+	}
+
+	private static @NotNull IFleet criarFrotaAleatoria() {
+		return Fleet.createRandom();
 	}
 
 	private static void correrSimulacao(IGame game, IFleet myFleet) {
