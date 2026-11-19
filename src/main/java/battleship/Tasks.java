@@ -140,13 +140,7 @@ public class Tasks {
 					break;
 				case CMD_EXPORTPDF:
 					if (game != null) {
-						try {
-							java.nio.file.Path pdf = PdfExporter.export(game);
-							System.out.println(Messages.format("msg.pdfExported", pdf.toAbsolutePath()));
-						} catch (java.io.IOException e) {
-							LOGGER.error(Messages.get("error.pdfExport"), e);
-							System.out.println(Messages.get("error.pdfExport"));
-						}
+						exportarJogoParaPdf(game);
 					} else {
 						System.out.println(Messages.get("msg.noActiveGame"));
 					}
@@ -161,6 +155,16 @@ public class Tasks {
 			command = in.next();
 		}
 		System.out.println(Messages.get("msg.goodbye"));
+	}
+
+	private static void exportarJogoParaPdf(IGame game) {
+		try {
+			java.nio.file.Path pdf = PdfExporter.export(game);
+			System.out.println(Messages.format("msg.pdfExported", pdf.toAbsolutePath()));
+		} catch (java.io.IOException e) {
+			LOGGER.error(Messages.get("error.pdfExport"), e);
+			System.out.println(Messages.get("error.pdfExport"));
+		}
 	}
 
 	private static void mostrarHistorico() {
