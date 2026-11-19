@@ -13,7 +13,8 @@ public class Move implements IMove {
 	private final List<IPosition> shots;
 	private final List<IGame.ShotResult> shotResults;
 
-	public Move(int moveNumber, List<IPosition> moveShots, List<IGame.ShotResult> moveResults) {
+	public Move(int moveNumber, List<IPosition> moveShots,
+				List<IGame.ShotResult> moveResults) {
 		this.number = moveNumber;
 		this.shots = moveShots;
 		this.shotResults = moveResults;
@@ -43,12 +44,6 @@ public class Move implements IMove {
 		return this.shotResults;
 	}
 
-	/**
-	 * Processes the results of enemy fire on the game board.
-	 *
-	 * @param verbose indicates whether a detailed summary should be printed
-	 * @return a JSON-formatted string containing the shot results
-	 */
 	@Override
 	public String processEnemyFire(boolean verbose) {
 
@@ -107,29 +102,50 @@ public class Move implements IMove {
 		// Determinar número de tiros fora do tabuleiro
 		int outsideShots = Game.NUMBER_SHOTS - validShots - repeatedShots;
 
-		if (verbose) {
-			String summary = buildSummary(
-					validShots,
-					repeatedShots,
-					missedShots,
-					outsideShots,
-					sunkBoatsCount,
-					hitsPerBoat
-			);
+		MoveStatistics statistics = new MoveStatistics(
+				validShots,
+				repeatedShots,
+				missedShots,
+				outsideShots,
+				sunkBoatsCount,
+				hitsPerBoat
+		);
 
-			System.out.println(Messages.format("move.line", this.number, summary));
+		if (verbose) {
+			String summary = buildSummary(statistics);
+
+			System.out.println(
+					Messages.format("move.line", this.number, summary)
+			);
 		}
 
-		// Construção do JSON de resposta
+		// Construção da resposta JSON
+		Map<String, Object> response = buildResponse(statistics);
+
+		String jsonString = serializeResponse(response);
+
+		System.out.println(jsonString);
+		System.out.println();
+
+		return jsonString;
+	}
+
+	/**
+	 * Constrói o mapa com os resultados dos disparos.
+	 */
+	private Map<String, Object> buildResponse(MoveStatistics statistics) {
+
 		Map<String, Object> response = new HashMap<>();
-		response.put("validShots", validShots);
-		response.put("outsideShots", outsideShots);
-		response.put("repeatedShots", repeatedShots);
-		response.put("missedShots", missedShots);
+		response.put("validShots", statistics.validShots());
+		response.put("outsideShots", statistics.outsideShots());
+		response.put("repeatedShots", statistics.repeatedShots());
+		response.put("missedShots", statistics.missedShots());
 
 		List<Map<String, Object>> sunkBoats = new ArrayList<>();
 
-		for (Map.Entry<String, Integer> entry : sunkBoatsCount.entrySet()) {
+		for (Map.Entry<String, Integer> entry :
+				statistics.sunkBoatsCount().entrySet()) {
+
 			Map<String, Object> boat = new HashMap<>();
 			boat.put("type", entry.getKey());
 			boat.put("count", entry.getValue());
@@ -140,8 +156,10 @@ public class Move implements IMove {
 
 		List<Map<String, Object>> boatHits = new ArrayList<>();
 
-		for (Map.Entry<String, Integer> entry : hitsPerBoat.entrySet()) {
-			if (!sunkBoatsCount.containsKey(entry.getKey())) {
+		for (Map.Entry<String, Integer> entry :
+				statistics.hitsPerBoat().entrySet()) {
+
+			if (!statistics.sunkBoatsCount().containsKey(entry.getKey())) {
 				Map<String, Object> boat = new HashMap<>();
 				boat.put("type", entry.getKey());
 				boat.put("hits", entry.getValue());
@@ -151,13 +169,7 @@ public class Move implements IMove {
 
 		response.put("hitsOnBoats", boatHits);
 
-		// Método extraído: serialização JSON
-		String jsonString = serializeResponse(response);
-
-		System.out.println(jsonString);
-		System.out.println();
-
-		return jsonString;
+		return response;
 	}
 
 	/**
@@ -166,7 +178,7 @@ public class Move implements IMove {
 	 * @param response mapa com os resultados dos disparos
 	 * @return resposta em formato JSON
 	 */
-	private String serializeResponse(Map<String, Object> response) {
+    String serializeResponse(Map<String, Object> response) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
@@ -182,25 +194,26 @@ public class Move implements IMove {
 	/**
 	 * Constrói a mensagem legível para o jogador.
 	 */
-	private String buildSummary(
-			int validShots,
-			int repeatedShots,
-			int missedShots,
-			int outsideShots,
-			Map<String, Integer> sunkBoatsCount,
-			Map<String, Integer> hitsPerBoat
-	) {
+	private String buildSummary(MoveStatistics statistics) {
 
 		StringBuilder sb = new StringBuilder();
 
 		// Caso especial: só há tiros repetidos
-		if (validShots == 0 && repeatedShots > 0) {
-			sb.append(Messages.format("move.repeated", countArgs(repeatedShots)));
+		if (statistics.validShots() == 0 &&
+				statistics.repeatedShots() > 0) {
+
+			sb.append(Messages.format(
+					"move.repeated",
+					countArgs(statistics.repeatedShots())
+			));
+
 		} else {
 			List<String> parts = new ArrayList<>();
 
 			// Navios afundados
-			for (Map.Entry<String, Integer> e : sunkBoatsCount.entrySet()) {
+			for (Map.Entry<String, Integer> e :
+					statistics.sunkBoatsCount().entrySet()) {
+
 				Map<String, Object> args = new HashMap<>();
 				args.put("count", e.getValue());
 				args.put("type", shipName(e.getKey(), false));
@@ -210,8 +223,10 @@ public class Move implements IMove {
 			}
 
 			// Navios atingidos mas ainda a flutuar
-			for (Map.Entry<String, Integer> e : hitsPerBoat.entrySet()) {
-				if (sunkBoatsCount.containsKey(e.getKey())) {
+			for (Map.Entry<String, Integer> e :
+					statistics.hitsPerBoat().entrySet()) {
+
+				if (statistics.sunkBoatsCount().containsKey(e.getKey())) {
 					continue;
 				}
 
@@ -223,35 +238,47 @@ public class Move implements IMove {
 			}
 
 			// Tiros na água
-			if (missedShots > 0) {
-				parts.add(Messages.format("move.missed", countArgs(missedShots)));
+			if (statistics.missedShots() > 0) {
+				parts.add(Messages.format(
+						"move.missed",
+						countArgs(statistics.missedShots())
+				));
 			}
 
 			// Prefixo dos tiros válidos
-			if (validShots > 0) {
-				sb.append(Messages.format("move.valid", countArgs(validShots)));
+			if (statistics.validShots() > 0) {
+				sb.append(Messages.format(
+						"move.valid",
+						countArgs(statistics.validShots())
+				));
 				sb.append(": ");
 			}
 
-			sb.append(String.join(" " + Messages.get("move.joiner") + " ", parts));
+			sb.append(String.join(
+					" " + Messages.get("move.joiner") + " ",
+					parts
+			));
 
 			// Tiros repetidos
-			if (repeatedShots > 0) {
-				if (sb.length() > 0) {
-					sb.append(", ");
-				}
-
-				sb.append(Messages.format("move.repeated", countArgs(repeatedShots)));
+			if (statistics.repeatedShots() > 0) {
+				sb.append(", ");
+				sb.append(Messages.format(
+						"move.repeated",
+						countArgs(statistics.repeatedShots())
+				));
 			}
 		}
 
 		// Tiros exteriores
-		if (outsideShots > 0) {
+		if (statistics.outsideShots() > 0) {
 			if (sb.length() > 0) {
 				sb.append(", ");
 			}
 
-			sb.append(Messages.format("move.outside", countArgs(outsideShots)));
+			sb.append(Messages.format(
+					"move.outside",
+					countArgs(statistics.outsideShots())
+			));
 		}
 
 		return sb.toString();

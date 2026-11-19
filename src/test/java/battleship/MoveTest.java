@@ -1,6 +1,7 @@
 
 package battleship;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -12,7 +13,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -501,5 +504,130 @@ class MoveTest {
                 0,
                 response.get("hitsOnBoats").size()
         );
+    }
+
+
+    @Test
+    void testProcessEnemyFireWithUnknownShipCategory() throws Exception {
+
+        Ship unknownShip = new Ship(
+                "categoria_sem_traducao",
+                Compass.NORTH,
+                new Position(0, 0),
+                1
+        ) {};
+
+        Move move = createMove(
+                new IGame.ShotResult(
+                        true, false, unknownShip, false
+                )
+        );
+
+        String json = assertDoesNotThrow(
+                () -> move.processEnemyFire(true)
+        );
+
+        JsonNode response = new ObjectMapper().readTree(json);
+
+        assertEquals(
+                "categoria_sem_traducao",
+                response.get("hitsOnBoats").get(0).get("type").asText()
+        );
+    }
+
+    @Test
+    void testSerializeResponseWithSerializationError() {
+
+        Move move = new Move(
+                MOVE_NUMBER,
+                new ArrayList<>(),
+                new ArrayList<>()
+        );
+
+        Map<String, Object> response = new HashMap<>();
+
+        // Criar uma referência circular, impossível de serializar em JSON
+        response.put("self", response);
+
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> move.serializeResponse(response)
+        );
+
+        assertNotNull(exception.getCause());
+        assertTrue(
+                exception.getCause() instanceof JsonProcessingException
+        );
+    }
+
+    @Test
+    void processEnemyFireVerboseWithHitAndRepeated() {
+        List<Position> shots = new ArrayList<>();
+        List<IGame.ShotResult> results = new ArrayList<>();
+
+        for (int i = 0; i < Game.NUMBER_SHOTS; i++) {
+            shots.add(new Position(0, i));
+            results.add(new IGame.ShotResult(true, false, null, false));
+        }
+
+        results.set(0, new IGame.ShotResult(
+                true, false, barge, false
+        ));
+        results.set(1, new IGame.ShotResult(
+                true, true, null, false
+        ));
+
+        Move move = createMove(
+                new IGame.ShotResult(false, false, null, false)
+        );
+
+        assertNotNull(move.processEnemyFire(true));
+    }
+
+    @Test
+    void processEnemyFireVerboseWithOnlyOutsideShots() {
+        List<Position> shots = new ArrayList<>();
+        List<IGame.ShotResult> results = new ArrayList<>();
+
+        for (int i = 0; i < Game.NUMBER_SHOTS; i++) {
+            shots.add(new Position(-1, -1));
+            results.add(new IGame.ShotResult(false, false, null, false));
+        }
+
+        Move move = createMove(
+                new IGame.ShotResult(false, false, null, false)
+        );
+
+        assertNotNull(move.processEnemyFire(true));
+    }
+
+    @Test
+    void processEnemyFireVerboseOnlyOutsideShots() {
+        List<IPosition> shots = new ArrayList<>();
+        List<IGame.ShotResult> results = new ArrayList<>();
+
+        for (int i = 0; i < Game.NUMBER_SHOTS; i++) {
+            shots.add(new Position(-1, -1));
+            results.add(new IGame.ShotResult(false, false, null, false));
+        }
+
+        Move move = new Move(1, shots, results);
+
+        assertNotNull(move.processEnemyFire(true));
+    }
+
+    @Test
+    void processEnemyFireVerboseOnlyHits() {
+        List<IPosition> shots = new ArrayList<>();
+        List<IGame.ShotResult> results = new ArrayList<>();
+
+        for (int i = 0; i < Game.NUMBER_SHOTS; i++) {
+            shots.add(new Position(0, i));
+            results.add(new IGame.ShotResult(true, false, barge, false));
+        }
+
+        Move move = new Move(1, shots, results);
+
+        assertNotNull(move.processEnemyFire(true));
     }
 }
