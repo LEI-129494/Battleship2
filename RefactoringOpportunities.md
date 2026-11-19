@@ -1,9 +1,12 @@
 # Oportunidades de Refabricação
 
-| Local (Classe::Método) | Cheiro no Código (Smell) | Refabricação a aplicar | 129494 |
+| Local (Classe::Método) | Cheiro no Código (Smell) | Refabricação a aplicar | Nº do Aluno |
 | :--- | :--- | :--- | :--- |
-| `Tasks::menu` | Long Method | Extract Method | 129494 |
-| `Tasks::buildFleet` | Long Method | Extract Method | 12345 |
-| `Move::buildSummary` | Long Parameter List | Introduce Parameter Object | 54321 |
-| `Game::printBoard` | Complex Condition | Decompose Conditional | 98765 |
-| ... | ... | ... | ... |
+| `Tasks::menu` (CMD_HISTORY) | Long Method | Extract Method | 129494 |
+| `Tasks::menu` (CMD_EXPORTPDF) | Long Method | Extract Method | 129494 |
+| `Tasks::menu` (CMD_SIMULATE) | Long Method | Extract Method | 129494 |
+| `Tasks::chooseLanguage` | Nomes pouco claros (Bad Naming) | Rename | 129494 |
+| `Tasks::menu` (CMD_NEWFLEET) | Long Method | Extract Method | 129494 |
+| *[Preencher pelo Colega 1]* | *[Cheiro]* | *[Refabricação]* | [Nº do Aluno] |
+| *[Preencher pelo Colega 2]* | *[Cheiro]* | *[Refabricação]* | [Nº do Aluno] |
+| *[Preencher pelo Colega 3]* | *[Cheiro]* | *[Refabricação]* | [Nº do Aluno] |
