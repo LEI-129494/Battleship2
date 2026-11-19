@@ -1,6 +1,6 @@
 # Oportunidades de Refabricação
 
-| Local (Classe::Método) | Cheiro no Código (Smell) | Refabricação a aplicar | 129494 |
+| Local (Classe::Método) | Cheiro no Código (Smell) | Refabricação a aplicar | Nº Aluno |
 | :--- | :--- | :--- | :--- |
 | `Tasks::menu` | Long Method | Extract Method | 129494 |
 | `Tasks::buildFleet` | Long Method | Extract Method | 12345 |

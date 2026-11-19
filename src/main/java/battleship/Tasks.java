@@ -83,7 +83,7 @@ public class Tasks {
 
 			switch (canonical(command)) {
 				case CMD_HISTORY:
-					DatabaseManager.printHistory();
+					mostrarHistorico();
 					break;
 				case CMD_NEWFLEET:
 					myFleet = Fleet.createRandom();
@@ -161,6 +161,11 @@ public class Tasks {
 			command = in.next();
 		}
 		System.out.println(Messages.get("msg.goodbye"));
+	}
+
+	private static void mostrarHistorico() {
+		DatabaseManager.printHistory();
+		return;
 	}
 
 	/**
