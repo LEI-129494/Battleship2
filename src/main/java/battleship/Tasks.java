@@ -117,16 +117,7 @@ public class Tasks {
 					break;
 				case CMD_SIMULATE:
 					if (game != null) {
-						while (game.getRemainingShips() > 0){
-							game.randomEnemyFire();
-							myFleet.printStatus();
-							game.printMyBoard(true, false);
-							try {
-								Thread.sleep(3000);
-							} catch (InterruptedException e) {
-								Thread.currentThread().interrupt();
-							}
-						}
+						correrSimulacao(game, myFleet);
 
 						if (game.getRemainingShips() == 0) {
 							game.over();
@@ -155,6 +146,19 @@ public class Tasks {
 			command = in.next();
 		}
 		System.out.println(Messages.get("msg.goodbye"));
+	}
+
+	private static void correrSimulacao(IGame game, IFleet myFleet) {
+		while (game.getRemainingShips() > 0){
+			game.randomEnemyFire();
+			myFleet.printStatus();
+			game.printMyBoard(true, false);
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+		}
 	}
 
 	private static void exportarJogoParaPdf(IGame game) {
