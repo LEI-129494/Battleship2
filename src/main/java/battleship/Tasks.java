@@ -56,10 +56,10 @@ public class Tasks {
 		System.out.println("==========================================");
 		System.out.print("> ");
 
-		Scanner in = new Scanner(System.in);
-		String opt = in.next().trim().toLowerCase();
+		Scanner scanner = new Scanner(System.in);
+		String opcaoEscolhida = scanner.next().trim().toLowerCase();
 
-		if ("2".equals(opt) || "en".equals(opt)) {
+		if ("2".equals(opcaoEscolhida) || "en".equals(opcaoEscolhida)) {
 			Messages.init(Locale.ENGLISH);
 		} else {
 			Messages.init(Locale.of("pt"));
