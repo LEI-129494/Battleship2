@@ -66,7 +66,12 @@ public class CallbackClient {
 		}
 
 		// ── 2. POST to student's server ──────────────────────────────────────
-		HttpRequest request = getRequest(url, body);
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(url))
+				.header("Content-Type", "application/json")
+				.timeout(Duration.ofSeconds(10))
+				.POST(HttpRequest.BodyPublishers.ofString(body))
+				.build();
 
 		HttpResponse<String> response;
 		try {
@@ -104,16 +109,6 @@ public class CallbackClient {
 		return true;
 	}
 
-	private static HttpRequest getRequest(String url, String body) {
-		HttpRequest request = HttpRequest.newBuilder()
-				.uri(URI.create(url))
-				.header("Content-Type", "application/json")
-				.timeout(Duration.ofSeconds(10))
-				.POST(HttpRequest.BodyPublishers.ofString(body))
-				.build();
-		return request;
-	}
-
 	/**
 	 * Records the AI's shots and the student's reported results into the Game object.
 	 * This allows AiShotStrategy to see past hits when computing the next move.
@@ -135,7 +130,8 @@ public class CallbackClient {
 		}
 
 		// Record the move in the game's alien moves list so strategy can inspect it
-		Move move = new Move(game.getAlienMoves().size() + 1, shots, shotResults);
+		int nextMoveNumber = game.getAlienMoves().size() + 1;
+		Move move = new Move(nextMoveNumber, shots, shotResults);
 		game.getAlienMoves().add(move);
 	}
 }
