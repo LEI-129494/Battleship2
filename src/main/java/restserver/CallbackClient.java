@@ -66,12 +66,7 @@ public class CallbackClient {
 		}
 
 		// ── 2. POST to student's server ──────────────────────────────────────
-		HttpRequest request = HttpRequest.newBuilder()
-				.uri(URI.create(url))
-				.header("Content-Type", "application/json")
-				.timeout(Duration.ofSeconds(10))
-				.POST(HttpRequest.BodyPublishers.ofString(body))
-				.build();
+		HttpRequest request = getRequest(url, body);
 
 		HttpResponse<String> response;
 		try {
@@ -107,6 +102,16 @@ public class CallbackClient {
 		}
 
 		return true;
+	}
+
+	private static HttpRequest getRequest(String url, String body) {
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(url))
+				.header("Content-Type", "application/json")
+				.timeout(Duration.ofSeconds(10))
+				.POST(HttpRequest.BodyPublishers.ofString(body))
+				.build();
+		return request;
 	}
 
 	/**
