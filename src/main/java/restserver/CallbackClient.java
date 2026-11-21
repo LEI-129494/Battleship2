@@ -126,7 +126,8 @@ public class CallbackClient {
 
 			// We don't have the actual IShip reference for the student's fleet,
 			// so we pass null for ship — the strategy uses outcome strings instead.
-			shotResults.add(new IGame.ShotResult(valid, repeated, null, sunk));
+			IGame.ShotResult result = new IGame.ShotResult(valid, repeated, null, sunk);
+			shotResults.add(result);
 		}
 
 		// Record the move in the game's alien moves list so strategy can inspect it
