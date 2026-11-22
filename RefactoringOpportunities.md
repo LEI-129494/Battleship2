@@ -17,3 +17,8 @@
 | `GameSession::markAiWins` | Magic String | Extract Constant (AI_WINS) | 124579 |
 | `GameSession::markStudentWins` | Magic String | Extract Constant (STUDENT_WINS) | 124579 |
 | `CallbackClient::recordAiMove` | Complex Expression | Extract Variable (result) | 124579 |
+| `AiShotStrategy::getHitButNotSunkPositions` | Unused Parameter | Safe Delete (Remove Parameter) | 127523 |
+| `SoundManager::play` | Unnecessary Parameter | Inline Parameter Value | 127523 |
+| `GameController::receiveShots` | Complex Method | Extract Method | 127523 |
+| `Caravel::Caravel` | Duplicated Code | Merge Switch Branches | 127523 |
+| `Compass::charToCompass` | Verbose Switch Statement | Replace with Switch Expression | 127523 |
