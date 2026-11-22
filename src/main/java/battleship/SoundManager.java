@@ -10,17 +10,17 @@ public class SoundManager {
     }
 
     public static void playHit() {
-        play("hit.mp3");
+        play();
     }
 
-    private static void play(String soundFile) {
+    private static void play() {
         Thread soundThread = new Thread(() -> {
             try {
                 InputStream sound = SoundManager.class
-                        .getResourceAsStream("/sounds/" + soundFile);
+                        .getResourceAsStream("/sounds/" + "hit.mp3");
 
                 if (sound == null) {
-                    System.err.println("Sound file not found: " + soundFile);
+                    System.err.println("Sound file not found: " + "hit.mp3");
                     return;
                 }
 
@@ -28,7 +28,7 @@ public class SoundManager {
                 player.play();
 
             } catch (Exception e) {
-                System.err.println("Error playing sound: " + soundFile);
+                System.err.println("Error playing sound: " + "hit.mp3");
             }
         });
 
